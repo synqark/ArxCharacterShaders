@@ -156,7 +156,7 @@ Shader "arktoon/Stencil/Reader/Cutout" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_CUTOUT
+            #define AXCS_CUTOUT
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -186,8 +186,8 @@ Shader "arktoon/Stencil/Reader/Cutout" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_CUTOUT
-            #define ARKTOON_ADD
+            #define AXCS_CUTOUT
+            #define AXCS_ADD
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"

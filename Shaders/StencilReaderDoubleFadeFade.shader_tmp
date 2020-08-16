@@ -170,7 +170,7 @@ Shader "arktoon/Stencil/Reader/Double/FadeFade" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_FADE
+            #define AXCS_FADE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -201,8 +201,8 @@ Shader "arktoon/Stencil/Reader/Double/FadeFade" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_FADE
-            #define ARKTOON_ADD
+            #define AXCS_FADE
+            #define AXCS_ADD
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -234,8 +234,8 @@ Shader "arktoon/Stencil/Reader/Double/FadeFade" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_FADE
-            #define ARKTOON_SECONDARY
+            #define AXCS_FADE
+            #define AXCS_SECONDARY
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -266,9 +266,9 @@ Shader "arktoon/Stencil/Reader/Double/FadeFade" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_FADE
-            #define ARKTOON_ADD
-            #define ARKTOON_SECONDARY
+            #define AXCS_FADE
+            #define AXCS_ADD
+            #define AXCS_SECONDARY
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"

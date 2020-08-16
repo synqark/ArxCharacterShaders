@@ -132,6 +132,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 2
+    - _Cull: 2
     - _CustomShadow2nd: 0
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -178,7 +179,10 @@ Material:
     - _ReflectionShadeMix: 0
     - _ReflectionSuppressBaseColorValue: 1
     - _RimBlend: 1
+    - _RimBlendEnd: 0
+    - _RimBlendStart: 0
     - _RimFresnelPower: 1
+    - _RimPow: 1
     - _RimShadeMix: 0
     - _RimUpperSideWidth: 0
     - _RimUseBaseTexture: 0
@@ -199,7 +203,7 @@ Material:
     - _ShadowPlanBUseCustomShadowTexture: 0
     - _ShadowPlanBUsePlanB: 1
     - _ShadowPlanBValueFromBase: 0.482
-    - _ShadowSteps: 4.44
+    - _ShadowSteps: 4
     - _ShadowStrength: 0.5
     - _ShadowUseStep: 1
     - _Shadowborder: 0.753

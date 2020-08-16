@@ -1,13 +1,15 @@
-Shader "AxCS/Opaque" {
+Shader "ArxCharacterShaders/Fade" {
     Properties {
         // Double Sided
-        [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0
+        [KeywordEnum(None, Front, Back)] _Cull("Cull", Int) = 2
         [Toggle(_)]_DoubleSidedFlipBackfaceNormal ("Flip backface normal", Float ) = 0
         _DoubleSidedBackfaceLightIntensity ("Backface Light intensity", Range(0, 2) ) = 0.5
         [Toggle(_)]_DoubleSidedBackfaceUseColorShift("Backface Use Color Shift", Int) = 0
         [PowerSlider(2.0)]_DoubleSidedBackfaceHueShiftFromBase("Backface Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _DoubleSidedBackfaceSaturationFromBase("Backface Saturation From Base", Range(0, 2)) = 1
         _DoubleSidedBackfaceValueFromBase("Backface Value From Base", Range(0, 2)) = 1
+        //
+        [Enum(Off, 0, On, 1)]_ZWrite("ZWrite", Float) = 0
         // Common
         _MainTex ("[Common] Base Texture", 2D) = "white" {}
         _Color ("[Common] Base Color", Color) = (1,1,1,1)
@@ -15,6 +17,8 @@ Shader "AxCS/Opaque" {
         _BumpScale ("[Common] Normal scale", Range(0,2)) = 1
         _EmissionMap ("[Common] Emission map", 2D) = "white" {}
         [HDR]_EmissionColor ("[Common] Emission Color", Color) = (0,0,0,1)
+        // Alpha Mask
+        _AlphaMask ("[Alpha] AlphaMask", 2D ) = "white" {}
         // Emission Parallax
         [Toggle(_)]_UseEmissionParallax ("[Emission Parallax] Use Emission Parallax", Int ) = 0
         _EmissionParallaxTex ("[Emission Parallax] Texture", 2D ) = "black" {}
@@ -42,8 +46,6 @@ Shader "AxCS/Opaque" {
         [Toggle(_)]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
         _PointShadowSteps("[PointShadow] steps between borders", Range(2, 10)) = 2
         // Plan B
-        [Toggle(_)]_ShadowPlanBUsePlanB ("[Plan B] Use Plan B", Int ) = 0
-        _ShadowPlanBDefaultShadowMix ("[Plan B] Shadow mix", Range(0, 1)) = 1
         [Toggle(_)] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _ShadowPlanBSaturationFromBase ("[Plan B] Saturation From Base", Range(0, 2)) = 1
@@ -67,17 +69,19 @@ Shader "AxCS/Opaque" {
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
         // Outline
-        [Toggle(_)]_UseOutline ("[Outline] Enabled", Int) = 0 // カスタムインスペクタでのみ使用
-        _OutlineWidth ("[Outline] Width", Range(0, 20)) = 0.1
-        _OutlineColor ("[Outline] Color", Color) = (0,0,0,1)
-        _OutlineTexture ("[Outline] Texture", 2D) = "white" {}
-        _OutlineShadeMix ("[Outline] Shade Mix", Range(0, 1)) = 0
-        _OutlineTextureColorRate ("[Outline] Texture Color Rate", Range(0, 1)) = 0.05
-        _OutlineWidthMask ("[Outline] Outline Width Mask", 2D) = "white" {}
-        [Toggle(_)]_OutlineUseColorShift("[Outline] Use Outline Color Shift", Int) = 0
-        [PowerSlider(2.0)]_OutlineHueShiftFromBase("[Outline] Hue Shift From Base", Range(-0.5, 0.5)) = 0
-        _OutlineSaturationFromBase("[Outline] Saturation From Base", Range(0, 2)) = 1
-        _OutlineValueFromBase("[Outline] Value From Base", Range(0, 2)) = 1
+        // [Toggle(_)]_UseOutline ("[Outline] Enabled", Int) = 0 // カスタムインスペクタでのみ使用
+        // _OutlineWidth ("[Outline] Width", Range(0, 20)) = 0.1
+        // _OutlineMask ("[Outline] Outline Mask", 2D) = "white" {}
+        // _OutlineCutoffRange ("[Outline] Cutoff Range", Range(0, 1)) = 0.5
+        // _OutlineColor ("[Outline] Color", Color) = (0,0,0,1)
+        // _OutlineTexture ("[Outline] Texture", 2D) = "white" {}
+        // _OutlineShadeMix ("[Outline] Shade Mix", Range(0, 1)) = 0
+        // _OutlineTextureColorRate ("[Outline] Texture Color Rate", Range(0, 1)) = 0.05
+        // _OutlineWidthMask ("[Outline] Outline Width Mask", 2D) = "white" {}
+        // [Toggle(_)]_OutlineUseColorShift("[Outline] Use Outline Color Shift", Int) = 0
+        // [PowerSlider(2.0)]_OutlineHueShiftFromBase("[Outline] Hue Shift From Base", Range(-0.5, 0.5)) = 0
+        // _OutlineSaturationFromBase("[Outline] Saturation From Base", Range(0, 2)) = 1
+        // _OutlineValueFromBase("[Outline] Value From Base", Range(0, 2)) = 1
         // MatCap
         [Enum(Add,0, Lighten,1, Screen,2, Unused,3)] _MatcapBlendMode ("[MatCap] Blend Mode", Int) = 3
         _MatcapBlend ("[MatCap] Blend", Range(0, 3)) = 1
@@ -124,26 +128,28 @@ Shader "AxCS/Opaque" {
     }
     SubShader {
         Tags {
-			"Queue"="Geometry"
-            "RenderType"="Opaque"
+            "Queue"="Transparent"
+            "RenderType"="Transparent"
         }
         Pass {
             Name "FORWARD"
             Tags {
                 "LightMode"="ForwardBase"
             }
-            Cull Back
+            Cull [_Cull]
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite [_ZWrite]
 
             CGPROGRAM
 
 
             #pragma vertex vert
-            #pragma geometry geom
             #pragma fragment frag
-            #pragma multi_compile_fwdbase_fullshadows
+            #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
+            #define AXCS_FADE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -156,19 +162,20 @@ Shader "AxCS/Opaque" {
             Tags {
                 "LightMode"="ForwardAdd"
             }
-            Cull Back
+            Cull [_Cull]
             Blend One One
+            ZWrite [_ZWrite]
 
             CGPROGRAM
 
             #pragma vertex vert
-			#pragma geometry geom
             #pragma fragment frag
-            #pragma multi_compile_fwdadd_fullshadows
+            #pragma multi_compile_fwdadd
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_ADD
+            #define AXCS_FADE
+            #define AXCS_ADD
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -176,42 +183,27 @@ Shader "AxCS/Opaque" {
             #include "cginc/arkludeAdd.cginc"
             ENDCG
         }
+
+        // ------------------------------------------------------------------
+        //  Shadow rendering pass
         Pass {
-            Name "ShadowCaster"
-            Tags {
-                "LightMode"="ShadowCaster"
-            }
-            Offset 1, 1
+            Name "SHADOWCASTER"
+            Tags { "LightMode" = "ShadowCaster" }
+
+            ZWrite On ZTest LEqual
             Cull [_Cull]
 
             CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-            #include "UnityCG.cginc"
-            #include "Lighting.cginc"
-            #pragma fragmentoption ARB_precision_hint_fastest
+            #pragma target 3.0
+
+            // -------------------------------------
             #pragma multi_compile_shadowcaster
-            #pragma multi_compile_fog
-            #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
-            struct VertexInput {
-                float4 vertex : POSITION;
-                float2 texcoord0 : TEXCOORD0;
-            };
-            struct g2f {
-                V2F_SHADOW_CASTER;
-                float2 uv0 : TEXCOORD1;
-            };
-            g2f vert (VertexInput v) {
-                g2f o = (g2f)0;
-                o.uv0 = v.texcoord0;
-                o.pos = UnityObjectToClipPos( v.vertex );
-                TRANSFER_SHADOW_CASTER(o)
-                return o;
-            }
-            float4 frag(g2f i) : COLOR {
-                SHADOW_CASTER_FRAGMENT(i)
-            }
+
+            #pragma vertex vertShadowCaster
+            #pragma fragment fragShadowCaster
+
+            #include "cginc/arkludeFadeShadowCaster.cginc"
+
             ENDCG
         }
     }

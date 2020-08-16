@@ -4,11 +4,12 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: mannequin2
   m_Shader: {fileID: 4800000, guid: 9566a373fffe627408d31026ce69389d, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _CULL_BACK
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -74,6 +75,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _OutlineMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OutlineTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -135,6 +140,7 @@ Material:
     - _Cull: 2
     - _CustomShadow2nd: 0
     - _Cutoff: 0.5
+    - _CutoutCutoutAdjust: 0.5
     - _DetailNormalMapScale: 1
     - _DoubleSidedBackfaceHueShiftFromBase: 0
     - _DoubleSidedBackfaceLightIntensity: 0.5
@@ -160,13 +166,14 @@ Material:
     - _OcclusionStrength: 1
     - _OtherShadowAdjust: -0.1
     - _OtherShadowBorderSharpness: 3
+    - _OutlineCutoffRange: 0.5
     - _OutlineHueShiftFromBase: 0
     - _OutlineSaturationFromBase: 1
     - _OutlineShadeMix: 0
     - _OutlineTextureColorRate: 0.05
     - _OutlineUseColorShift: 0
     - _OutlineValueFromBase: 1
-    - _OutlineWidth: 0.05
+    - _OutlineWidth: 4.61
     - _Parallax: 0.02
     - _PointAddIntensity: 1
     - _PointShadowSteps: 2
@@ -216,7 +223,7 @@ Material:
     - _UseEmissionParallax: 0
     - _UseGloss: 0
     - _UseLegacyCapCalc: 0
-    - _UseOutline: 0
+    - _UseOutline: 1
     - _UseOutlineWidthMask: 0
     - _UsePositionRelatedCalc: 0
     - _UseReflection: 0

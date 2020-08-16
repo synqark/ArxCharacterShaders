@@ -1,5 +1,5 @@
 float4 frag(
-    #ifdef ARKTOON_OUTLINE
+    #ifdef AXCS_OUTLINE
         g2f i
     #else
         VertexOutput i
@@ -14,10 +14,10 @@ float4 frag(
     // アウトラインの裏面は常に削除
     clip(1 - isOutline + isFrontFace - 0.001);
 
+    // 後の計算に使う変数を予め定義
     float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir * lerp(1, faceSign, _DoubleSidedFlipBackfaceNormal));
     float3 viewDirection = normalize(UnityWorldSpaceViewDir(i.posWorld.xyz));
-    float3 _BumpMap_var = UnpackScaleNormal(tex2D(REF_BUMPMAP,TRANSFORM_TEX(i.uv0, REF_BUMPMAP)), REF_BUMPSCALE);
-    float3 normalLocal = _BumpMap_var.rgb;
+    float3 normalLocal = UnpackScaleNormal(tex2D(REF_BUMPMAP,TRANSFORM_TEX(i.uv0, REF_BUMPMAP)), REF_BUMPSCALE);
     float3 normalDirection = normalize(mul( normalLocal, tangentTransform )); // Perturbed normals
     float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz + float3(0, +0.0000000001, 0));
     float3 lightColor = _LightColor0.rgb;
@@ -30,22 +30,26 @@ float4 frag(
         UNITY_LIGHT_ATTENUATION(attenuation, i, i.posWorld.xyz);
     #endif
 
+    // 拡散色（基本色）を決定
+    // テクスチャカラー×プロパティカラー×頂点カラー（頂点ブレンドを設定している場合）
     float4 _MainTex_var = UNITY_SAMPLE_TEX2D(REF_MAINTEX, TRANSFORM_TEX(i.uv0, REF_MAINTEX));
     float3 Diffuse = (_MainTex_var.rgb*REF_COLOR.rgb);
     Diffuse = lerp(Diffuse, Diffuse * i.color, _VertexColorBlendDiffuse);
 
-    #ifdef ARKTOON_CUTOUT
+    // Cutoutの場合、アルファが決定したのでここでクリップする。
+    #ifdef AXCS_CUTOUT
         clip((_MainTex_var.a * REF_COLOR.a) - _CutoutCutoutAdjust);
     #endif
 
-    #ifdef ARKTOON_OUTLINE
+    #ifdef AXCS_OUTLINE
+        // 描画しているものがアウトラインの場合
         if (isOutline) {
-            #if defined(ARKTOON_CUTOUT) || defined(ARKTOON_FADE)
+            // アウトラインクリップ処理
+            #if defined(AXCS_CUTOUT) || defined(AXCS_FADE)
                 float _OutlineMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_OutlineMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _OutlineMask)).r;
                 clip(_OutlineMask_var.r - _OutlineCutoffRange);
             #endif
-
-            // アウトラインであればDiffuseとColorを混ぜる
+            // アウトライン用のテクスチャと色を使う場合は、その割合でDiffuseを更新する
             float4 _OutlineTexture_var = UNITY_SAMPLE_TEX2D_SAMPLER(_OutlineTexture, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _OutlineTexture));
             float3 outlineColor = lerp(float3(_OutlineColor.rgb * _OutlineTexture_var.rgb), Diffuse, _OutlineTextureColorRate);
             if (_OutlineUseColorShift) {
@@ -59,71 +63,65 @@ float4 frag(
 
     // 空間光をサンプリング
     float3 ShadeSH9Plus = GetSHLength();
-    float3 ShadeSH9Minus = ShadeSH9(float4(0,0,0,1));
+    float3 ShadeSH9Minus = ShadeSH9(float4(0,0,0,1)) * _ShadowIndirectIntensity;
 
-    // 陰の計算
-    float3 directLighting = saturate((ShadeSH9Plus+lightColor));
-    ShadeSH9Minus *= _ShadowIndirectIntensity;
+    // もっとも明るい部分を取得
+    float3 directLightingShadowFactor = ShadeSH9Plus * lerp(1, _ShadowIndirectIntensity, 1 - saturate(lightColor)); // 光の強さに応じてShadowIndirectIntensityの乗算に近づける
+    float3 directLighting = saturate(directLightingShadowFactor+lightColor);
+    // もっとも暗い部分を取得
     float3 indirectLighting = saturate(ShadeSH9Minus);
 
+    // 最も明るい部分と最も暗い部分をそれぞれグレースケールに変換し、その差を取得
     float3 grayscale_vector = grayscale_vector_node();
     float grayscalelightcolor = dot(lightColor,grayscale_vector);
-    float grayscaleDirectLighting = (((dot(lightDirection,normalDirection)*0.5+0.5)*grayscalelightcolor*attenuation)+dot(ShadeSH9Normal( normalDirection ),grayscale_vector));
     float bottomIndirectLighting = dot(ShadeSH9Minus,grayscale_vector);
     float topIndirectLighting = dot(ShadeSH9Plus,grayscale_vector);
-    float lightDifference = ((topIndirectLighting+grayscalelightcolor)-bottomIndirectLighting);
-    float remappedLight = ((grayscaleDirectLighting-bottomIndirectLighting)/lightDifference);
-    float _ShadowStrengthMask_var = tex2D(_ShadowStrengthMask, TRANSFORM_TEX(i.uv0, _ShadowStrengthMask));
+    float lightDifference = (topIndirectLighting+grayscalelightcolor)-bottomIndirectLighting;
 
+    // 陰と光のグラデーション強度を決定
     fixed _ShadowborderBlur_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowborderBlurMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowborderBlurMask)).r * _ShadowborderBlur;
-    //0< _Shadowborder< 1,0 < _ShadowborderBlur < 1 より  _Shadowborder - _ShadowborderBlur_var/2 < 1 , 0 < _Shadowborder + _ShadowborderBlur_var/2
-    //float ShadowborderMin = max(0, _Shadowborder - _ShadowborderBlur_var/2);
-    //float ShadowborderMax = min(1, _Shadowborder + _ShadowborderBlur_var/2);
     float ShadowborderMin = saturate(_Shadowborder - _ShadowborderBlur_var/2);//この場合saturateはコスト０でmaxより軽量です
     float ShadowborderMax = saturate(_Shadowborder + _ShadowborderBlur_var/2);//この場合saturateはコスト０でminより軽量です
-    float grayscaleDirectLighting2 = (((dot(lightDirection,normalDirection)*0.5+0.5)*grayscalelightcolor) + dot(ShadeSH9Normal( normalDirection ),grayscale_vector));
+
+    // 計算済みの「明るい部分」「暗い部分」「それらの差」を利用し、現在描画しているピクセルの明るさがどれだけなのかを０（最も暗い）～１（最も明るい）で正規化して取得する
+    // →受光強度とする
+    float grayscaleDirectLighting2 = ((dot(lightDirection,normalDirection)*0.5+0.5)*grayscalelightcolor) + dot(ShadeSH9Normal( normalDirection ),grayscale_vector);
     float remappedLight2 = ((grayscaleDirectLighting2-bottomIndirectLighting)/lightDifference);
     float directContribution = 1.0 - ((1.0 - saturate(( (saturate(remappedLight2) - ShadowborderMin)) / (ShadowborderMax - ShadowborderMin))));
 
+    // （若干おまじない）周囲のオブジェクトから受けた「影」の明るさを補正する。
     float selfShade = saturate(dot(lightDirection,normalDirection)+1+_OtherShadowAdjust);
     float otherShadow = saturate(saturate(mad(attenuation,2 ,-1))+mad(_OtherShadowBorderSharpness,-selfShade,_OtherShadowBorderSharpness));
     float tmpDirectContributionFactor0 = saturate(dot(lightColor,grayscale_for_light())*1.5);
     directContribution = lerp(0, directContribution, saturate(1-(mad(tmpDirectContributionFactor0,-otherShadow,tmpDirectContributionFactor0))));
+
+    // 設定されていれば、受光強度をステップ化する
     directContribution = lerp(directContribution, min(1,floor(directContribution * _ShadowSteps) / (_ShadowSteps - 1)), _ShadowUseStep);
 
-    float tmpDirectContributionFactor1 = 1; //_ShadowStrengthMask_var * _ShadowStrength; は３に移動
-    directContribution = 1.0 - mad(tmpDirectContributionFactor1,-directContribution,tmpDirectContributionFactor1);
+    // 各種プロパティから受光強度を直接補正する
+    // １：裏面専用の倍率を受光強度に乗算
+    float additionalContributionMultiplier = lerp(_DoubleSidedBackfaceLightIntensity, 1, isFrontFace);
 
-    // 光の受光に関する更なる補正
-    // ・LightIntensityIfBackface(裏面を描画中に変動する受光倍率)
-    // ・ShadowCapのModeがLightShutterの時にかかるマスク乗算
-    float additionalContributionMultiplier = 1;
-    additionalContributionMultiplier *= lerp(_DoubleSidedBackfaceLightIntensity, 1, isFrontFace);
-
-    if (_ShadowCapBlendMode == 2) { // Light Shutter
+    // ２：ShadeCapでLightShutterを使っている場合、受光強度にマスク処理を施す
+    if (_ShadowCapBlendMode == 2) {
         float3 normalDirectionShadowCap = normalize(mul( float3(normalLocal.r*_ShadowCapNormalMix,normalLocal.g*_ShadowCapNormalMix,normalLocal.b), tangentTransform )); // Perturbed normals
         float2 transformShadowCap = ComputeTransformCap(cameraSpaceViewDir,normalDirectionShadowCap);
         float4 _ShadowCapTexture_var =  UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowCapTexture, REF_MAINTEX, TRANSFORM_TEX(transformShadowCap, _ShadowCapTexture));
         float4 _ShadowCapBlendMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowCapBlendMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowCapBlendMask));
         additionalContributionMultiplier *= saturate(1.0 - mad(_ShadowCapBlendMask_var.rgb,-_ShadowCapTexture_var.rgb,_ShadowCapBlendMask_var.rgb)*_ShadowCapBlend);
     }
-
+    // 受光強度に反映
     directContribution *= additionalContributionMultiplier;
 
-    // 頂点ライティング：PixelLightから溢れた4光源をそれぞれ計算
+
+    // 頂点ライティングの情報を計算----------------------------------------------
+    // 受光強度の補正はこちらにも反映する
     float3 coloredLight_sum = float3(0,0,0);
     fixed _PointShadowborderBlur_var = UNITY_SAMPLE_TEX2D_SAMPLER(_PointShadowborderBlurMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _PointShadowborderBlurMask)).r * _PointShadowborderBlur;
     float VertexShadowborderMin = saturate(-_PointShadowborderBlur_var*0.5 + _PointShadowborder);
     float VertexShadowborderMax = saturate( _PointShadowborderBlur_var*0.5 + _PointShadowborder);
     float4 directContributionVertex = 1.0 - ((1.0 - saturate(( (saturate(i.ambientAttenuation) - VertexShadowborderMin)) / (VertexShadowborderMax - VertexShadowborderMin))));
-    directContributionVertex = lerp(directContributionVertex, min(1,floor(directContributionVertex * _PointShadowSteps) / (_PointShadowSteps - 1)), _PointShadowUseStep);
-
-    directContributionVertex *= additionalContributionMultiplier;
-
-    // テスト：directContributionも掛けてみるとどうなる？
-    directContribution = 1 - (1 - directContribution) * (1 - directContribution);
-    // TODO:この時点のdirectContributionにShadowRampテクスチャを適用してみたい。
-
+    directContributionVertex = lerp(directContributionVertex, min(1,floor(directContributionVertex * _PointShadowSteps) / (_PointShadowSteps - 1)), _PointShadowUseStep) * additionalContributionMultiplier;
     //ベクトル演算を減らしつつ、複数のスカラー演算を一つのベクトル演算にまとめました。
     //現代のPC向けGPUはほぼ100%がスカラー型であり、ベクトル演算は基本的にその次元数分ALU負荷が倍増します。
     //複数の掛け算は基本的にスカラーを左に寄せるだけでベクトル演算が減って最適化に繋がります。
@@ -135,14 +133,16 @@ float4 frag(
     float3 coloredLight_3 = max(tmpColoredLightFactorAttenuated.a ,tmpColoredLightFactorIndirect.a) * i.lightColor3;
     coloredLight_sum = (coloredLight_0 + coloredLight_1 + coloredLight_2 + coloredLight_3) * _PointAddIntensity;
 
+
+    // 受光強度を線形ではなく多少ゆるやかにしてみたかった
+    // TODO:この時点のdirectContributionにShadowRampテクスチャを適用してみたい。
+    // directContribution = 1 - (1 - directContribution) * (1 - directContribution);
+
+    // 受光強度の計算が終わったので空間色を確定
     float3 finalLight = lerp(indirectLighting,directLighting,directContribution)+coloredLight_sum;
 
-    // カスタム陰を使っている場合、directContributionや直前のfinalLightを使い、finalLightを上書きする
     float3 toonedMap = float3(0,0,0);
-    if (_ShadowPlanBUsePlanB) {
-
-
-
+    {
         // 標準の
         // float3 shadeMixValue = lerp(directLighting, finalLight, _ShadowPlanBDefaultShadowMix);  _ShadowPlanBDefaultShadowMix要らない説
 
@@ -158,6 +158,7 @@ float4 frag(
         }
 
 
+        float _ShadowStrengthMask_var = tex2D(_ShadowStrengthMask, TRANSFORM_TEX(i.uv0, _ShadowStrengthMask));
         float shadowStrength = _ShadowStrengthMask_var * _ShadowStrength;
 
         float3 lightColorWhenShaded = directLighting + lerp(0, indirectLighting - directLighting, shadowStrength); // ３
@@ -171,11 +172,14 @@ float4 frag(
         toonedMap = finslBaseColor * finalLightColor; // ８
         /*
 
-        １．サンプリングした光の色 : directLighting
-        ２．サンプリングした陰の色 : indirectLighting
+        １．サンプリングした最大の光の色 : directLighting
+            TODO:光の影響を受けたくない場合に「Lerp(directLighting, 1, 利用者がUnlitにさせたい割合（1＝完全Unlit）)」をする。していいかどうかは要確認
+
+        ２．サンプリングした最大の陰の色 : indirectLighting
         Ａ．サンプリングした重要度の低いポイントライトの色：coloredLight_sum
         ３．陰に対して陰の色をどの程度適用するか：[１] + lerp(0, [２] - [１], ShadowStrength) // ...あれ、ShadowStrengthってここでは？上の処理いらん気がしてきた
-        ４．その地点にどの程度の光が降っているか：directContribution
+        　　　ShadowStrengthがゼロの場合、陰に対しても最大の光が決定される。
+        ４．その地点にどの程度の光が降っているか（０～１で正規化済み）：directContribution
         ５．その地点に提供すべき光の色：lerp([３], [１], [４]) + [Ａ]
         ６．利用者が陰となるべき部分に適用したいテクスチャの色　: ShadeMap(ベースカラーから計算済み)
         ７．その地点で使用すべきテクスチャの色：lerp([６], Diffuse, [４])
@@ -227,20 +231,18 @@ float4 frag(
         //     ShadeMap = lerp(ShadeMap2,ShadeMap,directContribution2);
         // }
 
-        #ifdef ARKTOON_DEBUG_CONTRIBUTION
+        #ifdef AXCS_DEBUG_CONTRIBUTION
             toonedMap = directContribution;
         #endif
-        #ifdef ARKTOON_DEBUG_LIGHTCOLOR
+        #ifdef AXCS_DEBUG_LIGHTCOLOR
             toonedMap = finalLightColor;
         #endif
         // toonedMap = lerp(ShadeMap,Diffuse*finalLight,finalLight);
-    } else {
-        toonedMap = Diffuse*finalLight;
     }
 
     float3 tmpToonedMapFactor = (Diffuse+(Diffuse*coloredLight_sum));
-    // アウトラインであればShadeMixを反映
-    #ifdef ARKTOON_OUTLINE
+    #ifdef AXCS_OUTLINE
+        // アウトラインであればShadeMixを反映
         toonedMap = lerp(toonedMap, (toonedMap * _OutlineShadeMix + mad(tmpToonedMapFactor,-_OutlineShadeMix,tmpToonedMapFactor)), isOutline);
     #endif
 
@@ -256,7 +258,7 @@ float4 frag(
     float3 RimLight = float3(0,0,0);
     float3 shadowcap = float3(1000,1000,1000);
 
-    #if !defined(ARKTOON_REFRACTED) && defined(ARKTOON_OUTLINE)
+    #if !defined(AXCS_REFRACTED) && defined(AXCS_OUTLINE)
     if (!isOutline) {
     #endif
         // オプション：Reflection
@@ -368,7 +370,7 @@ float4 frag(
             float4 _ShadowCapBlendMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowCapBlendMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowCapBlendMask));
             shadowcap = (1.0 - mad(_ShadowCapBlendMask_var.rgb,-(_ShadowCapTexture_var.rgb),_ShadowCapBlendMask_var.rgb)*_ShadowCapBlend);
         }
-    #if !defined(ARKTOON_REFRACTED) && defined(ARKTOON_OUTLINE)
+    #if !defined(AXCS_REFRACTED) && defined(AXCS_OUTLINE)
     }
     #endif
 
@@ -391,7 +393,7 @@ float4 frag(
     }
 
     // 屈折
-    #ifdef ARKTOON_REFRACTED
+    #ifdef AXCS_REFRACTED
         float refractionValue = pow(1.0-saturate(dot(normalDirection, viewDirection)),_RefractionFresnelExp);
         float2 sceneUVs = (i.grabUV) + ((refractionValue*_RefractionStrength) * mul(unity_WorldToCamera, float4(normalDirection,0) ).xyz.rgb.rg);
         float4 sceneColor = tex2D(_GrabTexture, sceneUVs);
@@ -408,7 +410,7 @@ float4 frag(
         emissionParallax = _EmissionParallaxTex_var * _EmissionMask_var;
     }
 
-    #ifdef ARKTOON_EMISSIVE_FREAK
+    #ifdef AXCS_EMISSIVE_FREAK
         float time = _Time.r;
 
         float2 emissiveFreak1uv = i.uv0 + float2(fmod(_EmissiveFreak1U * time, 1.0 / _EmissiveFreak1Tex_ST.x), fmod(time * _EmissiveFreak1V, 1.0 / _EmissiveFreak1Tex_ST.y));
@@ -452,9 +454,9 @@ float4 frag(
     float3 emissive = max( lerp(_Emission.rgb, _Emission.rgb * i.color, _VertexColorBlendEmissive) , RimLight) * !isOutline;
     float3 finalColor = emissive + finalcolor2;
 
-    #ifdef ARKTOON_FADE
+    #ifdef AXCS_FADE
         fixed _AlphaMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_AlphaMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _AlphaMask)).r;
-        #ifdef ARKTOON_REFRACTED
+        #ifdef AXCS_REFRACTED
             fixed4 finalRGBA = fixed4(lerp(sceneColor, finalColor, (_MainTex_var.a*REF_COLOR.a*_AlphaMask_var)),1);
         #else
             fixed4 finalRGBA = fixed4(finalColor,(_MainTex_var.a*REF_COLOR.a*_AlphaMask_var));

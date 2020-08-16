@@ -32,6 +32,12 @@ half3 GetSHLength ()
     x1.r = length(unity_SHBr);
     x1.g = length(unity_SHBg);
     x1.b = length(unity_SHBb);
+
+    //TODO unity_SHCをませたい
+    // Final (5th) quadratic (L2) polynomial
+    // half vC = normal.x*normal.x - normal.y*normal.y;
+    // x2 = unity_SHC.rgb * vC;
+
     return x + x1;
 }
 

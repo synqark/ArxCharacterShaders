@@ -45,7 +45,6 @@ namespace AxCharacterShaders
         MaterialProperty PointShadowUseStep;
         MaterialProperty PointShadowSteps;
         MaterialProperty CutoutCutoutAdjust;
-        MaterialProperty ShadowPlanBUsePlanB;
         MaterialProperty ShadowPlanBDefaultShadowMix;
         MaterialProperty ShadowPlanBUseCustomShadowTexture;
         MaterialProperty ShadowPlanBHueShiftFromBase;
@@ -233,7 +232,6 @@ namespace AxCharacterShaders
             PointShadowborderBlurMask= FindAndRegisterProperties("_PointShadowborderBlurMask", props, false);
             PointShadowUseStep = FindAndRegisterProperties("_PointShadowUseStep", props, false);
             PointShadowSteps = FindAndRegisterProperties("_PointShadowSteps", props, false);
-            ShadowPlanBUsePlanB = FindAndRegisterProperties("_ShadowPlanBUsePlanB", props, false);
             ShadowPlanBDefaultShadowMix = FindAndRegisterProperties("_ShadowPlanBDefaultShadowMix", props, false);
             ShadowPlanBUseCustomShadowTexture = FindAndRegisterProperties("_ShadowPlanBUseCustomShadowTexture", props, false);
             ShadowPlanBHueShiftFromBase = FindAndRegisterProperties("_ShadowPlanBHueShiftFromBase", props, false);
@@ -465,13 +463,10 @@ namespace AxCharacterShaders
                     });
 
                     UIHelper.DrawWithGroup(() => {
-                        materialEditor.ShaderProperty(ShadowPlanBUsePlanB, "Use Custom Shade");
-                        var usePlanB = ShadowPlanBUsePlanB.floatValue;
-                        if(usePlanB > 0)
+
                         {
                             EditorGUILayout.HelpBox(
                                 "[Strength] max is recommended for using custom shade." + Environment.NewLine + "Custom Shadeの使用時は[Strength]を最大値に設定することを推奨", MessageType.Info);
-                            materialEditor.ShaderProperty(ShadowPlanBDefaultShadowMix, "Mix Default Shade");
                             UIHelper.DrawWithGroup(() => {
                                 EditorGUILayout.LabelField("1st shade", EditorStyles.boldLabel);
                                 EditorGUI.indentLevel ++;

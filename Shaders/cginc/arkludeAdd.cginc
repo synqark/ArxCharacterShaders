@@ -1,5 +1,5 @@
 float4 frag(
-    #ifdef ARKTOON_OUTLINE
+    #ifdef AXCS_OUTLINE
         g2f i
     #else
         VertexOutput i
@@ -29,13 +29,13 @@ float4 frag(
     float3 Diffuse = (_MainTex_var.rgb*REF_COLOR.rgb);
     Diffuse = lerp(Diffuse, Diffuse * i.color, _VertexColorBlendDiffuse);
 
-    #ifdef ARKTOON_CUTOUT
+    #ifdef AXCS_CUTOUT
         clip((_MainTex_var.a * REF_COLOR.a) - _CutoutCutoutAdjust);
     #endif
 
-    #ifdef ARKTOON_OUTLINE
+    #ifdef AXCS_OUTLINE
         if (isOutline) {
-            #if defined(ARKTOON_CUTOUT) || defined(ARKTOON_FADE)
+            #if defined(AXCS_CUTOUT) || defined(AXCS_FADE)
                 float _OutlineMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_OutlineMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _OutlineMask)).r;
                 clip(_OutlineMask_var.r - _OutlineCutoffRange);
             #endif
@@ -94,7 +94,7 @@ float4 frag(
     float3 RimLight = float3(0,0,0);
     float3 shadowcap = float3(1000,1000,1000);
 
-    #if !defined(ARKTOON_REFRACTED) && defined(ARKTOON_OUTLINE)
+    #if !defined(AXCS_REFRACTED) && defined(AXCS_OUTLINE)
     if (!isOutline) {
     #endif
         // オプション：Gloss
@@ -171,7 +171,7 @@ float4 frag(
             );
             RimLight = min(RimLight, RimLight * (coloredLight * _RimShadeMix));
         }
-    #if !defined(ARKTOON_REFRACTED) && defined(ARKTOON_OUTLINE)
+    #if !defined(AXCS_REFRACTED) && defined(AXCS_OUTLINE)
     }
     #endif
 
@@ -193,7 +193,7 @@ float4 frag(
         finalColor = 1-(1-finalColor) * (1-matcap);
     }
 
-    #ifdef ARKTOON_FADE
+    #ifdef AXCS_FADE
         fixed _AlphaMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_AlphaMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _AlphaMask)).r;
         fixed4 finalRGBA = fixed4(finalColor * (_MainTex_var.a * REF_COLOR.a * _AlphaMask_var),0);
     #else

@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Cloth
   m_Shader: {fileID: 4800000, guid: 9566a373fffe627408d31026ce69389d, type: 3}
   m_ShaderKeywords: _
@@ -179,8 +180,8 @@ Material:
     - _ReflectionShadeMix: 0
     - _ReflectionSuppressBaseColorValue: 1
     - _RimBlend: 1
-    - _RimBlendEnd: 0
-    - _RimBlendStart: 0
+    - _RimBlendEnd: 0.907
+    - _RimBlendStart: 0.541
     - _RimFresnelPower: 7.6
     - _RimPow: 1
     - _RimShadeMix: 1
@@ -221,7 +222,7 @@ Material:
     - _UsePositionRelatedCalc: 0
     - _UseReflection: 1
     - _UseReflectionProbe: 1
-    - _UseRim: 0
+    - _UseRim: 1
     - _UseVertexLight: 1
     - _Version: 1025
     - _VertexColorBlendDiffuse: 0

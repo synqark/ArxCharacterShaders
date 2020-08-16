@@ -1,4 +1,4 @@
-Shader "AxCS/FadeRefracted" {
+Shader "ArxCharacterShaders/FadeRefracted" {
     Properties {
         // Double Sided
         [KeywordEnum(None, Front, Back)] _Cull("Cull", Int) = 2
@@ -49,8 +49,6 @@ Shader "AxCS/FadeRefracted" {
         [Toggle(_)]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
         _PointShadowSteps("[PointShadow] steps between borders", Range(2, 10)) = 2
         // Plan B
-        [Toggle(_)]_ShadowPlanBUsePlanB ("[Plan B] Use Plan B", Int ) = 0
-        _ShadowPlanBDefaultShadowMix ("[Plan B] Shadow mix", Range(0, 1)) = 1
         [Toggle(_)] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _ShadowPlanBSaturationFromBase ("[Plan B] Saturation From Base", Range(0, 2)) = 1
@@ -155,8 +153,8 @@ Shader "AxCS/FadeRefracted" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_FADE
-            #define ARKTOON_REFRACTED
+            #define AXCS_FADE
+            #define AXCS_REFRACTED
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -181,9 +179,9 @@ Shader "AxCS/FadeRefracted" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_FADE
-            #define ARKTOON_ADD
-            #define ARKTOON_REFRACTED
+            #define AXCS_FADE
+            #define AXCS_ADD
+            #define AXCS_REFRACTED
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"

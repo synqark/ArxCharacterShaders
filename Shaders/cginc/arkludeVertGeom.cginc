@@ -1,7 +1,7 @@
 struct VertexOutput
 {
     // appdata_full
-    #ifdef ARKTOON_OUTLINE
+    #ifdef AXCS_OUTLINE
         float4 vertex : SV_POSITION;
     #endif
     // float3 normal : NORMAL; TODO:アウトラインの幅の調整方法を後程検討する。その際にgeom内での膨らまし方によっては使う。
@@ -9,7 +9,7 @@ struct VertexOutput
     float2 uv0 : TEXCOORD0;
     float4 color : COLOR0; // ※ a値をアウトラインの判断に使用。 Outlineであれば1,そうでなければ0
 
-    #ifdef ARKTOON_OUTLINE
+    #ifdef AXCS_OUTLINE
         float4 pos : CLIP_POS;
     #else
         float4 pos : SV_POSITION;
@@ -21,7 +21,7 @@ struct VertexOutput
 
     SHADOW_COORDS(5)
     UNITY_FOG_COORDS(6)
-    #ifndef ARKTOON_ADD
+    #ifndef AXCS_ADD
         float3 lightColor0 : LIGHT_COLOR0;
         float3 lightColor1 : LIGHT_COLOR1;
         float3 lightColor2 : LIGHT_COLOR2;
@@ -29,7 +29,7 @@ struct VertexOutput
         float4 ambientAttenuation : AMBIENT_ATTEN;
         float4 ambientIndirect : AMBIENT_INDIRECT;
     #endif
-    #ifdef ARKTOON_REFRACTED
+    #ifdef AXCS_REFRACTED
         noperspective float2 grabUV : TEXCOORD7;
     #endif
 };
@@ -50,7 +50,7 @@ struct v2g
 
     SHADOW_COORDS(5)
     UNITY_FOG_COORDS(6)
-    #ifndef ARKTOON_ADD
+    #ifndef AXCS_ADD
         float3 lightColor0 : LIGHT_COLOR0;
         float3 lightColor1 : LIGHT_COLOR1;
         float3 lightColor2 : LIGHT_COLOR2;
@@ -58,7 +58,7 @@ struct v2g
         float4 ambientAttenuation : AMBIENT_ATTEN;
         float4 ambientIndirect : AMBIENT_INDIRECT;
     #endif
-    #ifdef ARKTOON_REFRACTED
+    #ifdef AXCS_REFRACTED
         noperspective float2 grabUV : TEXCOORD7;
     #endif
 };
@@ -76,7 +76,7 @@ struct g2f {
 
     SHADOW_COORDS(5)
     UNITY_FOG_COORDS(6)
-    #ifndef ARKTOON_ADD
+    #ifndef AXCS_ADD
         float3 lightColor0 : LIGHT_COLOR0;
         float3 lightColor1 : LIGHT_COLOR1;
         float3 lightColor2 : LIGHT_COLOR2;
@@ -84,13 +84,13 @@ struct g2f {
         float4 ambientAttenuation : AMBIENT_ATTEN;
         float4 ambientIndirect : AMBIENT_INDIRECT;
     #endif
-    #ifdef ARKTOON_REFRACTED
+    #ifdef AXCS_REFRACTED
         noperspective float2 grabUV : TEXCOORD7;
     #endif
 };
 
 
-#ifndef ARKTOON_ADD
+#ifndef AXCS_ADD
     inline void calcAmbientByShade4PointLights(float flipNormal, inout VertexOutput o) {
         // Shade4PointLightsを展開して改変
         // {
@@ -134,7 +134,7 @@ VertexOutput vert(appdata_full v) {
     o.bitangentDir = cross(o.normalDir, o.tangentDir) * v.tangent.w * unity_WorldTransformParams.w;
     o.posWorld = mul(unity_ObjectToWorld, v.vertex);
 
-    #ifdef ARKTOON_OUTLINE
+    #ifdef AXCS_OUTLINE
     o.vertex = v.vertex;
     #endif
 
@@ -142,7 +142,7 @@ VertexOutput vert(appdata_full v) {
     TRANSFER_SHADOW(o);
     UNITY_TRANSFER_FOG(o, o.pos);
 
-    #ifndef ARKTOON_ADD
+    #ifndef AXCS_ADD
         // 頂点ライティングが必要な場合に取得
         #if UNITY_SHOULD_SAMPLE_SH && defined(VERTEXLIGHT_ON)
             o.lightColor0 = unity_LightColor[0].rgb;
@@ -159,7 +159,7 @@ VertexOutput vert(appdata_full v) {
         #endif
     #endif
 
-    #ifdef ARKTOON_REFRACTED
+    #ifdef AXCS_REFRACTED
         o.grabUV = ComputeGrabScreenPos (o.pos).xy/o.pos.w;
     #endif
 
@@ -170,7 +170,7 @@ VertexOutput vert(appdata_full v) {
 void geom(triangle v2g IN[3], inout TriangleStream<g2f> tristream)
 {
     g2f o;
-    #if !defined(ARKTOON_REFRACTED) && defined(ARKTOON_OUTLINE)
+    #if !defined(AXCS_REFRACTED) && defined(AXCS_OUTLINE)
         for (int i = 2; i >= 0; i--)
         {
             float4 posWorld = (mul(unity_ObjectToWorld, IN[i].vertex));
@@ -195,11 +195,11 @@ void geom(triangle v2g IN[3], inout TriangleStream<g2f> tristream)
                 o.fogCoord = IN[i].fogCoord;
             #endif
 
-            #ifdef ARKTOON_REFRACTED
+            #ifdef AXCS_REFRACTED
                 o.grabUV = IN[i].grabUV;
             #endif
 
-            #ifndef ARKTOON_ADD
+            #ifndef AXCS_ADD
                 o.lightColor0        = IN[i].lightColor0;
                 o.lightColor1        = IN[i].lightColor1;
                 o.lightColor2        = IN[i].lightColor2;
@@ -233,11 +233,11 @@ void geom(triangle v2g IN[3], inout TriangleStream<g2f> tristream)
             o.fogCoord = IN[ii].fogCoord;
         #endif
 
-        #ifdef ARKTOON_REFRACTED
+        #ifdef AXCS_REFRACTED
             o.grabUV = IN[ii].grabUV;
         #endif
 
-        #ifndef ARKTOON_ADD
+        #ifndef AXCS_ADD
             o.lightColor0        = IN[ii].lightColor0;
             o.lightColor1        = IN[ii].lightColor1;
             o.lightColor2        = IN[ii].lightColor2;

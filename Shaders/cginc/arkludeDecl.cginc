@@ -3,7 +3,7 @@
 #include "Lighting.cginc"
 
 
-#if defined(ARKTOON_SECONDARY)
+#if defined(AXCS_SECONDARY)
     // Secondary
     UNITY_DECLARE_TEX2D(_MainTexSecondary); uniform float4 _MainTexSecondary_ST;
     uniform float4 _ColorSecondary;
@@ -64,8 +64,6 @@ uniform int _ShadowSteps;
 uniform sampler2D _ShadowStrengthMask; uniform float4 _ShadowStrengthMask_ST;
 
 // Custom shade1
-uniform int _ShadowPlanBUsePlanB;
-uniform float _ShadowPlanBDefaultShadowMix;
 uniform float _ShadowPlanBHueShiftFromBase;
 uniform float _ShadowPlanBSaturationFromBase;
 uniform float _ShadowPlanBValueFromBase;
@@ -85,7 +83,7 @@ UNITY_DECLARE_TEX2D_NOSAMPLER(_ShadowPlanB2CustomShadowTexture); uniform float4 
 uniform float4 _ShadowPlanB2CustomShadowTextureRGB;
 
 // Outline
-#ifdef ARKTOON_OUTLINE
+#ifdef AXCS_OUTLINE
 UNITY_DECLARE_TEX2D_NOSAMPLER(_OutlineMask); uniform float4 _OutlineMask_ST;
 uniform float _OutlineCutoffRange;
 uniform float _OutlineTextureColorRate;
@@ -168,14 +166,14 @@ uniform float _OtherShadowBorderSharpness;
 uniform int _UsePositionRelatedCalc;
 
 // Refraction IF refracted
-#ifdef ARKTOON_REFRACTED
+#ifdef AXCS_REFRACTED
 uniform sampler2D _GrabTexture;
 uniform float _RefractionFresnelExp;
 uniform float _RefractionStrength;
 #endif
 
 // ScrolledEmission
-#ifdef ARKTOON_EMISSIVE_FREAK
+#ifdef AXCS_EMISSIVE_FREAK
 UNITY_DECLARE_TEX2D_NOSAMPLER(_EmissiveFreak1Tex); uniform float4 _EmissiveFreak1Tex_ST;
 uniform float4 _EmissiveFreak1Color;
 UNITY_DECLARE_TEX2D_NOSAMPLER(_EmissiveFreak1Mask); uniform float4 _EmissiveFreak1Mask_ST;

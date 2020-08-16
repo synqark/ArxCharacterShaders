@@ -188,9 +188,9 @@ Shader "arktoon/_Extra/EmissiveFreak/FadeRefracted" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_FADE
-            #define ARKTOON_REFRACTED
-            #define ARKTOON_EMISSIVE_FREAK
+            #define AXCS_FADE
+            #define AXCS_REFRACTED
+            #define AXCS_EMISSIVE_FREAK
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -216,9 +216,9 @@ Shader "arktoon/_Extra/EmissiveFreak/FadeRefracted" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_FADE
-            #define ARKTOON_ADD
-            #define ARKTOON_REFRACTED
+            #define AXCS_FADE
+            #define AXCS_ADD
+            #define AXCS_REFRACTED
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"

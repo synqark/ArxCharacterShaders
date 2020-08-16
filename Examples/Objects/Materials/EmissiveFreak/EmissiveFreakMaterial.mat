@@ -4,11 +4,12 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: EmissiveFreakMaterial
-  m_Shader: {fileID: 4800000, guid: 6e08acecbe384864d82690f1704a89bf, type: 3}
-  m_ShaderKeywords: 
+  m_Shader: {fileID: 4800000, guid: 7cd7acf9f2c9a534a82cc956170f1ccf, type: 3}
+  m_ShaderKeywords: _CULL_BACK
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -18,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AlphaMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseTexture:
         m_Texture: {fileID: 2800000, guid: 3784a951dbf03b645afc723f23aea29b, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -308,7 +313,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.992647, g: 0.5474156, b: 0.5474156, a: 1}
-    - _Color: {r: 0.3083164, g: 0.5588235, b: 0.20955881, a: 1}
+    - _Color: {r: 0.30831635, g: 0.5588235, b: 0.20955876, a: 0.59607846}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionParallaxColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveFreak1Color: {r: 1, g: 0.9752535, b: 0.102941155, a: 1}

@@ -1,7 +1,7 @@
-Shader "arktoon/AlphaCutout" {
+Shader "ArxCharacterShaders/Outline/AlphaCutout" {
     Properties {
         // Double Sided
-        [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0
+        [KeywordEnum(None, Front, Back)] _Cull("Cull", Int) = 2
         [Toggle(_)]_DoubleSidedFlipBackfaceNormal ("Flip backface normal", Float ) = 0
         _DoubleSidedBackfaceLightIntensity ("Backface Light intensity", Range(0, 2) ) = 0.5
         [Toggle(_)]_DoubleSidedBackfaceUseColorShift("Backface Use Color Shift", Int) = 0
@@ -44,8 +44,6 @@ Shader "arktoon/AlphaCutout" {
         [Toggle(_)]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
         _PointShadowSteps("[PointShadow] steps between borders", Range(2, 10)) = 2
         // Plan B
-        [Toggle(_)]_ShadowPlanBUsePlanB ("[Plan B] Use Plan B", Int ) = 0
-        _ShadowPlanBDefaultShadowMix ("[Plan B] Shadow mix", Range(0, 1)) = 1
         [Toggle(_)] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _ShadowPlanBSaturationFromBase ("[Plan B] Saturation From Base", Range(0, 2)) = 1
@@ -104,8 +102,9 @@ Shader "arktoon/AlphaCutout" {
         _RimBlend ("[Rim] Blend", Range(0, 3)) = 1
         _RimBlendMask ("[Rim] Blend Mask", 2D) = "white" {}
         _RimShadeMix("[Rim] Shade Mix", Range(0, 1)) = 0
-        [PowerSlider(3.0)]_RimFresnelPower ("[Rim] Fresnel Power", Range(0, 200)) = 1
-        _RimUpperSideWidth("[Rim] Upper width", Range(0, 1)) = 0
+        _RimBlendStart("[Rim] Blend start", Range(0, 1)) = 0
+        _RimBlendEnd("[Rim] Blend end", Range(0, 1)) = 0
+        [Enum(Linear,0, Pow3,1, Pow5,2)] _RimPow ("[Rim] Power Type", Int) = 1
         [HDR]_RimColor ("[Rim] Color", Color) = (1,1,1,1)
         _RimTexture ("[Rim] Texture", 2D) = "white" {}
         [Toggle(_)] _RimUseBaseTexture ("[Rim] Use Base Texture", Float ) = 0
@@ -137,7 +136,7 @@ Shader "arktoon/AlphaCutout" {
             Tags {
                 "LightMode"="ForwardBase"
             }
-            Cull Back
+            Cull [_Cull]
 
             CGPROGRAM
 
@@ -149,7 +148,8 @@ Shader "arktoon/AlphaCutout" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_CUTOUT
+            #define AXCS_CUTOUT
+            #define AXCS_OUTLINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -162,7 +162,7 @@ Shader "arktoon/AlphaCutout" {
             Tags {
                 "LightMode"="ForwardAdd"
             }
-            Cull Back
+            Cull [_Cull]
             Blend One One
 
             CGPROGRAM
@@ -174,8 +174,9 @@ Shader "arktoon/AlphaCutout" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
-            #define ARKTOON_CUTOUT
-            #define ARKTOON_ADD
+            #define AXCS_CUTOUT
+            #define AXCS_ADD
+            #define AXCS_OUTLINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
