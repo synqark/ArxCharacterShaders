@@ -205,10 +205,10 @@ Material:
     - _ShadowPlanBUsePlanB: 1
     - _ShadowPlanBValueFromBase: 1
     - _ShadowSteps: 5
-    - _ShadowStrength: 0.71
+    - _ShadowStrength: 1
     - _ShadowUseStep: 0
-    - _Shadowborder: 0.5
-    - _ShadowborderBlur: 0.261
+    - _Shadowborder: 0.6
+    - _ShadowborderBlur: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -237,4 +237,4 @@ Material:
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowPlanB2CustomShadowTextureRGB: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowPlanBCustomShadowTextureRGB: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadowPlanBCustomShadowTextureRGB: {r: 0, g: 0, b: 0, a: 1}

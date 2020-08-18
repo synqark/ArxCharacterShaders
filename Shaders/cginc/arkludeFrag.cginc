@@ -67,7 +67,7 @@ float4 frag(
 
     // もっとも明るい部分を取得
     float3 directLightingShadowFactor = ShadeSH9Plus * lerp(1, _ShadowIndirectIntensity, 1 - saturate(lightColor)); // 光の強さに応じてShadowIndirectIntensityの乗算に近づける
-    float3 directLighting = saturate(directLightingShadowFactor+lightColor);
+    float3 directLighting = saturate(directLightingShadowFactor + lightColor);
     // もっとも暗い部分を取得
     float3 indirectLighting = saturate(ShadeSH9Minus);
 

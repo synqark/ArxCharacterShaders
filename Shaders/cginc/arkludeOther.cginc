@@ -94,10 +94,5 @@ float2 ComputeNonPositionRelatedTransformCap(in float3 normalDirectionCap){
 }
 
 float2 ComputeTransformCap(in float3 cameraSpaceViewDir, in float3 normalDirectionCap){
-    if(_UsePositionRelatedCalc){
-        return ComputePositionRelatedTransformCap(cameraSpaceViewDir,normalDirectionCap);
-    }
-    else{
-        return ComputeNonPositionRelatedTransformCap(normalDirectionCap);
-    }
+    return ComputeNonPositionRelatedTransformCap(normalDirectionCap);
 }

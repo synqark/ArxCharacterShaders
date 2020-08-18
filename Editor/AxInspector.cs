@@ -131,7 +131,6 @@ namespace AxCharacterShaders
         MaterialProperty OtherShadowBorderSharpness;
         MaterialProperty OtherShadowAdjust;
         MaterialProperty BackfaceColorMultiply;
-        MaterialProperty UsePositionRelatedCalc;
         MaterialProperty EmissiveFreak1Tex;
         MaterialProperty EmissiveFreak1Mask;
         MaterialProperty EmissiveFreak1Color;
@@ -316,7 +315,6 @@ namespace AxCharacterShaders
             VertexColorBlendEmissive = FindAndRegisterProperties("_VertexColorBlendEmissive", props, false);
             OtherShadowBorderSharpness = FindAndRegisterProperties("_OtherShadowBorderSharpness", props, false);
             OtherShadowAdjust = FindAndRegisterProperties("_OtherShadowAdjust", props, false);
-            UsePositionRelatedCalc = FindAndRegisterProperties("_UsePositionRelatedCalc", props, false);
             ZWrite = FindAndRegisterProperties("_ZWrite", props, false);
 
             EmissiveFreak1Tex = FindAndRegisterProperties("_EmissiveFreak1Tex", props, false);
@@ -806,7 +804,6 @@ namespace AxCharacterShaders
                             ShadowIndirectIntensity.floatValue = 0.25f;
                             VertexColorBlendDiffuse.floatValue = 0f;
                             VertexColorBlendEmissive.floatValue = 0f;
-                            UsePositionRelatedCalc.floatValue = 0f;
                         }
                         UIHelper.DrawWithGroup(() => {
                             EditorGUILayout.LabelField("Directional Shadow", EditorStyles.boldLabel);
@@ -842,12 +839,6 @@ namespace AxCharacterShaders
                             EditorGUI.indentLevel ++;
                             materialEditor.ShaderProperty(OtherShadowAdjust, "Adjust (def:-0.1)");
                             materialEditor.ShaderProperty(OtherShadowBorderSharpness, "Sharpness(def:3)");
-                            EditorGUI.indentLevel --;
-                        });
-                        UIHelper.DrawWithGroup(() => {
-                            EditorGUILayout.LabelField("MatCap / ShadeCap", EditorStyles.boldLabel);
-                            EditorGUI.indentLevel ++;
-                            materialEditor.ShaderProperty(UsePositionRelatedCalc, "Use Position Related Calc(def: no)");
                             EditorGUI.indentLevel --;
                         });
                     });

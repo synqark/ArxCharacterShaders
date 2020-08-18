@@ -121,8 +121,6 @@ Shader "arktoon/_Extra/EmissiveFreak/AlphaCutout" {
         // advanced tweaking
         _OtherShadowAdjust ("[Advanced] Other Mesh Shadow Adjust", Range(-0.2, 0.2)) = -0.1
         _OtherShadowBorderSharpness ("[Advanced] Other Mesh Shadow Border Sharpness", Range(1, 5)) = 3
-        // Legacy MatCap/ShadeCap Calculation
-        [Toggle(_)]_UsePositionRelatedCalc ("[Mat/ShadowCap] Use Position Related Calc (Experimental)", Int) = 0
         // EmissiveFreak
         _EmissiveFreak1Tex ("[EmissiveFreak] Texture", 2D ) = "white" {}
         [HDR]_EmissiveFreak1Color ("[EmissiveFreak] Color", Color ) = (0,0,0,1)

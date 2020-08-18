@@ -69,15 +69,7 @@ float4 frag(
     if (_ShadowCapBlendMode == 2) { // Light Shutter
         float3 normalDirectionShadowCap = normalize(mul( float3(normalLocal.r*_ShadowCapNormalMix,normalLocal.g*_ShadowCapNormalMix,normalLocal.b), tangentTransform )); // Perturbed normals
         float2 transformShadowCap = float2(0,0);
-        //ここだけ他のComputeTransformCapと式が違った
-        if (_UsePositionRelatedCalc) {
-            float3 transformShadowCapViewDir = cameraSpaceViewDir - float3(0,0,1);
-            float3 transformShadowCapNormal = mul((float3x3)unity_WorldToCamera, normalDirectionShadowCap);
-            float3 transformShadowCapCombined = transformShadowCapViewDir * (dot(transformShadowCapViewDir, transformShadowCapNormal) / transformShadowCapViewDir.z) + transformShadowCapNormal;
-            transformShadowCap = ((transformShadowCapCombined.rg*0.5)+0.5);
-        } else {
-            transformShadowCap = (mul((float3x3)unity_WorldToCamera, normalDirectionShadowCap).rg*0.5+0.5);
-        }
+        transformShadowCap = (mul((float3x3)unity_WorldToCamera, normalDirectionShadowCap).rg*0.5+0.5);
         float4 _ShadowCapTexture_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowCapTexture, REF_MAINTEX, TRANSFORM_TEX(transformShadowCap, _ShadowCapTexture));
         float4 _ShadowCapBlendMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowCapBlendMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowCapBlendMask));
         additionalContributionMultiplier *= (1.0 - ((1.0 - (_ShadowCapTexture_var.rgb))*_ShadowCapBlendMask_var.rgb)*_ShadowCapBlend);
