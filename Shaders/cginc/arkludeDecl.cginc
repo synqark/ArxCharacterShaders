@@ -71,16 +71,6 @@ uniform int _ShadowPlanBUseCustomShadowTexture;
 UNITY_DECLARE_TEX2D_NOSAMPLER(_ShadowPlanBCustomShadowTexture); uniform float4 _ShadowPlanBCustomShadowTexture_ST;
 uniform float4 _ShadowPlanBCustomShadowTextureRGB;
 
-// Cutsom shade2
-uniform int _CustomShadow2nd;
-uniform float _ShadowPlanB2border;
-uniform float _ShadowPlanB2borderBlur;
-uniform float _ShadowPlanB2HueShiftFromBase;
-uniform float _ShadowPlanB2SaturationFromBase;
-uniform float _ShadowPlanB2ValueFromBase;
-uniform int _ShadowPlanB2UseCustomShadowTexture;
-UNITY_DECLARE_TEX2D_NOSAMPLER(_ShadowPlanB2CustomShadowTexture); uniform float4 _ShadowPlanB2CustomShadowTexture_ST;
-uniform float4 _ShadowPlanB2CustomShadowTextureRGB;
 
 // Outline
 #ifdef AXCS_OUTLINE

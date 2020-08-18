@@ -52,15 +52,6 @@ namespace AxCharacterShaders
         MaterialProperty ShadowPlanBValueFromBase;
         MaterialProperty ShadowPlanBCustomShadowTexture;
         MaterialProperty ShadowPlanBCustomShadowTextureRGB;
-        MaterialProperty CustomShadow2nd;
-        MaterialProperty ShadowPlanB2border;
-        MaterialProperty ShadowPlanB2borderBlur;
-        MaterialProperty ShadowPlanB2HueShiftFromBase;
-        MaterialProperty ShadowPlanB2SaturationFromBase;
-        MaterialProperty ShadowPlanB2ValueFromBase;
-        MaterialProperty ShadowPlanB2UseCustomShadowTexture;
-        MaterialProperty ShadowPlanB2CustomShadowTexture;
-        MaterialProperty ShadowPlanB2CustomShadowTextureRGB;
         MaterialProperty UseGloss;
         MaterialProperty GlossBlend;
         MaterialProperty GlossBlendMask;
@@ -238,15 +229,6 @@ namespace AxCharacterShaders
             ShadowPlanBValueFromBase = FindAndRegisterProperties("_ShadowPlanBValueFromBase", props, false);
             ShadowPlanBCustomShadowTexture = FindAndRegisterProperties("_ShadowPlanBCustomShadowTexture", props, false);
             ShadowPlanBCustomShadowTextureRGB = FindAndRegisterProperties("_ShadowPlanBCustomShadowTextureRGB", props, false);
-            CustomShadow2nd = FindAndRegisterProperties("_CustomShadow2nd", props, false);
-            ShadowPlanB2border = FindAndRegisterProperties("_ShadowPlanB2border", props, false);
-            ShadowPlanB2borderBlur = FindAndRegisterProperties("_ShadowPlanB2borderBlur", props, false);
-            ShadowPlanB2HueShiftFromBase = FindAndRegisterProperties("_ShadowPlanB2HueShiftFromBase", props, false);
-            ShadowPlanB2SaturationFromBase = FindAndRegisterProperties("_ShadowPlanB2SaturationFromBase", props, false);
-            ShadowPlanB2ValueFromBase = FindAndRegisterProperties("_ShadowPlanB2ValueFromBase", props, false);
-            ShadowPlanB2UseCustomShadowTexture = FindAndRegisterProperties("_ShadowPlanB2UseCustomShadowTexture", props, false);
-            ShadowPlanB2CustomShadowTexture = FindAndRegisterProperties("_ShadowPlanB2CustomShadowTexture", props, false);
-            ShadowPlanB2CustomShadowTextureRGB = FindAndRegisterProperties("_ShadowPlanB2CustomShadowTextureRGB", props, false);
             UseGloss = FindAndRegisterProperties("_UseGloss", props, false);
             GlossBlend = FindAndRegisterProperties("_GlossBlend", props, false);
             GlossBlendMask = FindAndRegisterProperties("_GlossBlendMask", props, false);
@@ -480,30 +462,6 @@ namespace AxCharacterShaders
                                     materialEditor.ShaderProperty(ShadowPlanBHueShiftFromBase, "Hue Shift");
                                     materialEditor.ShaderProperty(ShadowPlanBSaturationFromBase, "Saturation");
                                     materialEditor.ShaderProperty(ShadowPlanBValueFromBase, "Value");
-                                }
-                                EditorGUI.indentLevel --;
-                            });
-
-                            UIHelper.DrawWithGroup(() => {
-                                EditorGUILayout.LabelField("2nd shade", EditorStyles.boldLabel);
-                                EditorGUI.indentLevel ++;
-                                materialEditor.ShaderProperty(CustomShadow2nd, "Use");
-                                var customshadow2nd = CustomShadow2nd.floatValue;
-                                if(customshadow2nd > 0)
-                                {
-                                    materialEditor.ShaderProperty(ShadowPlanB2border, "Border");
-                                    materialEditor.ShaderProperty(ShadowPlanB2borderBlur, "Blur");
-                                    materialEditor.ShaderProperty(ShadowPlanB2UseCustomShadowTexture, "Use Shade Texture");
-                                    var useShadeTexture2 = ShadowPlanB2UseCustomShadowTexture.floatValue;
-                                    if(useShadeTexture2 > 0)
-                                    {
-                                        materialEditor.ShaderProperty(ShadowPlanB2CustomShadowTexture,  "Shade Texture");
-                                        materialEditor.ShaderProperty(ShadowPlanB2CustomShadowTextureRGB,  "Shade Texture RGB");
-                                    }else{
-                                        materialEditor.ShaderProperty(ShadowPlanB2HueShiftFromBase, "Hue Shift");
-                                        materialEditor.ShaderProperty(ShadowPlanB2SaturationFromBase, "Saturation");
-                                        materialEditor.ShaderProperty(ShadowPlanB2ValueFromBase, "Value");
-                                    }
                                 }
                                 EditorGUI.indentLevel --;
                             });

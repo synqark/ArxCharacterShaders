@@ -213,31 +213,12 @@ float4 frag(
 
         */
 
-        // if (_CustomShadow2nd) {
-        //     float ShadowborderMin2 = saturate((_ShadowPlanB2border * _Shadowborder) - _ShadowPlanB2borderBlur/2);
-        //     float ShadowborderMax2 = saturate((_ShadowPlanB2border * _Shadowborder) + _ShadowPlanB2borderBlur/2);
-        //     float directContribution2 = 1.0 - ((1.0 - saturate(( (saturate(remappedLight2) - ShadowborderMin2)) / (ShadowborderMax2 - ShadowborderMin2))));  // /2の部分をパラメーターにしたい
-        //     directContribution2 *= additionalContributionMultiplier;
-        //     float3 ShadeMap2 = float3(0,0,0);
-        //     if (_ShadowPlanB2UseCustomShadowTexture) {
-        //         float4 _ShadowPlanB2CustomShadowTexture_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowPlanB2CustomShadowTexture, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowPlanB2CustomShadowTexture));
-        //         float3 shadowCustomTexture2 = _ShadowPlanB2CustomShadowTexture_var.rgb * _ShadowPlanB2CustomShadowTextureRGB.rgb;
-        //         shadowCustomTexture2 =  lerp(shadowCustomTexture2, shadowCustomTexture2 * i.color,_VertexColorBlendDiffuse); // 頂点カラーを合成
-        //         ShadeMap2 = shadowCustomTexture2*shadeMixValue;
-        //     } else {
-        //         float3 Diff_HSV2 = CalculateHSV(Diffuse, _ShadowPlanB2HueShiftFromBase, _ShadowPlanB2SaturationFromBase, _ShadowPlanB2ValueFromBase);
-        //         ShadeMap2 = Diff_HSV2*shadeMixValue;
-        //     }
-        //     ShadeMap = lerp(ShadeMap2,ShadeMap,directContribution2);
-        // }
-
         #ifdef AXCS_DEBUG_CONTRIBUTION
             toonedMap = directContribution;
         #endif
         #ifdef AXCS_DEBUG_LIGHTCOLOR
             toonedMap = finalLightColor;
         #endif
-        // toonedMap = lerp(ShadeMap,Diffuse*finalLight,finalLight);
     }
 
     float3 tmpToonedMapFactor = (Diffuse+(Diffuse*coloredLight_sum));
