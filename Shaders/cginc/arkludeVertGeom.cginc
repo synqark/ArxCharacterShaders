@@ -32,6 +32,7 @@ struct VertexOutput
     #ifdef AXCS_REFRACTED
         noperspective float2 grabUV : TEXCOORD7;
     #endif
+    UNITY_VERTEX_OUTPUT_STEREO
 };
 
 struct v2g
@@ -61,6 +62,7 @@ struct v2g
     #ifdef AXCS_REFRACTED
         noperspective float2 grabUV : TEXCOORD7;
     #endif
+    UNITY_VERTEX_OUTPUT_STEREO
 };
 
 struct g2f {
@@ -87,6 +89,7 @@ struct g2f {
     #ifdef AXCS_REFRACTED
         noperspective float2 grabUV : TEXCOORD7;
     #endif
+    UNITY_VERTEX_OUTPUT_STEREO
 };
 
 
@@ -126,6 +129,7 @@ struct g2f {
 
 VertexOutput vert(appdata_full v) {
     VertexOutput o;
+    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
     o.uv0 = v.texcoord;
     // o.normal = v.normal;
     o.color = float4(v.color.rgb, 0);

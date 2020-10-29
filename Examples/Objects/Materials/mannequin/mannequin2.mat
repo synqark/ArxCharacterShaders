@@ -180,7 +180,7 @@ Material:
     - _PointShadowStrength: 0.5
     - _PointShadowUseStep: 0
     - _PointShadowborder: 0.5
-    - _PointShadowborderBlur: 0.01
+    - _PointShadowborderBlur: 0
     - _ReflectionNormalMix: 1
     - _ReflectionReflectionPower: 1
     - _ReflectionShadeMix: 0
@@ -193,7 +193,7 @@ Material:
     - _RimShadeMix: 1
     - _RimUpperSideWidth: 0.198
     - _RimUseBaseTexture: 1
-    - _ShadowCapBlend: 0.34
+    - _ShadowCapBlend: 1.62
     - _ShadowCapBlendMode: 2
     - _ShadowCapNormalMix: 1
     - _ShadowCasterCulling: 2
@@ -214,7 +214,7 @@ Material:
     - _ShadowStrength: 0
     - _ShadowUseStep: 0
     - _Shadowborder: 0.6
-    - _ShadowborderBlur: 0.181
+    - _ShadowborderBlur: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

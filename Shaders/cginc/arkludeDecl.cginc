@@ -192,5 +192,8 @@ uniform float _EmissiveFreak2BlinkOutMix;
 uniform float _EmissiveFreak2BlinkIn;
 uniform float _EmissiveFreak2BlinkInMix;
 uniform float _EmissiveFreak2HueShift;
-
 #endif
+
+// Proximity blackout
+uniform float _BlackoutBegin;
+uniform float _BlackoutEnd;

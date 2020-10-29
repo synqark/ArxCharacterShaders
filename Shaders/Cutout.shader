@@ -122,6 +122,9 @@ Shader "ArxCharacterShaders/AlphaCutout" {
         _OtherShadowBorderSharpness ("[Advanced] Other Mesh Shadow Border Sharpness", Range(1, 5)) = 3
         // Version
         [HideInInspector]_Version("[hidden] Version", int) = 0
+        // Proximity Blackout
+        _BlackoutBegin ("[Blackout] Begin", Range(0.0, 1.0)) = 0.15
+        _BlackoutEnd ("[Blackout] End", Range(0.0, 1.0)) = 0.03
     }
     SubShader {
         Tags {
@@ -146,6 +149,7 @@ Shader "ArxCharacterShaders/AlphaCutout" {
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 3.0
             #define AXCS_CUTOUT
+            #define AXCS_PROXIMITY_BLACKOUT
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -171,6 +175,7 @@ Shader "ArxCharacterShaders/AlphaCutout" {
             #pragma target 3.0
             #define AXCS_CUTOUT
             #define AXCS_ADD
+            #define AXCS_PROXIMITY_BLACKOUT
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"

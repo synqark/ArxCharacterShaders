@@ -7,6 +7,8 @@ float4 frag(
     ,  bool isFrontFace : SV_IsFrontFace
     ) : SV_Target
 {
+    UNITY_VERTEX_OUTPUT_STEREO(i);
+
     // 表裏・アウトライン
     fixed faceSign = isFrontFace ? 1 : -1;
     bool isOutline = i.color.a;
@@ -189,7 +191,13 @@ float4 frag(
         fixed _AlphaMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_AlphaMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _AlphaMask)).r;
         fixed4 finalRGBA = fixed4(finalColor * (_MainTex_var.a * REF_COLOR.a * _AlphaMask_var),0);
     #else
-        fixed4 finalRGBA = fixed4(finalColor, 0);
+        #ifdef AXCS_PROXIMITY_BLACKOUT
+            float blackoutDistance = _BlackoutBegin - _BlackoutEnd;
+            float blackoutFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _BlackoutEnd) / blackoutDistance , 0.0 , 1.0 ).x;
+            fixed4 finalRGBA = fixed4(lerp(finalColor, float3(0,0,0), blackoutFactor),1);
+        #else
+            fixed4 finalRGBA = fixed4(finalColor,1);
+        #endif
     #endif
     UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
     return finalRGBA;

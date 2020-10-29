@@ -154,7 +154,6 @@ namespace AxCharacterShaders
         MaterialProperty EmissiveFreak2HueShift;
 
         // TODO: そろそろShaderUtil.GetPropertiesで一括処理したい。
-        // ただ、その場合は、カスタムインスペクタで定義していない追加のプロパティを、このファイルを弄らずに動的に表示できるようにしてあげたい（改変の負荷軽減のため）
 
         #endregion
 
