@@ -1,4 +1,4 @@
-Shader "arktoon/_Extra/EmissiveFreak/Opaque" {
+Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Opaque" {
     Properties {
         // Double Sided
         [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0

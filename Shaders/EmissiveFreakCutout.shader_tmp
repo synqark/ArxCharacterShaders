@@ -1,4 +1,4 @@
-Shader "arktoon/_Extra/EmissiveFreak/AlphaCutout" {
+Shader "ArxCharacterShaders/_Extra/EmissiveFreak/AlphaCutout" {
     Properties {
         // Double Sided
         [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0

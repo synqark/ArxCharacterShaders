@@ -1,4 +1,4 @@
-Shader "arktoon/Stencil/Reader/Cutout" {
+Shader "ArxCharacterShaders/Stencil/Reader/Cutout" {
     Properties {
         // Double Sided
         [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0

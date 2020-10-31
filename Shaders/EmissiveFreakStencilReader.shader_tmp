@@ -1,4 +1,4 @@
-Shader "arktoon/_Extra/EmissiveFreak/StencilReaderCutout" {
+Shader "ArxCharacterShaders/_Extra/EmissiveFreak/StencilReaderCutout" {
     Properties {
         // Double Sided
         [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0

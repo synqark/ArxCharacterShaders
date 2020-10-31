@@ -809,14 +809,6 @@ namespace AxCharacterShaders
                 if(IsShowNonRegistered) {
                      DrawNonRegisteredProperties(materialEditor, props);
                 }
-
-                // Docs
-                UIHelper.DrawWithGroupHorizontal(() => {
-                    if(GUILayout.Button("How to use (Old)"))
-                    {
-                        System.Diagnostics.Process.Start("https://synqark.github.io/Arktoon-Shaders-Doc/");
-                    }
-                });
             }
             EditorGUI.EndChangeCheck();
         }

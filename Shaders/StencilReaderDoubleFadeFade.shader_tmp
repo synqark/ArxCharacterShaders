@@ -1,4 +1,4 @@
-Shader "arktoon/Stencil/Reader/Double/FadeFade" {
+Shader "ArxCharacterShaders/Stencil/Reader/Double/FadeFade" {
     Properties {
         // Double Sided
         [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0
