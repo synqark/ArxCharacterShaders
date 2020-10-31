@@ -1,7 +1,7 @@
-Shader "ArxCharacterShaders/_Extra/EmissiveFreak/AlphaCutout" {
+Shader "ArxCharacterShaders/EmissiveFreak/AlphaCutout" {
     Properties {
         // Double Sided
-        [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0
+        [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
         [Toggle(_)]_DoubleSidedFlipBackfaceNormal ("Flip backface normal", Float ) = 0
         _DoubleSidedBackfaceLightIntensity ("Backface Light intensity", Range(0, 2) ) = 0.5
         [Toggle(_)]_DoubleSidedBackfaceUseColorShift("Backface Use Color Shift", Int) = 0
@@ -31,6 +31,7 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/AlphaCutout" {
         _ShadowborderBlurMask ("[Shadow] border Blur Mask", 2D) = "white" {}
         _ShadowStrength ("[Shadow] Strength", Range(0, 1)) = 0.5
         _ShadowStrengthMask ("[Shadow] Strength Mask", 2D) = "white" {}
+        _ShadowAmbientIntensity ("[Shadow] Ambient Intensity", Range(0, 1)) = 0.75
         // Shadow steps
         [Toggle(_)]_ShadowUseStep ("[Shadow] use step", Float ) = 0
         _ShadowSteps("[Shadow] steps between borders", Range(2, 10)) = 4
@@ -43,7 +44,6 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/AlphaCutout" {
         [Toggle(_)]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
         _PointShadowSteps("[PointShadow] steps between borders", Range(2, 10)) = 2
         // Plan B
-        [Toggle(_)]_ShadowPlanBUsePlanB ("[Plan B] Use Plan B", Int ) = 0
         [Toggle(_)] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _ShadowPlanBSaturationFromBase ("[Plan B] Saturation From Base", Range(0, 2)) = 1
@@ -127,6 +127,11 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/AlphaCutout" {
         _EmissiveFreak2BlinkIn ("[EmissiveFreak2] Blink In", Float ) = 0
         _EmissiveFreak2BlinkInMix ("[EmissiveFreak2] Blink In Factor", Range(0, 1) ) = 0
         _EmissiveFreak2HueShift ("[EmissiveFreak2] Hue Shift Speed", Float ) = 0
+        // Proximity color override
+        [Toggle(_)]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
+        _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
+        _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
+        _ProximityOverrideColor ("[ProximityOverride] Override Color", Color) = (0,0,0,1)
     }
     SubShader {
         Tags {
@@ -139,18 +144,17 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/AlphaCutout" {
             Tags {
                 "LightMode"="ForwardBase"
             }
-            Cull Back
+            Cull [_Cull]
 
             CGPROGRAM
 
 
             #pragma vertex vert
-            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdbase_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
+            #pragma target 3.0
             #define AXCS_CUTOUT
             #define AXCS_EMISSIVE_FREAK
 
@@ -165,18 +169,17 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/AlphaCutout" {
             Tags {
                 "LightMode"="ForwardAdd"
             }
-            Cull Back
+            Cull [_Cull]
             Blend One One
 
             CGPROGRAM
 
             #pragma vertex vert
-            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdadd_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
+            #pragma target 3.0
             #define AXCS_CUTOUT
             #define AXCS_ADD
 
@@ -203,7 +206,7 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/AlphaCutout" {
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
+            #pragma target 3.0
             uniform float _CutoutCutoutAdjust;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform float4 _Color;

@@ -34,6 +34,7 @@ namespace AxCharacterShaders
         MaterialProperty ShadowborderBlurMask;
         MaterialProperty ShadowStrength;
         MaterialProperty ShadowStrengthMask;
+        MaterialProperty ShadowAmbientIntensity;
         MaterialProperty ShadowUseStep;
         MaterialProperty ShadowSteps;
         MaterialProperty PointAddIntensity;
@@ -207,6 +208,7 @@ namespace AxCharacterShaders
             ShadowborderBlurMask = MatP("_ShadowborderBlurMask", props, false);
             ShadowStrength = MatP("_ShadowStrength", props, false);
             ShadowStrengthMask = MatP("_ShadowStrengthMask", props, false);
+            ShadowAmbientIntensity = MatP("_ShadowAmbientIntensity", props, false);
             ShadowUseStep = MatP("_ShadowUseStep", props, false);
             ShadowSteps = MatP("_ShadowSteps", props, false);
             PointAddIntensity = MatP("_PointAddIntensity", props, false);
@@ -471,10 +473,10 @@ namespace AxCharacterShaders
                         }
                         EditorGUI.indentLevel --;
 
-                        EditorGUILayout.LabelField("Ambient", EditorStyles.boldLabel);
+                        EditorGUILayout.LabelField("Ambient Light", EditorStyles.boldLabel);
                         EditorGUI.indentLevel ++;
-                        EditorGUILayout.LabelField("TODO: Ambient Light Intensity");
-                        EditorGUI.indentLevel ++;
+                        materialEditor.ShaderProperty(ShadowAmbientIntensity, "Intensity");
+                        EditorGUI.indentLevel --;
                     });
                 });
 

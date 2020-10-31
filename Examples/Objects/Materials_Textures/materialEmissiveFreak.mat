@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: material
-  m_Shader: {fileID: 4800000, guid: acaabbe907212b94c85ab392bb1306a1, type: 3}
-  m_ShaderKeywords: 
+  m_Name: materialEmissiveFreak
+  m_Shader: {fileID: 4800000, guid: 9ce3973bae37a5c43a3c22309be11936, type: 3}
+  m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -56,6 +56,30 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Emissionmap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveFreak1DepthMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveFreak1Mask:
+        m_Texture: {fileID: 2800000, guid: 47c95c2343f176e47b666b929de8f68c, type: 3}
+        m_Scale: {x: 3, y: 3}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveFreak1Tex:
+        m_Texture: {fileID: 2800000, guid: 358ad584c99802b4da2965f294fdfe92, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveFreak2DepthMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveFreak2Mask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveFreak2Tex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -155,6 +179,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _StencilMaskTex:
+        m_Texture: {fileID: 2800000, guid: 45fdda763b21e774b88fe8a7736e4164, type: 3}
+        m_Scale: {x: 5, y: 5}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _Cull: 2
@@ -171,6 +199,28 @@ Material:
     - _DstBlend: 0
     - _EmissionParallaxDepth: 0
     - _EmissionParallaxDepthMaskInvert: 0
+    - _EmissiveFreak1BlinkIn: 0
+    - _EmissiveFreak1BlinkInMix: 0
+    - _EmissiveFreak1BlinkOut: 0
+    - _EmissiveFreak1BlinkOutMix: 0
+    - _EmissiveFreak1Breathing: 0
+    - _EmissiveFreak1BreathingMix: 0
+    - _EmissiveFreak1Depth: 0
+    - _EmissiveFreak1DepthMaskInvert: 0
+    - _EmissiveFreak1HueShift: 50
+    - _EmissiveFreak1U: 0
+    - _EmissiveFreak1V: -10
+    - _EmissiveFreak2BlinkIn: 0
+    - _EmissiveFreak2BlinkInMix: 0
+    - _EmissiveFreak2BlinkOut: 0
+    - _EmissiveFreak2BlinkOutMix: 0
+    - _EmissiveFreak2Breathing: 0
+    - _EmissiveFreak2BreathingMix: 0
+    - _EmissiveFreak2Depth: 0
+    - _EmissiveFreak2DepthMaskInvert: 0
+    - _EmissiveFreak2HueShift: 0
+    - _EmissiveFreak2U: 0
+    - _EmissiveFreak2V: 0
     - _GlossBlend: 0
     - _GlossMapScale: 1
     - _GlossPower: 0.5
@@ -232,12 +282,12 @@ Material:
     - _ShadowPlanB2border: 0.55
     - _ShadowPlanB2borderBlur: 0.55
     - _ShadowPlanBDefaultShadowMix: 1
-    - _ShadowPlanBHueShiftFromBase: 0
-    - _ShadowPlanBSaturationFromBase: 1
+    - _ShadowPlanBHueShiftFromBase: -0.034
+    - _ShadowPlanBSaturationFromBase: 1.436
     - _ShadowPlanBUseCustomShadowTexture: 0
     - _ShadowPlanBUsePlanB: 0
     - _ShadowPlanBUseShadowMix: 0
-    - _ShadowPlanBValueFromBase: 1
+    - _ShadowPlanBValueFromBase: 0.501
     - _ShadowSteps: 4
     - _ShadowStrength: 1
     - _ShadowUseStep: 0
@@ -246,6 +296,10 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _StencilCompareAction: 6
+    - _StencilMaskAdjust: 0.5
+    - _StencilMaskAlphaDither: 0.5
+    - _StencilNumber: 5
     - _UVSec: 0
     - _UseDoubleSided: 0
     - _UseEmissionParallax: 0
@@ -267,9 +321,11 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.992647, g: 0.5474156, b: 0.5474156, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionParallaxColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissiveFreak1Color: {r: 1, g: 0, b: 0, a: 1}
+    - _EmissiveFreak2Color: {r: 0, g: 0, b: 0, a: 1}
     - _GlossColor: {r: 1, g: 1, b: 1, a: 1}
     - _MatcapColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 1, g: 0.80689657, b: 0, a: 1}

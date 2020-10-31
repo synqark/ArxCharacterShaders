@@ -222,6 +222,7 @@ Material:
     - _RimShadeMix: 0
     - _RimUpperSideWidth: 0
     - _RimUseBaseTexture: 0
+    - _ShadowAmbientIntensity: 0.75
     - _ShadowBoarderMax: 0.55
     - _ShadowBoarderMin: 0.499
     - _ShadowCapBlend: 1.21
@@ -235,14 +236,14 @@ Material:
     - _ShadowPlanB2border: 0.55
     - _ShadowPlanB2borderBlur: 0.55
     - _ShadowPlanBDefaultShadowMix: 1
-    - _ShadowPlanBHueShiftFromBase: -0.034
-    - _ShadowPlanBSaturationFromBase: 1.436
+    - _ShadowPlanBHueShiftFromBase: -0.011
+    - _ShadowPlanBSaturationFromBase: 1.348
     - _ShadowPlanBUseCustomShadowTexture: 0
     - _ShadowPlanBUsePlanB: 0
     - _ShadowPlanBUseShadowMix: 0
-    - _ShadowPlanBValueFromBase: 0.501
+    - _ShadowPlanBValueFromBase: 0.376
     - _ShadowSteps: 4
-    - _ShadowStrength: 1
+    - _ShadowStrength: 0
     - _ShadowUseStep: 0
     - _Shadowborder: 0.6
     - _ShadowborderBlur: 0.05
@@ -274,7 +275,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.992647, g: 0.5474156, b: 0.5474156, a: 1}
-    - _Color: {r: 0.8113208, g: 0, b: 0.6191028, a: 1}
+    - _Color: {r: 0.26666665, g: 0.5476676, b: 0.6039216, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionParallaxColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlossColor: {r: 1, g: 1, b: 1, a: 1}

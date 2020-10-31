@@ -31,6 +31,7 @@ Shader "ArxCharacterShaders/Stencil/Writer/Cutout" {
         _ShadowborderBlurMask ("[Shadow] border Blur Mask", 2D) = "white" {}
         _ShadowStrength ("[Shadow] Strength", Range(0, 1)) = 0.5
         _ShadowStrengthMask ("[Shadow] Strength Mask", 2D) = "white" {}
+        _ShadowAmbientIntensity ("[Shadow] Ambient Intensity", Range(0, 1)) = 0.75
         // Shadow steps
         [Toggle(_)]_ShadowUseStep ("[Shadow] use step", Float ) = 0
         _ShadowSteps("[Shadow] steps between borders", Range(2, 10)) = 4

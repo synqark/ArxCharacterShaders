@@ -186,6 +186,7 @@ Material:
     - _RimPow: 1
     - _RimShadeMix: 0
     - _RimUseBaseTexture: 0
+    - _ShadowAmbientIntensity: 0.75
     - _ShadowCapBlend: 1
     - _ShadowCapBlendMode: 3
     - _ShadowCapNormalMix: 1
