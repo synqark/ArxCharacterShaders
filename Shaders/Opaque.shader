@@ -120,7 +120,6 @@ Shader "ArxCharacterShaders/Opaque" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 3.0
-            #define AXCS_PROXIMITY_OVERRIDE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -145,7 +144,6 @@ Shader "ArxCharacterShaders/Opaque" {
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 3.0
             #define AXCS_ADD
-            #define AXCS_PROXIMITY_OVERRIDE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"

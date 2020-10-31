@@ -139,7 +139,6 @@ Shader "ArxCharacterShaders/Outline/AlphaCutout" {
             #pragma target 4.0
             #define AXCS_CUTOUT
             #define AXCS_OUTLINE
-            #define AXCS_PROXIMITY_OVERRIDE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -167,7 +166,6 @@ Shader "ArxCharacterShaders/Outline/AlphaCutout" {
             #define AXCS_CUTOUT
             #define AXCS_ADD
             #define AXCS_OUTLINE
-            #define AXCS_PROXIMITY_OVERRIDE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
