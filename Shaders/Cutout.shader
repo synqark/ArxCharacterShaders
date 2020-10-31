@@ -1,7 +1,7 @@
 Shader "ArxCharacterShaders/AlphaCutout" {
     Properties {
         // Double Sided
-        [KeywordEnum(None, Front, Back)] _Cull("Cull", Int) = 2
+        [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
         [Toggle(_)]_DoubleSidedFlipBackfaceNormal ("Flip backface normal", Float ) = 0
         _DoubleSidedBackfaceLightIntensity ("Backface Light intensity", Range(0, 2) ) = 0.5
         [Toggle(_)]_DoubleSidedBackfaceUseColorShift("Backface Use Color Shift", Int) = 0
@@ -50,36 +50,12 @@ Shader "ArxCharacterShaders/AlphaCutout" {
         _ShadowPlanBValueFromBase ("[Plan B] Value From Base", Range(0, 2)) = 1
         _ShadowPlanBCustomShadowTexture ("[Plan B] Custom Shadow Texture", 2D) = "black" {}
         _ShadowPlanBCustomShadowTextureRGB ("[Plan B] Custom Shadow Texture RGB", Color) = (1,1,1,1)
-        // ShadowPlanB-2
-        [Toggle(_)]_CustomShadow2nd ("[Plan B-2] CustomShadow2nd", Int ) = 0
-        _ShadowPlanB2border ("[Plan B-2] border ", Range(0, 1)) = 0.55
-        _ShadowPlanB2borderBlur ("[Plan B-2] border Blur", Range(0, 1)) = 0.55
-        [Toggle(_)] _ShadowPlanB2UseCustomShadowTexture ("[Plan B-2] Use Custom Shadow Texture", Int ) = 0
-        [PowerSlider(2.0)]_ShadowPlanB2HueShiftFromBase ("[Plan B-2] Hue Shift From Base", Range(-0.5, 0.5)) = 0
-        _ShadowPlanB2SaturationFromBase ("[Plan B-2] Saturation From Base", Range(0, 2)) = 1
-        _ShadowPlanB2ValueFromBase ("[Plan B-2] Value From Base", Range(0, 2)) = 1
-        _ShadowPlanB2CustomShadowTexture ("[Plan B-2] Custom Shadow Texture", 2D) = "black" {}
-        _ShadowPlanB2CustomShadowTextureRGB ("[Plan B-2] Custom Shadow Texture RGB", Color) = (1,1,1,1)
         // Gloss
         [Toggle(_)]_UseGloss ("[Gloss] Enabled", Int) = 0
         _GlossBlend ("[Gloss] Smoothness", Range(0, 1)) = 0.5
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
-        // Outline
-        // [Toggle(_)]_UseOutline ("[Outline] Enabled", Int) = 0 // カスタムインスペクタでのみ使用
-        // _OutlineWidth ("[Outline] Width", Range(0, 20)) = 0.1
-        // _OutlineMask ("[Outline] Outline Mask", 2D) = "white" {}
-        // _OutlineCutoffRange ("[Outline] Cutoff Range", Range(0, 1)) = 0.5
-        // _OutlineColor ("[Outline] Color", Color) = (0,0,0,1)
-        // _OutlineTexture ("[Outline] Texture", 2D) = "white" {}
-        // _OutlineShadeMix ("[Outline] Shade Mix", Range(0, 1)) = 0
-        // _OutlineTextureColorRate ("[Outline] Texture Color Rate", Range(0, 1)) = 0.05
-        // _OutlineWidthMask ("[Outline] Outline Width Mask", 2D) = "white" {}
-        // [Toggle(_)]_OutlineUseColorShift("[Outline] Use Outline Color Shift", Int) = 0
-        // [PowerSlider(2.0)]_OutlineHueShiftFromBase("[Outline] Hue Shift From Base", Range(-0.5, 0.5)) = 0
-        // _OutlineSaturationFromBase("[Outline] Saturation From Base", Range(0, 2)) = 1
-        // _OutlineValueFromBase("[Outline] Value From Base", Range(0, 2)) = 1
         // MatCap
         [Enum(Add,0, Lighten,1, Screen,2, Unused,3)] _MatcapBlendMode ("[MatCap] Blend Mode", Int) = 3
         _MatcapBlend ("[MatCap] Blend", Range(0, 3)) = 1
@@ -103,7 +79,7 @@ Shader "ArxCharacterShaders/AlphaCutout" {
         _RimBlendMask ("[Rim] Blend Mask", 2D) = "white" {}
         _RimShadeMix("[Rim] Shade Mix", Range(0, 1)) = 0
         _RimBlendStart("[Rim] Blend start", Range(0, 1)) = 0
-        _RimBlendEnd("[Rim] Blend end", Range(0, 1)) = 0
+        _RimBlendEnd("[Rim] Blend end", Range(0, 1)) = 1
         [Enum(Linear,0, Pow3,1, Pow5,2)] _RimPow ("[Rim] Power Type", Int) = 1
         [HDR]_RimColor ("[Rim] Color", Color) = (1,1,1,1)
         _RimTexture ("[Rim] Texture", 2D) = "white" {}
@@ -120,11 +96,11 @@ Shader "ArxCharacterShaders/AlphaCutout" {
         // advanced tweaking
         _OtherShadowAdjust ("[Advanced] Other Mesh Shadow Adjust", Range(-0.2, 0.2)) = -0.1
         _OtherShadowBorderSharpness ("[Advanced] Other Mesh Shadow Border Sharpness", Range(1, 5)) = 3
-        // Version
-        [HideInInspector]_Version("[hidden] Version", int) = 0
-        // Proximity Blackout
-        _BlackoutBegin ("[Blackout] Begin", Range(0.0, 1.0)) = 0.15
-        _BlackoutEnd ("[Blackout] End", Range(0.0, 1.0)) = 0.03
+        // Proximity color override
+        [Toggle(_)]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
+        _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
+        _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
+        _ProximityOverrideColor ("[ProximityOverride] Override Color", Color) = (0,0,0,1)
     }
     SubShader {
         Tags {
@@ -149,7 +125,7 @@ Shader "ArxCharacterShaders/AlphaCutout" {
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 3.0
             #define AXCS_CUTOUT
-            #define AXCS_PROXIMITY_BLACKOUT
+            #define AXCS_PROXIMITY_OVERRIDE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -175,7 +151,7 @@ Shader "ArxCharacterShaders/AlphaCutout" {
             #pragma target 3.0
             #define AXCS_CUTOUT
             #define AXCS_ADD
-            #define AXCS_PROXIMITY_BLACKOUT
+            #define AXCS_PROXIMITY_OVERRIDE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"

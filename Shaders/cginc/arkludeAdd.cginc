@@ -190,15 +190,24 @@ float4 frag(
     #ifdef AXCS_FADE
         fixed _AlphaMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_AlphaMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _AlphaMask)).r;
         fixed4 finalRGBA = fixed4(finalColor * (_MainTex_var.a * REF_COLOR.a * _AlphaMask_var),0);
+        if (_UseProximityOverride) {
+            float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
+            float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd) / overrideDistance , 0.0 , 1.0 ).x;
+            finalRGBA = lerp(finalRGBA, fixed4(lerp(_ProximityOverrideColor.rgb, finalRGBA.rgb, _ProximityOverrideAlphaOnly), _ProximityOverrideColor.a), overrideFactor);
+        }
+        UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
+        return finalRGBA;
     #else
-        #ifdef AXCS_PROXIMITY_BLACKOUT
-            float blackoutDistance = _BlackoutBegin - _BlackoutEnd;
-            float blackoutFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _BlackoutEnd) / blackoutDistance , 0.0 , 1.0 ).x;
-            fixed4 finalRGBA = fixed4(lerp(finalColor, float3(0,0,0), blackoutFactor),1);
-        #else
+        if (_UseProximityOverride) {
+            float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
+            float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd) / overrideDistance , 0.0 , 1.0 ).x;
+            fixed4 finalRGBA = fixed4(lerp(finalColor, _ProximityOverrideColor.xyz, overrideFactor),1);
+            UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
+            return finalRGBA;
+        } else {
             fixed4 finalRGBA = fixed4(finalColor,1);
-        #endif
+            UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
+            return finalRGBA;
+        }
     #endif
-    UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
-    return finalRGBA;
 }

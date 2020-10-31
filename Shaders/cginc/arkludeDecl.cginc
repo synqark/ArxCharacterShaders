@@ -194,6 +194,10 @@ uniform float _EmissiveFreak2BlinkInMix;
 uniform float _EmissiveFreak2HueShift;
 #endif
 
-// Proximity blackout
-uniform float _BlackoutBegin;
-uniform float _BlackoutEnd;
+// Proximity color override
+uniform int _UseProximityOverride;
+uniform float _ProximityOverrideBegin;
+uniform float _ProximityOverrideEnd;
+uniform float4 _ProximityOverrideColor;
+uniform int _ProximityOverrideAlphaOnly;
+

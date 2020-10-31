@@ -57,7 +57,6 @@ namespace AxCharacterShaders
         MaterialProperty GlossBlendMask;
         MaterialProperty GlossPower;
         MaterialProperty GlossColor;
-        MaterialProperty UseOutline;
         MaterialProperty OutlineWidth;
         MaterialProperty OutlineMask;
         MaterialProperty OutlineCutoffRange;
@@ -153,14 +152,11 @@ namespace AxCharacterShaders
         MaterialProperty EmissiveFreak2BlinkInMix;
         MaterialProperty EmissiveFreak2HueShift;
 
-        // TODO: そろそろShaderUtil.GetPropertiesで一括処理したい。
-
         #endregion
 
         static bool IsShowAdvanced = false;
         static bool IsShowAlphaMask = false;
         static bool IsShowNonRegistered = false;
-        GUIStyle style = new GUIStyle();
 
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] props)
@@ -185,150 +181,148 @@ namespace AxCharacterShaders
             ClearRegisteredPropertiesList();
 
             // FindProperties
-            BaseTexture = FindAndRegisterProperties("_MainTex", props, false);
-            BaseColor = FindAndRegisterProperties("_Color", props, false);
-            Normalmap = FindAndRegisterProperties("_BumpMap", props, false);
-            BumpScale = FindAndRegisterProperties("_BumpScale", props, false);
-            EmissionMap = FindAndRegisterProperties("_EmissionMap", props, false);
-            EmissionColor = FindAndRegisterProperties("_EmissionColor", props, false);
-            AlphaMask = FindAndRegisterProperties("_AlphaMask", props, false);
-            BaseTextureSecondary = FindAndRegisterProperties("_MainTexSecondary", props, false);
-            BaseColorSecondary = FindAndRegisterProperties("_ColorSecondary", props, false);
-            NormalmapSecondary = FindAndRegisterProperties("_BumpMapSecondary", props, false);
-            BumpScaleSecondary = FindAndRegisterProperties("_BumpScaleSecondary", props, false);
-            EmissionMapSecondary = FindAndRegisterProperties("_EmissionMapSecondary", props, false);
-            EmissionColorSecondary = FindAndRegisterProperties("_EmissionColorSecondary", props, false);
-            UseEmissionParallax = FindAndRegisterProperties("_UseEmissionParallax", props, false);
-            EmissionParallaxColor = FindAndRegisterProperties("_EmissionParallaxColor", props, false);
-            EmissionParallaxTex = FindAndRegisterProperties("_EmissionParallaxTex", props, false);
-            EmissionParallaxMask = FindAndRegisterProperties("_EmissionParallaxMask", props, false);
-            EmissionParallaxDepth = FindAndRegisterProperties("_EmissionParallaxDepth", props, false);
-            EmissionParallaxDepthMask = FindAndRegisterProperties("_EmissionParallaxDepthMask", props, false);
-            EmissionParallaxDepthMaskInvert = FindAndRegisterProperties("_EmissionParallaxDepthMaskInvert", props, false);
-            CutoutCutoutAdjust = FindAndRegisterProperties("_CutoutCutoutAdjust", props, false);
-            Shadowborder = FindAndRegisterProperties("_Shadowborder", props, false);
-            ShadowborderBlur = FindAndRegisterProperties("_ShadowborderBlur", props, false);
-            ShadowborderBlurMask = FindAndRegisterProperties("_ShadowborderBlurMask", props, false);
-            ShadowStrength = FindAndRegisterProperties("_ShadowStrength", props, false);
-            ShadowStrengthMask = FindAndRegisterProperties("_ShadowStrengthMask", props, false);
-            ShadowIndirectIntensity = FindAndRegisterProperties("_ShadowIndirectIntensity", props, false);
-            ShadowUseStep = FindAndRegisterProperties("_ShadowUseStep", props, false);
-            ShadowSteps = FindAndRegisterProperties("_ShadowSteps", props, false);
-            PointAddIntensity = FindAndRegisterProperties("_PointAddIntensity", props, false);
-            PointShadowStrength = FindAndRegisterProperties("_PointShadowStrength", props, false);
-            PointShadowborder = FindAndRegisterProperties("_PointShadowborder", props, false);
-            PointShadowborderBlur = FindAndRegisterProperties("_PointShadowborderBlur", props, false);
-            PointShadowborderBlurMask= FindAndRegisterProperties("_PointShadowborderBlurMask", props, false);
-            PointShadowUseStep = FindAndRegisterProperties("_PointShadowUseStep", props, false);
-            PointShadowSteps = FindAndRegisterProperties("_PointShadowSteps", props, false);
-            ShadowPlanBDefaultShadowMix = FindAndRegisterProperties("_ShadowPlanBDefaultShadowMix", props, false);
-            ShadowPlanBUseCustomShadowTexture = FindAndRegisterProperties("_ShadowPlanBUseCustomShadowTexture", props, false);
-            ShadowPlanBHueShiftFromBase = FindAndRegisterProperties("_ShadowPlanBHueShiftFromBase", props, false);
-            ShadowPlanBSaturationFromBase = FindAndRegisterProperties("_ShadowPlanBSaturationFromBase", props, false);
-            ShadowPlanBValueFromBase = FindAndRegisterProperties("_ShadowPlanBValueFromBase", props, false);
-            ShadowPlanBCustomShadowTexture = FindAndRegisterProperties("_ShadowPlanBCustomShadowTexture", props, false);
-            ShadowPlanBCustomShadowTextureRGB = FindAndRegisterProperties("_ShadowPlanBCustomShadowTextureRGB", props, false);
-            UseGloss = FindAndRegisterProperties("_UseGloss", props, false);
-            GlossBlend = FindAndRegisterProperties("_GlossBlend", props, false);
-            GlossBlendMask = FindAndRegisterProperties("_GlossBlendMask", props, false);
-            GlossPower = FindAndRegisterProperties("_GlossPower", props, false);
-            GlossColor = FindAndRegisterProperties("_GlossColor", props, false);
-            UseOutline = FindAndRegisterProperties("_UseOutline", props, false);
-            OutlineWidth = FindAndRegisterProperties("_OutlineWidth", props, false);
-            OutlineMask = FindAndRegisterProperties("_OutlineMask", props, false);
-            OutlineCutoffRange = FindAndRegisterProperties("_OutlineCutoffRange", props, false);
-            OutlineColor = FindAndRegisterProperties("_OutlineColor", props, false);
-            OutlineTexture = FindAndRegisterProperties("_OutlineTexture", props, false);
-            OutlineShadeMix = FindAndRegisterProperties("_OutlineShadeMix", props, false);
-            OutlineTextureColorRate = FindAndRegisterProperties("_OutlineTextureColorRate", props, false);
-            OutlineWidthMask = FindAndRegisterProperties("_OutlineWidthMask", props, false);
-            OutlineUseColorShift = FindAndRegisterProperties("_OutlineUseColorShift", props, false);
-            OutlineHueShiftFromBase = FindAndRegisterProperties("_OutlineHueShiftFromBase", props, false);
-            OutlineSaturationFromBase = FindAndRegisterProperties("_OutlineSaturationFromBase", props, false);
-            OutlineValueFromBase = FindAndRegisterProperties("_OutlineValueFromBase", props, false);
-            MatcapBlendMode = FindAndRegisterProperties("_MatcapBlendMode", props, false);
-            MatcapBlend = FindAndRegisterProperties("_MatcapBlend", props, false);
-            MatcapTexture = FindAndRegisterProperties("_MatcapTexture", props, false);
-            MatcapColor = FindAndRegisterProperties("_MatcapColor", props, false);
-            MatcapBlendMask = FindAndRegisterProperties("_MatcapBlendMask", props, false);
-            MatcapNormalMix = FindAndRegisterProperties("_MatcapNormalMix", props, false);
-            MatcapShadeMix = FindAndRegisterProperties("_MatcapShadeMix", props, false);
-            UseReflection = FindAndRegisterProperties("_UseReflection", props, false);
-            UseReflectionProbe = FindAndRegisterProperties("_UseReflectionProbe", props, false);
-            ReflectionReflectionPower = FindAndRegisterProperties("_ReflectionReflectionPower", props, false);
-            ReflectionReflectionMask = FindAndRegisterProperties("_ReflectionReflectionMask", props, false);
-            ReflectionNormalMix = FindAndRegisterProperties("_ReflectionNormalMix", props, false);
-            ReflectionShadeMix = FindAndRegisterProperties("_ReflectionShadeMix", props, false);
-            ReflectionCubemap = FindAndRegisterProperties("_ReflectionCubemap", props, false);
-            ReflectionSuppressBaseColorValue = FindAndRegisterProperties("_ReflectionSuppressBaseColorValue", props, false);
-            RefractionFresnelExp = FindAndRegisterProperties("_RefractionFresnelExp", props, false);
-            RefractionStrength = FindAndRegisterProperties("_RefractionStrength", props, false);
-            UseRim = FindAndRegisterProperties("_UseRim", props, false);
-            RimBlend = FindAndRegisterProperties("_RimBlend", props, false);
-            RimBlendMask = FindAndRegisterProperties("_RimBlendMask", props, false);
-            RimShadeMix = FindAndRegisterProperties("_RimShadeMix", props, false);
-            RimBlendStart = FindAndRegisterProperties("_RimBlendStart", props, false);
-            RimBlendEnd = FindAndRegisterProperties("_RimBlendEnd", props, false);
-            RimPow = FindAndRegisterProperties("_RimPow", props, false);
-            RimColor = FindAndRegisterProperties("_RimColor", props, false);
-            RimTexture = FindAndRegisterProperties("_RimTexture", props, false);
-            RimUseBaseTexture = FindAndRegisterProperties("_RimUseBaseTexture", props, false);
-            ShadowCapBlendMode = FindAndRegisterProperties("_ShadowCapBlendMode", props, false);
-            ShadowCapBlend = FindAndRegisterProperties("_ShadowCapBlend", props, false);
-            ShadowCapBlendMask = FindAndRegisterProperties("_ShadowCapBlendMask", props, false);
-            ShadowCapNormalMix = FindAndRegisterProperties("_ShadowCapNormalMix", props, false);
-            ShadowCapTexture = FindAndRegisterProperties("_ShadowCapTexture", props, false);
-            StencilNumber = FindAndRegisterProperties("_StencilNumber", props, false);
-            StencilMaskTex = FindAndRegisterProperties("_StencilMaskTex", props, false);
-            StencilMaskAdjust = FindAndRegisterProperties("_StencilMaskAdjust", props, false);
-            StencilMaskAlphaDither = FindAndRegisterProperties("_StencilMaskAlphaDither", props, false);
-            StencilCompareAction = FindAndRegisterProperties("_StencilCompareAction", props, false);
-            StencilNumberSecondary = FindAndRegisterProperties("_StencilNumberSecondary", props, false);
-            StencilCompareActionSecondary = FindAndRegisterProperties("_StencilCompareActionSecondary", props, false);
-            Cull = FindAndRegisterProperties("_Cull", props, false);
-            DoubleSidedFlipBackfaceNormal = FindAndRegisterProperties("_DoubleSidedFlipBackfaceNormal", props, false);
-            DoubleSidedBackfaceLightIntensity = FindAndRegisterProperties("_DoubleSidedBackfaceLightIntensity", props, false);
-            DoubleSidedBackfaceUseColorShift = FindAndRegisterProperties("_DoubleSidedBackfaceUseColorShift", props, false);
-            DoubleSidedBackfaceHueShiftFromBase = FindAndRegisterProperties("_DoubleSidedBackfaceHueShiftFromBase", props, false);
-            DoubleSidedBackfaceSaturationFromBase = FindAndRegisterProperties("_DoubleSidedBackfaceSaturationFromBase", props, false);
-            DoubleSidedBackfaceValueFromBase = FindAndRegisterProperties("_DoubleSidedBackfaceValueFromBase", props, false);
-            VertexColorBlendDiffuse = FindAndRegisterProperties("_VertexColorBlendDiffuse", props, false);
-            VertexColorBlendEmissive = FindAndRegisterProperties("_VertexColorBlendEmissive", props, false);
-            OtherShadowBorderSharpness = FindAndRegisterProperties("_OtherShadowBorderSharpness", props, false);
-            OtherShadowAdjust = FindAndRegisterProperties("_OtherShadowAdjust", props, false);
-            ZWrite = FindAndRegisterProperties("_ZWrite", props, false);
+            BaseTexture = MatP("_MainTex", props, false);
+            BaseColor = MatP("_Color", props, false);
+            Normalmap = MatP("_BumpMap", props, false);
+            BumpScale = MatP("_BumpScale", props, false);
+            EmissionMap = MatP("_EmissionMap", props, false);
+            EmissionColor = MatP("_EmissionColor", props, false);
+            AlphaMask = MatP("_AlphaMask", props, false);
+            BaseTextureSecondary = MatP("_MainTexSecondary", props, false);
+            BaseColorSecondary = MatP("_ColorSecondary", props, false);
+            NormalmapSecondary = MatP("_BumpMapSecondary", props, false);
+            BumpScaleSecondary = MatP("_BumpScaleSecondary", props, false);
+            EmissionMapSecondary = MatP("_EmissionMapSecondary", props, false);
+            EmissionColorSecondary = MatP("_EmissionColorSecondary", props, false);
+            UseEmissionParallax = MatP("_UseEmissionParallax", props, false);
+            EmissionParallaxColor = MatP("_EmissionParallaxColor", props, false);
+            EmissionParallaxTex = MatP("_EmissionParallaxTex", props, false);
+            EmissionParallaxMask = MatP("_EmissionParallaxMask", props, false);
+            EmissionParallaxDepth = MatP("_EmissionParallaxDepth", props, false);
+            EmissionParallaxDepthMask = MatP("_EmissionParallaxDepthMask", props, false);
+            EmissionParallaxDepthMaskInvert = MatP("_EmissionParallaxDepthMaskInvert", props, false);
+            CutoutCutoutAdjust = MatP("_CutoutCutoutAdjust", props, false);
+            Shadowborder = MatP("_Shadowborder", props, false);
+            ShadowborderBlur = MatP("_ShadowborderBlur", props, false);
+            ShadowborderBlurMask = MatP("_ShadowborderBlurMask", props, false);
+            ShadowStrength = MatP("_ShadowStrength", props, false);
+            ShadowStrengthMask = MatP("_ShadowStrengthMask", props, false);
+            ShadowIndirectIntensity = MatP("_ShadowIndirectIntensity", props, false);
+            ShadowUseStep = MatP("_ShadowUseStep", props, false);
+            ShadowSteps = MatP("_ShadowSteps", props, false);
+            PointAddIntensity = MatP("_PointAddIntensity", props, false);
+            PointShadowStrength = MatP("_PointShadowStrength", props, false);
+            PointShadowborder = MatP("_PointShadowborder", props, false);
+            PointShadowborderBlur = MatP("_PointShadowborderBlur", props, false);
+            PointShadowborderBlurMask= MatP("_PointShadowborderBlurMask", props, false);
+            PointShadowUseStep = MatP("_PointShadowUseStep", props, false);
+            PointShadowSteps = MatP("_PointShadowSteps", props, false);
+            ShadowPlanBUseCustomShadowTexture = MatP("_ShadowPlanBUseCustomShadowTexture", props, false);
+            ShadowPlanBHueShiftFromBase = MatP("_ShadowPlanBHueShiftFromBase", props, false);
+            ShadowPlanBSaturationFromBase = MatP("_ShadowPlanBSaturationFromBase", props, false);
+            ShadowPlanBValueFromBase = MatP("_ShadowPlanBValueFromBase", props, false);
+            ShadowPlanBCustomShadowTexture = MatP("_ShadowPlanBCustomShadowTexture", props, false);
+            ShadowPlanBCustomShadowTextureRGB = MatP("_ShadowPlanBCustomShadowTextureRGB", props, false);
+            UseGloss = MatP("_UseGloss", props, false);
+            GlossBlend = MatP("_GlossBlend", props, false);
+            GlossBlendMask = MatP("_GlossBlendMask", props, false);
+            GlossPower = MatP("_GlossPower", props, false);
+            GlossColor = MatP("_GlossColor", props, false);
+            OutlineWidth = MatP("_OutlineWidth", props, false);
+            OutlineMask = MatP("_OutlineMask", props, false);
+            OutlineCutoffRange = MatP("_OutlineCutoffRange", props, false);
+            OutlineColor = MatP("_OutlineColor", props, false);
+            OutlineTexture = MatP("_OutlineTexture", props, false);
+            OutlineShadeMix = MatP("_OutlineShadeMix", props, false);
+            OutlineTextureColorRate = MatP("_OutlineTextureColorRate", props, false);
+            OutlineWidthMask = MatP("_OutlineWidthMask", props, false);
+            OutlineUseColorShift = MatP("_OutlineUseColorShift", props, false);
+            OutlineHueShiftFromBase = MatP("_OutlineHueShiftFromBase", props, false);
+            OutlineSaturationFromBase = MatP("_OutlineSaturationFromBase", props, false);
+            OutlineValueFromBase = MatP("_OutlineValueFromBase", props, false);
+            MatcapBlendMode = MatP("_MatcapBlendMode", props, false);
+            MatcapBlend = MatP("_MatcapBlend", props, false);
+            MatcapTexture = MatP("_MatcapTexture", props, false);
+            MatcapColor = MatP("_MatcapColor", props, false);
+            MatcapBlendMask = MatP("_MatcapBlendMask", props, false);
+            MatcapNormalMix = MatP("_MatcapNormalMix", props, false);
+            MatcapShadeMix = MatP("_MatcapShadeMix", props, false);
+            UseReflection = MatP("_UseReflection", props, false);
+            UseReflectionProbe = MatP("_UseReflectionProbe", props, false);
+            ReflectionReflectionPower = MatP("_ReflectionReflectionPower", props, false);
+            ReflectionReflectionMask = MatP("_ReflectionReflectionMask", props, false);
+            ReflectionNormalMix = MatP("_ReflectionNormalMix", props, false);
+            ReflectionShadeMix = MatP("_ReflectionShadeMix", props, false);
+            ReflectionCubemap = MatP("_ReflectionCubemap", props, false);
+            ReflectionSuppressBaseColorValue = MatP("_ReflectionSuppressBaseColorValue", props, false);
+            RefractionFresnelExp = MatP("_RefractionFresnelExp", props, false);
+            RefractionStrength = MatP("_RefractionStrength", props, false);
+            UseRim = MatP("_UseRim", props, false);
+            RimBlend = MatP("_RimBlend", props, false);
+            RimBlendMask = MatP("_RimBlendMask", props, false);
+            RimShadeMix = MatP("_RimShadeMix", props, false);
+            RimBlendStart = MatP("_RimBlendStart", props, false);
+            RimBlendEnd = MatP("_RimBlendEnd", props, false);
+            RimPow = MatP("_RimPow", props, false);
+            RimColor = MatP("_RimColor", props, false);
+            RimTexture = MatP("_RimTexture", props, false);
+            RimUseBaseTexture = MatP("_RimUseBaseTexture", props, false);
+            ShadowCapBlendMode = MatP("_ShadowCapBlendMode", props, false);
+            ShadowCapBlend = MatP("_ShadowCapBlend", props, false);
+            ShadowCapBlendMask = MatP("_ShadowCapBlendMask", props, false);
+            ShadowCapNormalMix = MatP("_ShadowCapNormalMix", props, false);
+            ShadowCapTexture = MatP("_ShadowCapTexture", props, false);
+            StencilNumber = MatP("_StencilNumber", props, false);
+            StencilMaskTex = MatP("_StencilMaskTex", props, false);
+            StencilMaskAdjust = MatP("_StencilMaskAdjust", props, false);
+            StencilMaskAlphaDither = MatP("_StencilMaskAlphaDither", props, false);
+            StencilCompareAction = MatP("_StencilCompareAction", props, false);
+            StencilNumberSecondary = MatP("_StencilNumberSecondary", props, false);
+            StencilCompareActionSecondary = MatP("_StencilCompareActionSecondary", props, false);
+            Cull = MatP("_Cull", props, false);
+            DoubleSidedFlipBackfaceNormal = MatP("_DoubleSidedFlipBackfaceNormal", props, false);
+            DoubleSidedBackfaceLightIntensity = MatP("_DoubleSidedBackfaceLightIntensity", props, false);
+            DoubleSidedBackfaceUseColorShift = MatP("_DoubleSidedBackfaceUseColorShift", props, false);
+            DoubleSidedBackfaceHueShiftFromBase = MatP("_DoubleSidedBackfaceHueShiftFromBase", props, false);
+            DoubleSidedBackfaceSaturationFromBase = MatP("_DoubleSidedBackfaceSaturationFromBase", props, false);
+            DoubleSidedBackfaceValueFromBase = MatP("_DoubleSidedBackfaceValueFromBase", props, false);
+            VertexColorBlendDiffuse = MatP("_VertexColorBlendDiffuse", props, false);
+            VertexColorBlendEmissive = MatP("_VertexColorBlendEmissive", props, false);
+            OtherShadowBorderSharpness = MatP("_OtherShadowBorderSharpness", props, false);
+            OtherShadowAdjust = MatP("_OtherShadowAdjust", props, false);
+            ZWrite = MatP("_ZWrite", props, false);
 
-            EmissiveFreak1Tex = FindAndRegisterProperties("_EmissiveFreak1Tex", props, false);
-            EmissiveFreak1Mask = FindAndRegisterProperties("_EmissiveFreak1Mask", props, false);
-            EmissiveFreak1Color = FindAndRegisterProperties("_EmissiveFreak1Color", props, false);
-            EmissiveFreak1U = FindAndRegisterProperties("_EmissiveFreak1U", props, false);
-            EmissiveFreak1V = FindAndRegisterProperties("_EmissiveFreak1V", props, false);
-            EmissiveFreak1Depth = FindAndRegisterProperties("_EmissiveFreak1Depth", props, false);
-            EmissiveFreak1DepthMask = FindAndRegisterProperties("_EmissiveFreak1DepthMask", props, false);
-            EmissiveFreak1DepthMaskInvert = FindAndRegisterProperties("_EmissiveFreak1DepthMaskInvert", props, false);
-            EmissiveFreak1Breathing = FindAndRegisterProperties("_EmissiveFreak1Breathing", props, false);
-            EmissiveFreak1BreathingMix = FindAndRegisterProperties("_EmissiveFreak1BreathingMix", props, false);
-            EmissiveFreak1BlinkOut = FindAndRegisterProperties("_EmissiveFreak1BlinkOut", props, false);
-            EmissiveFreak1BlinkOutMix = FindAndRegisterProperties("_EmissiveFreak1BlinkOutMix", props, false);
-            EmissiveFreak1BlinkIn = FindAndRegisterProperties("_EmissiveFreak1BlinkIn", props, false);
-            EmissiveFreak1BlinkInMix = FindAndRegisterProperties("_EmissiveFreak1BlinkInMix", props, false);
-            EmissiveFreak1HueShift = FindAndRegisterProperties("_EmissiveFreak1HueShift", props, false);
+            EmissiveFreak1Tex = MatP("_EmissiveFreak1Tex", props, false);
+            EmissiveFreak1Mask = MatP("_EmissiveFreak1Mask", props, false);
+            EmissiveFreak1Color = MatP("_EmissiveFreak1Color", props, false);
+            EmissiveFreak1U = MatP("_EmissiveFreak1U", props, false);
+            EmissiveFreak1V = MatP("_EmissiveFreak1V", props, false);
+            EmissiveFreak1Depth = MatP("_EmissiveFreak1Depth", props, false);
+            EmissiveFreak1DepthMask = MatP("_EmissiveFreak1DepthMask", props, false);
+            EmissiveFreak1DepthMaskInvert = MatP("_EmissiveFreak1DepthMaskInvert", props, false);
+            EmissiveFreak1Breathing = MatP("_EmissiveFreak1Breathing", props, false);
+            EmissiveFreak1BreathingMix = MatP("_EmissiveFreak1BreathingMix", props, false);
+            EmissiveFreak1BlinkOut = MatP("_EmissiveFreak1BlinkOut", props, false);
+            EmissiveFreak1BlinkOutMix = MatP("_EmissiveFreak1BlinkOutMix", props, false);
+            EmissiveFreak1BlinkIn = MatP("_EmissiveFreak1BlinkIn", props, false);
+            EmissiveFreak1BlinkInMix = MatP("_EmissiveFreak1BlinkInMix", props, false);
+            EmissiveFreak1HueShift = MatP("_EmissiveFreak1HueShift", props, false);
 
-            EmissiveFreak2Tex = FindAndRegisterProperties("_EmissiveFreak2Tex", props, false);
-            EmissiveFreak2Mask = FindAndRegisterProperties("_EmissiveFreak2Mask", props, false);
-            EmissiveFreak2Color = FindAndRegisterProperties("_EmissiveFreak2Color", props, false);
-            EmissiveFreak2U = FindAndRegisterProperties("_EmissiveFreak2U", props, false);
-            EmissiveFreak2V = FindAndRegisterProperties("_EmissiveFreak2V", props, false);
-            EmissiveFreak2Depth = FindAndRegisterProperties("_EmissiveFreak2Depth", props, false);
-            EmissiveFreak2DepthMask = FindAndRegisterProperties("_EmissiveFreak2DepthMask", props, false);
-            EmissiveFreak2DepthMaskInvert = FindAndRegisterProperties("_EmissiveFreak2DepthMaskInvert", props, false);
-            EmissiveFreak2Breathing = FindAndRegisterProperties("_EmissiveFreak2Breathing", props, false);
-            EmissiveFreak2BreathingMix = FindAndRegisterProperties("_EmissiveFreak2BreathingMix", props, false);
-            EmissiveFreak2BlinkOut = FindAndRegisterProperties("_EmissiveFreak2BlinkOut", props, false);
-            EmissiveFreak2BlinkOutMix = FindAndRegisterProperties("_EmissiveFreak2BlinkOutMix", props, false);
-            EmissiveFreak2BlinkIn = FindAndRegisterProperties("_EmissiveFreak2BlinkIn", props, false);
-            EmissiveFreak2BlinkInMix = FindAndRegisterProperties("_EmissiveFreak2BlinkInMix", props, false);
-            EmissiveFreak2HueShift = FindAndRegisterProperties("_EmissiveFreak2HueShift", props, false);
+            EmissiveFreak2Tex = MatP("_EmissiveFreak2Tex", props, false);
+            EmissiveFreak2Mask = MatP("_EmissiveFreak2Mask", props, false);
+            EmissiveFreak2Color = MatP("_EmissiveFreak2Color", props, false);
+            EmissiveFreak2U = MatP("_EmissiveFreak2U", props, false);
+            EmissiveFreak2V = MatP("_EmissiveFreak2V", props, false);
+            EmissiveFreak2Depth = MatP("_EmissiveFreak2Depth", props, false);
+            EmissiveFreak2DepthMask = MatP("_EmissiveFreak2DepthMask", props, false);
+            EmissiveFreak2DepthMaskInvert = MatP("_EmissiveFreak2DepthMaskInvert", props, false);
+            EmissiveFreak2Breathing = MatP("_EmissiveFreak2Breathing", props, false);
+            EmissiveFreak2BreathingMix = MatP("_EmissiveFreak2BreathingMix", props, false);
+            EmissiveFreak2BlinkOut = MatP("_EmissiveFreak2BlinkOut", props, false);
+            EmissiveFreak2BlinkOutMix = MatP("_EmissiveFreak2BlinkOutMix", props, false);
+            EmissiveFreak2BlinkIn = MatP("_EmissiveFreak2BlinkIn", props, false);
+            EmissiveFreak2BlinkInMix = MatP("_EmissiveFreak2BlinkInMix", props, false);
+            EmissiveFreak2HueShift = MatP("_EmissiveFreak2HueShift", props, false);
 
             EditorGUIUtility.labelWidth = 0f;
 
@@ -413,20 +407,13 @@ namespace AxCharacterShaders
                 // Shadow
                 UIHelper.ShurikenHeader("Shadow");
                 UIHelper.DrawWithGroup(() => {
-                    materialEditor.ShaderProperty(Shadowborder, "Border");
-
                     UIHelper.DrawWithGroup(() => {
-                        materialEditor.TexturePropertySingleLine(new GUIContent("Strength & Mask", "Strength and Mask Texture"), ShadowStrengthMask, ShadowStrength);
-                        materialEditor.TextureScaleOffsetPropertyIndent(ShadowStrengthMask);
-                    });
-
-                    UIHelper.DrawWithGroup(() => {
+                        EditorGUILayout.LabelField("Border & blur", EditorStyles.boldLabel);
+                        EditorGUI.indentLevel ++;
+                        materialEditor.ShaderProperty(Shadowborder, "Border");
                         materialEditor.TexturePropertySingleLine(new GUIContent("Blur & Mask", "Blur and Mask Texture"), ShadowborderBlurMask, ShadowborderBlur);
                         materialEditor.TextureScaleOffsetPropertyIndent(ShadowborderBlurMask);
-                    });
-
-                    UIHelper.DrawWithGroup(() => {
-                        materialEditor.ShaderProperty(ShadowUseStep, "Use Steps");
+                        materialEditor.ShaderProperty(ShadowUseStep, "Use Step");
                         var useStep = ShadowUseStep.floatValue;
                         if(useStep > 0)
                         {
@@ -439,57 +426,38 @@ namespace AxCharacterShaders
                             ;
                             EditorGUI.indentLevel --;
                         }
+                        EditorGUI.indentLevel --;
                     });
 
                     UIHelper.DrawWithGroup(() => {
+                        EditorGUILayout.LabelField("Default color shading", EditorStyles.boldLabel);
+                        EditorGUI.indentLevel ++;
+                        materialEditor.TexturePropertySingleLine(new GUIContent("Strength & Mask", "Strength and Mask Texture"), ShadowStrengthMask, ShadowStrength);
+                        materialEditor.TextureScaleOffsetPropertyIndent(ShadowStrengthMask);
+                        EditorGUI.indentLevel --;
 
+                        EditorGUILayout.LabelField("Custom color shading", EditorStyles.boldLabel);
+                        EditorGUI.indentLevel ++;
+                        materialEditor.ShaderProperty(ShadowPlanBUseCustomShadowTexture, "Use Texture");
+                        var useShadeTexture = ShadowPlanBUseCustomShadowTexture.floatValue;
+                        if(useShadeTexture > 0)
                         {
-                            EditorGUILayout.HelpBox(
-                                "[Strength] max is recommended for using custom shade." + Environment.NewLine + "Custom Shadeの使用時は[Strength]を最大値に設定することを推奨", MessageType.Info);
-                            UIHelper.DrawWithGroup(() => {
-                                EditorGUILayout.LabelField("1st shade", EditorStyles.boldLabel);
-                                EditorGUI.indentLevel ++;
-                                materialEditor.ShaderProperty(ShadowPlanBUseCustomShadowTexture, "Use Shade Texture");
-                                var useShadeTexture = ShadowPlanBUseCustomShadowTexture.floatValue;
-                                if(useShadeTexture > 0)
-                                {
-                                    materialEditor.ShaderProperty(ShadowPlanBCustomShadowTexture, "Shade Texture");
-                                    materialEditor.ShaderProperty(ShadowPlanBCustomShadowTextureRGB, "Shade Texture RGB");
-                                }
-                                else
-                                {
-                                    materialEditor.ShaderProperty(ShadowPlanBHueShiftFromBase, "Hue Shift");
-                                    materialEditor.ShaderProperty(ShadowPlanBSaturationFromBase, "Saturation");
-                                    materialEditor.ShaderProperty(ShadowPlanBValueFromBase, "Value");
-                                }
-                                EditorGUI.indentLevel --;
-                            });
+                            materialEditor.ShaderProperty(ShadowPlanBCustomShadowTexture, "Texture");
+                            materialEditor.ShaderProperty(ShadowPlanBCustomShadowTextureRGB, "RGB multiply");
                         }
+                        else
+                        {
+                            materialEditor.ShaderProperty(ShadowPlanBHueShiftFromBase, "Hue Shift");
+                            materialEditor.ShaderProperty(ShadowPlanBSaturationFromBase, "Saturation");
+                            materialEditor.ShaderProperty(ShadowPlanBValueFromBase, "Value");
+                        }
+                        EditorGUI.indentLevel --;
                     });
                 });
-
-                // Gloss
-                UIHelper.ShurikenHeader("Gloss");
-                materialEditor.DrawShaderPropertySameLIne(UseGloss);
-                var isEnabledGloss = UseGloss.floatValue;
-                if(isEnabledGloss > 0)
-                {
-                    UIHelper.DrawWithGroup(() => {
-                        UIHelper.DrawWithGroup(() => {
-                            materialEditor.TexturePropertySingleLine(new GUIContent("Smoothness & Mask", "Smoothness and Mask Texture"), GlossBlendMask, GlossBlend);
-                            materialEditor.TextureScaleOffsetPropertyIndent(GlossBlendMask);
-                        });
-                        materialEditor.ShaderProperty(GlossPower, "Metallic");
-                        materialEditor.ShaderProperty(GlossColor, "Color");
-                    });
-                }
 
                 // Outline
                 if(!isRefracted && isOutline) {
                     UIHelper.ShurikenHeader("Outline");
-                    materialEditor.DrawShaderPropertySameLIne(UseOutline);
-                    var useOutline = UseOutline.floatValue;
-                    if(useOutline > 0)
                     {
                         UIHelper.DrawWithGroup(() => {
                             UIHelper.DrawWithGroup(() => {
@@ -521,6 +489,22 @@ namespace AxCharacterShaders
                             materialEditor.ShaderProperty(OutlineShadeMix,"Shadow mix");
                         });
                     }
+                }
+
+                // Gloss
+                UIHelper.ShurikenHeader("Gloss");
+                materialEditor.DrawShaderPropertySameLIne(UseGloss);
+                var isEnabledGloss = UseGloss.floatValue;
+                if(isEnabledGloss > 0)
+                {
+                    UIHelper.DrawWithGroup(() => {
+                        UIHelper.DrawWithGroup(() => {
+                            materialEditor.TexturePropertySingleLine(new GUIContent("Smoothness & Mask", "Smoothness and Mask Texture"), GlossBlendMask, GlossBlend);
+                            materialEditor.TextureScaleOffsetPropertyIndent(GlossBlendMask);
+                        });
+                        materialEditor.ShaderProperty(GlossPower, "Metallic");
+                        materialEditor.ShaderProperty(GlossColor, "Color");
+                    });
                 }
 
                 // MatCap
@@ -742,6 +726,25 @@ namespace AxCharacterShaders
                     });
                 }
 
+                // Proximity color override
+                UIHelper.ShurikenHeader("Proximity Color Override");
+                var useProximityOverride = MatP("_UseProximityOverride", props, false);
+                materialEditor.DrawShaderPropertySameLIne(useProximityOverride);
+                if(useProximityOverride.floatValue > 0)
+                {
+                    UIHelper.DrawWithGroup(() => {
+                        UIHelper.DrawWithGroup(() => {
+                            if (isFade) materialEditor.ShaderProperty(MatP("_ProximityOverrideAlphaOnly", props, false), "Alpha channel only");
+
+                            var begin = MatP("_ProximityOverrideBegin", props, false);
+                            var end = MatP("_ProximityOverrideEnd", props, false);
+                            materialEditor.ShaderProperty(MatP("_ProximityOverrideColor", props, false), "Color");
+                            materialEditor.ShaderProperty(begin, "Begin(far)");
+                            materialEditor.ShaderProperty(end, "End(near)");
+                        });
+                    });
+                }
+
 
                 // Advanced / Experimental
                 IsShowAdvanced = UIHelper.ShurikenFoldout("Advanced / Experimental (Click to Open)", IsShowAdvanced);
@@ -809,7 +812,7 @@ namespace AxCharacterShaders
 
                 // Docs
                 UIHelper.DrawWithGroupHorizontal(() => {
-                    if(GUILayout.Button("How to use (Japanese)"))
+                    if(GUILayout.Button("How to use (Old)"))
                     {
                         System.Diagnostics.Process.Start("https://synqark.github.io/Arktoon-Shaders-Doc/");
                     }
@@ -824,7 +827,7 @@ namespace AxCharacterShaders
             registeredProperties.Clear();
         }
 
-        public MaterialProperty FindAndRegisterProperties(string propertyName, MaterialProperty[] properties, bool propertyIsMandatory) {
+        public MaterialProperty MatP(string propertyName, MaterialProperty[] properties, bool propertyIsMandatory) {
             if (!registeredProperties.Contains(propertyName)) registeredProperties.Add(propertyName);
             return FindProperty(propertyName, properties, propertyIsMandatory);
         }
