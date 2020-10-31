@@ -34,7 +34,6 @@ namespace AxCharacterShaders
         MaterialProperty ShadowborderBlurMask;
         MaterialProperty ShadowStrength;
         MaterialProperty ShadowStrengthMask;
-        MaterialProperty ShadowIndirectIntensity;
         MaterialProperty ShadowUseStep;
         MaterialProperty ShadowSteps;
         MaterialProperty PointAddIntensity;
@@ -157,6 +156,7 @@ namespace AxCharacterShaders
         static bool IsShowAdvanced = false;
         static bool IsShowAlphaMask = false;
         static bool IsShowNonRegistered = false;
+        static bool IsShowVariationTip = false;
 
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] props)
@@ -207,7 +207,6 @@ namespace AxCharacterShaders
             ShadowborderBlurMask = MatP("_ShadowborderBlurMask", props, false);
             ShadowStrength = MatP("_ShadowStrength", props, false);
             ShadowStrengthMask = MatP("_ShadowStrengthMask", props, false);
-            ShadowIndirectIntensity = MatP("_ShadowIndirectIntensity", props, false);
             ShadowUseStep = MatP("_ShadowUseStep", props, false);
             ShadowSteps = MatP("_ShadowSteps", props, false);
             PointAddIntensity = MatP("_PointAddIntensity", props, false);
@@ -328,6 +327,25 @@ namespace AxCharacterShaders
 
             EditorGUI.BeginChangeCheck();
             {
+                // バリエーションの説明
+                IsShowVariationTip = UIHelper.ShurikenFoldout(shader.name.Substring(20) + "について", IsShowVariationTip);
+                if (IsShowVariationTip) {
+                    var isShown = false;
+                    if (isOpaque && !isOutline) {
+                        EditorGUILayout.HelpBox(
+                            "Opaqueは、完全に不透明で、アウトラインの無いメッシュに対して効率よく適用できるバリエーションです。"
+                            + Environment.NewLine + "---"
+                            + Environment.NewLine + "アウトラインが欲しい→ Outline/Opaque"
+                            + Environment.NewLine + "メッシュの一部をアルファで抜きたい→ AlphaCutout"
+                            + Environment.NewLine + "メッシュの一部を半透明にしたい→ Fade"
+                            , MessageType.Info);
+                        isShown = true;
+                    }
+                    if (!isShown) {
+                        EditorGUILayout.HelpBox("準備中です", MessageType.Info);
+                    }
+                }
+
                 // Common
                 UIHelper.ShurikenHeader("Common");
                 UIHelper.DrawWithGroup(() => {
@@ -761,16 +779,9 @@ namespace AxCharacterShaders
                             OtherShadowBorderSharpness.floatValue = 3;
                             PointShadowUseStep.floatValue = 0;
                             PointShadowSteps.floatValue = 2;
-                            ShadowIndirectIntensity.floatValue = 0.25f;
                             VertexColorBlendDiffuse.floatValue = 0f;
                             VertexColorBlendEmissive.floatValue = 0f;
                         }
-                        UIHelper.DrawWithGroup(() => {
-                            EditorGUILayout.LabelField("Directional Shadow", EditorStyles.boldLabel);
-                            EditorGUI.indentLevel ++;
-                            materialEditor.ShaderProperty(ShadowIndirectIntensity, "Indirect face Intensity (0.25)");
-                            EditorGUI.indentLevel --;
-                        });
                         UIHelper.DrawWithGroup(() => {
                             EditorGUILayout.LabelField("Vertex Colors", EditorStyles.boldLabel);
                             EditorGUI.indentLevel ++;

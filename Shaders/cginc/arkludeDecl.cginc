@@ -58,7 +58,6 @@ uniform float _Shadowborder;
 uniform float _ShadowborderBlur;
 UNITY_DECLARE_TEX2D_NOSAMPLER(_ShadowborderBlurMask); uniform float4 _ShadowborderBlurMask_ST;
 uniform float _ShadowStrength;
-uniform float _ShadowIndirectIntensity;
 uniform float _ShadowUseStep;
 uniform int _ShadowSteps;
 uniform sampler2D _ShadowStrengthMask; uniform float4 _ShadowStrengthMask_ST;

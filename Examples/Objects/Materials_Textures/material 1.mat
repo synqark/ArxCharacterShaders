@@ -229,7 +229,6 @@ Material:
     - _ShadowCapBlendMode: 3
     - _ShadowCapNormalMix: 0
     - _ShadowCasterCulling: 2
-    - _ShadowIndirectIntensity: 0.25
     - _ShadowPlanB2HueShiftFromBase: 0
     - _ShadowPlanB2SaturationFromBase: 1
     - _ShadowPlanB2UseCustomShadowTexture: 0
