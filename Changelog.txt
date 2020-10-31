@@ -10,3 +10,11 @@
 - Stencil/Reader/AlphaCutout
 - Stencil/Writer/AlphaCutout
 - Stencil/WriterMask/AlphaCutout
+
+Shadowカテゴリに「Ambient Light Intensity」を追加：
+ディレクショナルライトを除く、空間色がどの程度陰に反映されるかを指定できます。
+0:影響無し（真っ黒） ～ 1:影響度100%（Environment LightingまたはLight Probeの色）
+初期値は0.75です。
+
+以前のビルド----------------------
+忘れた
