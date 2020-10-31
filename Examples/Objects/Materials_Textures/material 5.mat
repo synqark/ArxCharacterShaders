@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: material 5
   m_Shader: {fileID: 4800000, guid: 0c89b4121f71eb546abb7748e6c7d25f, type: 3}
-  m_ShaderKeywords: _CULL_NONE
+  m_ShaderKeywords: _
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -128,8 +128,6 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _ProximityOverrideBegin: 0.15
-    - _ProximityOverrideEnd: 0.03
     - _BumpScale: 1
     - _Cull: 0
     - _CustomShadow2nd: 0
@@ -165,6 +163,9 @@ Material:
     - _PointShadowUseStep: 0
     - _PointShadowborder: 0.5
     - _PointShadowborderBlur: 0.01
+    - _ProximityOverrideAlphaOnly: 0
+    - _ProximityOverrideBegin: 0.15
+    - _ProximityOverrideEnd: 0.03
     - _ReflectionNormalMix: 1
     - _ReflectionReflectionPower: 1
     - _ReflectionShadeMix: 0
@@ -204,6 +205,7 @@ Material:
     - _UVSec: 0
     - _UseEmissionParallax: 0
     - _UseGloss: 0
+    - _UseProximityOverride: 0
     - _UseReflection: 1
     - _UseReflectionProbe: 1
     - _UseRim: 0
@@ -217,6 +219,7 @@ Material:
     - _EmissionParallaxColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlossColor: {r: 1, g: 1, b: 1, a: 1}
     - _MatcapColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ProximityOverrideColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowPlanB2CustomShadowTextureRGB: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowPlanBCustomShadowTextureRGB: {r: 1, g: 1, b: 1, a: 1}

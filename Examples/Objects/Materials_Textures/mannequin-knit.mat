@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: mannequin-knit
   m_Shader: {fileID: 4800000, guid: acaabbe907212b94c85ab392bb1306a1, type: 3}
-  m_ShaderKeywords: _CULL_NONE
+  m_ShaderKeywords: _
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
