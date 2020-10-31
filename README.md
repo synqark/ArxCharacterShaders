@@ -1,5 +1,5 @@
 # ArxCharacterShaders
-build 1
+build 4
 
 # バリエーション
 - AlphaCutout
@@ -20,5 +20,5 @@ Arktoonにあったその他バリエーションは調整中
 ※ここで指定した色は、空間のあらゆる光の影響を無視して反映されます。
 
 ## 変更・削除
-- Shadow関連のいくつかの項目を調整・廃止（2nd shadeとか）
+- Shadow関連の計算を再構築
 - Outlineを別シェーダーバリエーションに切り出した
