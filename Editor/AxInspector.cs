@@ -470,6 +470,11 @@ namespace AxCharacterShaders
                             materialEditor.ShaderProperty(ShadowPlanBValueFromBase, "Value");
                         }
                         EditorGUI.indentLevel --;
+
+                        EditorGUILayout.LabelField("Ambient", EditorStyles.boldLabel);
+                        EditorGUI.indentLevel ++;
+                        EditorGUILayout.LabelField("TODO: Ambient Light Intensity");
+                        EditorGUI.indentLevel ++;
                     });
                 });
 

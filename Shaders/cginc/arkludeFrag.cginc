@@ -65,10 +65,10 @@ float4 frag(
 
     // 空間光をサンプリング
     float3 ShadeSH9Plus = GetSHLength();
-    float3 ShadeSH9Minus = ShadeSH9(float4(0,0,0,1)) * 0.5;
+    float3 ShadeSH9Minus = ShadeSH9(float4(0,0,0,1)) * 1; /* TODO Ambient Light Intensity */
 
     // もっとも明るい部分を取得
-    float3 directLightingShadowFactor = ShadeSH9Plus * lerp(0.5, 1, saturate(lightColor));
+    float3 directLightingShadowFactor = ShadeSH9Plus * lerp(1, 1, saturate(lightColor)); /* TODO Ambient Light Intensity */
     float3 directLighting = saturate(directLightingShadowFactor + lightColor);
     // もっとも暗い部分を取得
     float3 indirectLighting = saturate(ShadeSH9Minus);

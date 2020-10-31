@@ -1,7 +1,7 @@
-Shader "ArxCharacterShaders/Stencil/Reader/Cutout" {
+Shader "ArxCharacterShaders/Stencil/Writer/Cutout" {
     Properties {
         // Double Sided
-        [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0
+        [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
         [Toggle(_)]_DoubleSidedFlipBackfaceNormal ("Flip backface normal", Float ) = 0
         _DoubleSidedBackfaceLightIntensity ("Backface Light intensity", Range(0, 2) ) = 0.5
         [Toggle(_)]_DoubleSidedBackfaceUseColorShift("Backface Use Color Shift", Int) = 0
@@ -43,7 +43,6 @@ Shader "ArxCharacterShaders/Stencil/Reader/Cutout" {
         [Toggle(_)]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
         _PointShadowSteps("[PointShadow] steps between borders", Range(2, 10)) = 2
         // Plan B
-        [Toggle(_)]_ShadowPlanBUsePlanB ("[Plan B] Use Plan B", Int ) = 0
         [Toggle(_)] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _ShadowPlanBSaturationFromBase ("[Plan B] Saturation From Base", Range(0, 2)) = 1
@@ -90,19 +89,23 @@ Shader "ArxCharacterShaders/Stencil/Reader/Cutout" {
         _ShadowCapBlendMask ("[ShadowCap] Blend Mask", 2D) = "white" {}
         _ShadowCapNormalMix ("[ShadowCap] Normal map mix", Range(0, 2)) = 1
         _ShadowCapTexture ("[ShadowCap] Texture", 2D) = "white" {}
-        // Stencil(Reader)
-        _StencilNumber ("[StencilReader] Number", int) = 5
-        [Enum(UnityEngine.Rendering.CompareFunction)] _StencilCompareAction ("[StencilReader] Compare Action", int) = 6
+        // Stencil(Writer)
+        _StencilNumber ("[StencilWriter] Number", int) = 5
         // vertex color blend
         _VertexColorBlendDiffuse ("[VertexColor] Blend to diffuse", Range(0,1)) = 0
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
         // advanced tweaking
         _OtherShadowAdjust ("[Advanced] Other Mesh Shadow Adjust", Range(-0.2, 0.2)) = -0.1
         _OtherShadowBorderSharpness ("[Advanced] Other Mesh Shadow Border Sharpness", Range(1, 5)) = 3
+        // Proximity color override
+        [Toggle(_)]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
+        _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
+        _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
+        _ProximityOverrideColor ("[ProximityOverride] Override Color", Color) = (0,0,0,1)
     }
     SubShader {
         Tags {
-            "Queue"="AlphaTest+1"
+            "Queue"="AlphaTest"
             "RenderType" = "TransparentCutout"
         }
         Pass {
@@ -110,25 +113,24 @@ Shader "ArxCharacterShaders/Stencil/Reader/Cutout" {
             Tags {
                 "LightMode"="ForwardBase"
             }
-            Cull Back
+            Cull [_Cull]
 
             Stencil {
                 Ref [_StencilNumber]
-                Comp [_StencilCompareAction]
+                Comp Always
+                Pass Replace
             }
 
             CGPROGRAM
 
 
             #pragma vertex vert
-            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdbase_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
+            #pragma target 3.0
             #define AXCS_CUTOUT
-
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
@@ -140,23 +142,23 @@ Shader "ArxCharacterShaders/Stencil/Reader/Cutout" {
             Tags {
                 "LightMode"="ForwardAdd"
             }
-            Cull Back
+            Cull [_Cull]
             Blend One One
 
             Stencil {
                 Ref [_StencilNumber]
-                Comp [_StencilCompareAction]
+                Comp Always
+                Pass Replace
             }
 
             CGPROGRAM
 
             #pragma vertex vert
-            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdadd_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
+            #pragma target 3.0
             #define AXCS_CUTOUT
             #define AXCS_ADD
 
@@ -166,7 +168,6 @@ Shader "ArxCharacterShaders/Stencil/Reader/Cutout" {
             #include "cginc/arkludeAdd.cginc"
             ENDCG
         }
-
         Pass {
             Name "ShadowCaster"
             Tags {
@@ -174,11 +175,6 @@ Shader "ArxCharacterShaders/Stencil/Reader/Cutout" {
             }
             Offset 1, 1
             Cull [_Cull]
-
-            Stencil {
-                Ref [_StencilNumber]
-                Comp [_StencilCompareAction]
-            }
 
             CGPROGRAM
             #pragma vertex vert
@@ -189,7 +185,7 @@ Shader "ArxCharacterShaders/Stencil/Reader/Cutout" {
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
+            #pragma target 3.0
             uniform float _CutoutCutoutAdjust;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform float4 _Color;

@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: material
-  m_Shader: {fileID: 4800000, guid: acaabbe907212b94c85ab392bb1306a1, type: 3}
-  m_ShaderKeywords: 
+  m_Name: materialStencilWriter
+  m_Shader: {fileID: 4800000, guid: 1adb078ef83bc634d91fa5a5e4961844, type: 3}
+  m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -155,6 +155,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _StencilMaskTex:
+        m_Texture: {fileID: 2800000, guid: 45fdda763b21e774b88fe8a7736e4164, type: 3}
+        m_Scale: {x: 3, y: 3}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _Cull: 2
@@ -231,12 +235,12 @@ Material:
     - _ShadowPlanB2border: 0.55
     - _ShadowPlanB2borderBlur: 0.55
     - _ShadowPlanBDefaultShadowMix: 1
-    - _ShadowPlanBHueShiftFromBase: 0
-    - _ShadowPlanBSaturationFromBase: 1
+    - _ShadowPlanBHueShiftFromBase: -0.034
+    - _ShadowPlanBSaturationFromBase: 1.436
     - _ShadowPlanBUseCustomShadowTexture: 0
     - _ShadowPlanBUsePlanB: 0
     - _ShadowPlanBUseShadowMix: 0
-    - _ShadowPlanBValueFromBase: 1
+    - _ShadowPlanBValueFromBase: 0.501
     - _ShadowSteps: 4
     - _ShadowStrength: 1
     - _ShadowUseStep: 0
@@ -245,6 +249,10 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _StencilCompareAction: 6
+    - _StencilMaskAdjust: 0.5
+    - _StencilMaskAlphaDither: 1
+    - _StencilNumber: 5
     - _UVSec: 0
     - _UseDoubleSided: 0
     - _UseEmissionParallax: 0
@@ -266,7 +274,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.992647, g: 0.5474156, b: 0.5474156, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 0.3490566, b: 0.3490566, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionParallaxColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlossColor: {r: 1, g: 1, b: 1, a: 1}
