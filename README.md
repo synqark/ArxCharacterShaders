@@ -1,5 +1,7 @@
 # ArxCharacterShaders
-バリエーション
+build 1
+
+# バリエーション
 - AlphaCutout
 - Fade
 - FadeRefracted
