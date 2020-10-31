@@ -1,4 +1,4 @@
-Shader "ArxCharacterShaders/Stencil/Writer/Cutout" {
+Shader "ArxCharacterShaders/Stencil/Writer/AlphaCutout" {
     Properties {
         // Double Sided
         [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2

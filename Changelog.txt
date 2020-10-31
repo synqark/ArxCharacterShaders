@@ -1,0 +1,12 @@
+build 4----------------------
+バリエーションを追加
+- AlphaCutout
+- EmissiveFreak/AlphaCutout
+- Fade
+- FadeRefracted
+- Opaque
+- Outline/AlphaCutout
+- Outline/Opaque
+- Stencil/Reader/AlphaCutout
+- Stencil/Writer/AlphaCutout
+- Stencil/WriterMask/AlphaCutout
