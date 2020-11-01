@@ -370,12 +370,14 @@ namespace AxCharacterShaders
                     }
                     if (isFade) {
                         EditorGUILayout.HelpBox("Fadeは、メッシュに半透明を部分的に含む場合に使用するバリエーションです。"
+                        + (isRefracted ? "" : Environment.NewLine + "デフォルトレンダーキューを「Transparent-100」に設定しています。")
                         + Environment.NewLine + "半透明とアウトラインは相性の問題で使用できません。"
                         + Environment.NewLine + "完全に不透明であれば「Opaque」、不透明＋完全に透明の２パターンであれば「AlphaCutout」を使用すると、効率よく描画できます。"
                         , MessageType.Info);
                     }
                     if (isRefracted) {
                         EditorGUILayout.HelpBox("Refractedは、半透明の奥に見える光景を疑似的に屈折させることのできるバリエーションです。"
+                        + Environment.NewLine + "Refractedのみレンダーキューが「Transparent」のままなので注意してください。"
                         + Environment.NewLine + "屈折表現が重要な場合にご利用いただき、そうでない場合は通常の「Fade」の利用を推奨します。"
                         , MessageType.Info);
                     }

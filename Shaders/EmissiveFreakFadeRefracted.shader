@@ -141,6 +141,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/FadeRefracted" {
         Tags {
             "Queue"="Transparent"
             "RenderType"="Transparent"
+            "IgnoreProjector"="True"
         }
         GrabPass{ }
         Pass {

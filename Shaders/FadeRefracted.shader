@@ -112,6 +112,7 @@ Shader "ArxCharacterShaders/FadeRefracted" {
         Tags {
             "Queue"="Transparent"
             "RenderType"="Transparent"
+            "IgnoreProjector"="True"
         }
         GrabPass{ }
         Pass {

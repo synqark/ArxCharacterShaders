@@ -122,6 +122,7 @@ Shader "ArxCharacterShaders/_Outline/_StencilReader/AlphaCutout" {
         Tags {
             "Queue"="AlphaTest+1"
             "RenderType" = "TransparentCutout"
+            "IgnoreProjector"="True"
         }
         Pass {
             Name "FORWARD"

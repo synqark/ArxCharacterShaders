@@ -322,7 +322,7 @@ Material:
     - _Version: 1025
     - _VertexColorBlendDiffuse: 0
     - _VertexColorBlendEmissive: 0
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 0.992647, g: 0.5474156, b: 0.5474156, a: 1}
     - _Color: {r: 0.46507198, g: 0, b: 0.509434, a: 0.68235296}

@@ -107,8 +107,9 @@ Shader "ArxCharacterShaders/Fade" {
     }
     SubShader {
         Tags {
-            "Queue"="Transparent"
+            "Queue"="Transparent-100"
             "RenderType"="Transparent"
+            "IgnoreProjector"="True"
         }
         Pass {
             Name "FORWARD"

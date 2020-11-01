@@ -117,7 +117,6 @@ Shader "ArxCharacterShaders/AlphaCutout" {
 
             CGPROGRAM
 
-
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_fwdbase_fullshadows

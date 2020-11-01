@@ -155,6 +155,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
         Tags {
             "Queue"="AlphaTest"
             "RenderType" = "TransparentCutout"
+            "IgnoreProjector"="True"
         }
         Pass {
             Name "STENCIL_WRITER"

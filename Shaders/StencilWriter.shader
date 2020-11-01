@@ -111,6 +111,7 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         Tags {
             "Queue"="AlphaTest"
             "RenderType" = "TransparentCutout"
+            "IgnoreProjector"="True"
         }
         Pass {
             Name "STENCIL_WRITER"

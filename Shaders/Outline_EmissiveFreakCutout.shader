@@ -161,7 +161,6 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/AlphaCutout" {
 
             CGPROGRAM
 
-
             #pragma vertex vert
             #pragma geometry geom
             #pragma fragment frag
