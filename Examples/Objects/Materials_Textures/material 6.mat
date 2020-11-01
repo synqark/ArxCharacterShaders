@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: material 6
   m_Shader: {fileID: 4800000, guid: bccf1a29daed7e347a5365f4ef9714aa, type: 3}
-  m_ShaderKeywords: _
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -164,7 +164,7 @@ Material:
     - _Cull: 0
     - _CustomShadow2nd: 0
     - _Cutoff: 0.5
-    - _CutoutCutoutAdjust: 0.825
+    - _CutoutCutoutAdjust: 0.512
     - _DetailNormalMapScale: 1
     - _DoubleSidedBackfaceHueShiftFromBase: 0
     - _DoubleSidedBackfaceLightIntensity: 0.5
@@ -271,7 +271,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.992647, g: 0.5474156, b: 0.5474156, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 0.6509804}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionParallaxColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlossColor: {r: 1, g: 1, b: 1, a: 1}

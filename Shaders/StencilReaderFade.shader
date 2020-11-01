@@ -2,9 +2,9 @@ Shader "ArxCharacterShaders/_StencilReader/Fade" {
     Properties {
         // Double Sided
         [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
-        [Toggle(_)]_DoubleSidedFlipBackfaceNormal ("Flip backface normal", Float ) = 0
+        [AXCSToggle]_DoubleSidedFlipBackfaceNormal ("Flip backface normal", Float ) = 0
         _DoubleSidedBackfaceLightIntensity ("Backface Light intensity", Range(0, 2) ) = 0.5
-        [Toggle(_)]_DoubleSidedBackfaceUseColorShift("Backface Use Color Shift", Int) = 0
+        [AXCSToggle]_DoubleSidedBackfaceUseColorShift("Backface Use Color Shift", Int) = 0
         [PowerSlider(2.0)]_DoubleSidedBackfaceHueShiftFromBase("Backface Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _DoubleSidedBackfaceSaturationFromBase("Backface Saturation From Base", Range(0, 2)) = 1
         _DoubleSidedBackfaceValueFromBase("Backface Value From Base", Range(0, 2)) = 1
@@ -19,13 +19,13 @@ Shader "ArxCharacterShaders/_StencilReader/Fade" {
         // Alpha Mask
         _AlphaMask ("[Alpha] AlphaMask", 2D ) = "white" {}
         // Emission Parallax
-        [Toggle(_)]_UseEmissionParallax ("[Emission Parallax] Use Emission Parallax", Int ) = 0
+        [AXCSToggle]_UseEmissionParallax ("[Emission Parallax] Use Emission Parallax", Int ) = 0
         _EmissionParallaxTex ("[Emission Parallax] Texture", 2D ) = "black" {}
         [HDR]_EmissionParallaxColor ("[Emission Parallax] Color", Color ) = (1,1,1,1)
         _EmissionParallaxMask ("[Emission Parallax] Emission Mask", 2D ) = "white" {}
         _EmissionParallaxDepth ("[Emission Parallax] Depth", Range(-1, 1) ) = 0
         _EmissionParallaxDepthMask ("[Emission Parallax] Depth Mask", 2D ) = "white" {}
-        [Toggle(_)]_EmissionParallaxDepthMaskInvert ("[Emission Parallax] Invert Depth Mask", Float ) = 0
+        [AXCSToggle]_EmissionParallaxDepthMaskInvert ("[Emission Parallax] Invert Depth Mask", Float ) = 0
         // Shadow (received from DirectionalLight, other Indirect(baked) Lights, including SH)
         _Shadowborder ("[Shadow] border ", Range(0, 1)) = 0.6
         _ShadowborderBlur ("[Shadow] border Blur", Range(0, 1)) = 0.05
@@ -34,7 +34,7 @@ Shader "ArxCharacterShaders/_StencilReader/Fade" {
         _ShadowStrengthMask ("[Shadow] Strength Mask", 2D) = "white" {}
         _ShadowAmbientIntensity ("[Shadow] Ambient Intensity", Range(0, 1)) = 0.75
         // Shadow steps
-        [Toggle(_)]_ShadowUseStep ("[Shadow] use step", Float ) = 0
+        [AXCSToggle]_ShadowUseStep ("[Shadow] use step", Float ) = 0
         _ShadowSteps("[Shadow] steps between borders", Range(2, 10)) = 4
         // PointShadow (received from Point/Spot Lights as Pixel/Vertex Lights)
         _PointAddIntensity ("[PointShadow] Light Intensity", Range(0,1)) = 1
@@ -42,17 +42,17 @@ Shader "ArxCharacterShaders/_StencilReader/Fade" {
         _PointShadowborder ("[PointShadow] border ", Range(0, 1)) = 0.5
         _PointShadowborderBlur ("[PointShadow] border Blur", Range(0, 1)) = 0.01
         _PointShadowborderBlurMask ("[PointShadow] border Blur Mask", 2D) = "white" {}
-        [Toggle(_)]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
+        [AXCSToggle]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
         _PointShadowSteps("[PointShadow] steps between borders", Range(2, 10)) = 2
         // Plan B
-        [Toggle(_)] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
+        [AXCSToggle] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _ShadowPlanBSaturationFromBase ("[Plan B] Saturation From Base", Range(0, 2)) = 1
         _ShadowPlanBValueFromBase ("[Plan B] Value From Base", Range(0, 2)) = 1
         _ShadowPlanBCustomShadowTexture ("[Plan B] Custom Shadow Texture", 2D) = "black" {}
         _ShadowPlanBCustomShadowTextureRGB ("[Plan B] Custom Shadow Texture RGB", Color) = (1,1,1,1)
         // Gloss
-        [Toggle(_)]_UseGloss ("[Gloss] Enabled", Int) = 0
+        [AXCSToggle]_UseGloss ("[Gloss] Enabled", Int) = 0
         _GlossBlend ("[Gloss] Smoothness", Range(0, 1)) = 0.5
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
@@ -66,8 +66,8 @@ Shader "ArxCharacterShaders/_StencilReader/Fade" {
         _MatcapTexture ("[MatCap] Texture", 2D) = "black" {}
         _MatcapColor ("[MatCap] Color", Color) = (1,1,1,1)
         // Reflection
-        [Toggle(_)]_UseReflection ("[Reflection] Enabled", Int) = 0
-        [Toggle(_)]_UseReflectionProbe ("[Reflection] Use Reflection Probe", Int) = 1
+        [AXCSToggle]_UseReflection ("[Reflection] Enabled", Int) = 0
+        [AXCSToggle]_UseReflectionProbe ("[Reflection] Use Reflection Probe", Int) = 1
         _ReflectionReflectionPower ("[Reflection] Reflection Power", Range(0, 1)) = 1
         _ReflectionReflectionMask ("[Reflection] Reflection Mask", 2D) = "white" {}
         _ReflectionNormalMix ("[Reflection] Normal Map Mix", Range(0,2)) = 1
@@ -75,7 +75,7 @@ Shader "ArxCharacterShaders/_StencilReader/Fade" {
         _ReflectionSuppressBaseColorValue ("[Reflection] Suppress Base Color", Range(0, 1)) = 1
         _ReflectionCubemap ("[Reflection] Cubemap", Cube) = "" {}
         // Rim
-        [Toggle(_)]_UseRim ("[Rim] Enabled", Int) = 0
+        [AXCSToggle]_UseRim ("[Rim] Enabled", Int) = 0
         _RimBlend ("[Rim] Blend", Range(0, 3)) = 1
         _RimBlendMask ("[Rim] Blend Mask", 2D) = "white" {}
         _RimShadeMix("[Rim] Shade Mix", Range(0, 1)) = 0
@@ -84,7 +84,7 @@ Shader "ArxCharacterShaders/_StencilReader/Fade" {
         [Enum(Linear,0, Pow3,1, Pow5,2)] _RimPow ("[Rim] Power Type", Int) = 1
         [HDR]_RimColor ("[Rim] Color", Color) = (1,1,1,1)
         _RimTexture ("[Rim] Texture", 2D) = "white" {}
-        [Toggle(_)] _RimUseBaseTexture ("[Rim] Use Base Texture", Float ) = 0
+        [AXCSToggle] _RimUseBaseTexture ("[Rim] Use Base Texture", Float ) = 0
         // ShadowCap
         [Enum(Darken,0, Multiply,1, Light Shutter,2, Unused,3)] _ShadowCapBlendMode ("[ShadowCap] Blend Mode", Int) = 3
         _ShadowCapBlend ("[ShadowCap] Blend", Range(0, 3)) = 1
@@ -101,7 +101,7 @@ Shader "ArxCharacterShaders/_StencilReader/Fade" {
         _OtherShadowAdjust ("[Advanced] Other Mesh Shadow Adjust", Range(-0.2, 0.2)) = -0.1
         _OtherShadowBorderSharpness ("[Advanced] Other Mesh Shadow Border Sharpness", Range(1, 5)) = 3
         // Proximity color override
-        [Toggle(_)]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
+        [AXCSToggle]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
         _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
         _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
         _ProximityOverrideColor ("[ProximityOverride] Override Color", Color) = (0,0,0,1)

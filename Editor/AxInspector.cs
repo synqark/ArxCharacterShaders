@@ -969,4 +969,57 @@ namespace AxCharacterShaders
             EditorGUILayout.EndHorizontal();
         }
     }
+
+    // シェーダーキーワードを作らないToggle（UIToggleだと面倒そうだったので）
+    internal class MaterialAXCSToggleDrawer : MaterialPropertyDrawer
+    {
+        public MaterialAXCSToggleDrawer()
+        {
+        }
+
+        public MaterialAXCSToggleDrawer(string keyword)
+        {
+        }
+
+        protected virtual void SetKeyword(MaterialProperty prop, bool on)
+        {
+        }
+
+        static bool IsPropertyTypeSuitable(MaterialProperty prop)
+        {
+            return prop.type == MaterialProperty.PropType.Float || prop.type == MaterialProperty.PropType.Range;
+        }
+
+        public override float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
+        {
+            return base.GetPropertyHeight(prop, label, editor);
+        }
+
+        public override void OnGUI(Rect position, MaterialProperty prop, GUIContent label, MaterialEditor editor)
+        {
+            EditorGUI.BeginChangeCheck();
+
+            bool value = (Math.Abs(prop.floatValue) > 0.001f);
+            EditorGUI.showMixedValue = prop.hasMixedValue;
+            value = EditorGUI.Toggle(position, label, value);
+            EditorGUI.showMixedValue = false;
+            if (EditorGUI.EndChangeCheck())
+            {
+                prop.floatValue = value ? 1.0f : 0.0f;
+                SetKeyword(prop, value);
+            }
+        }
+
+        public override void Apply(MaterialProperty prop)
+        {
+            base.Apply(prop);
+            if (!IsPropertyTypeSuitable(prop))
+                return;
+
+            if (prop.hasMixedValue)
+                return;
+
+            SetKeyword(prop, (Math.Abs(prop.floatValue) > 0.001f));
+        }
+    }
 }
