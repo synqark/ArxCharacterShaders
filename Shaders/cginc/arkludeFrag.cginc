@@ -143,6 +143,21 @@ float4 frag(
     // 受光強度の計算が終わったので空間色を確定
     float3 finalLight = lerp(indirectLighting,directLighting,directContribution)+coloredLight_sum;
 
+    /*
+    １．サンプリングした最大の光の色 : directLighting
+        TODO:光の影響を受けたくない場合に「Lerp(directLighting, 1, 利用者がUnlitにさせたい割合（1＝完全Unlit）)」をする。していいかどうかは要確認
+
+    ２．サンプリングした最大の陰の色 : indirectLighting
+    Ａ．サンプリングした重要度の低いポイントライトの色：coloredLight_sum
+    ３．陰に対して陰の色をどの程度適用するか：[１] + lerp(0, [２] - [１], ShadowStrength) // ...あれ、ShadowStrengthってここでは？上の処理いらん気がしてきた
+    　　　ShadowStrengthがゼロの場合、陰に対しても最大の光が決定される。
+    ４．その地点にどの程度の光が降っているか（０～１で正規化済み）：directContribution
+    ５．その地点に提供すべき光の色：lerp([３], [１], [４]) + [Ａ]
+    ６．利用者が陰となるべき部分に適用したいテクスチャの色　: ShadeMap(ベースカラーから計算済み)
+    ７．その地点で使用すべきテクスチャの色：lerp([６], Diffuse, [４])
+    ８．その地点であるべき色：[５]＊[７]
+    */
+
     float3 toonedMap = float3(0,0,0);
     {
         // Contributionが0の地点の色（影色）の決定
@@ -156,7 +171,6 @@ float4 frag(
             ShadeMap = Diff_HSV;
         }
 
-
         float _ShadowStrengthMask_var = tex2D(_ShadowStrengthMask, TRANSFORM_TEX(i.uv0, _ShadowStrengthMask));
         float shadowStrength = _ShadowStrengthMask_var * _ShadowStrength;
 
@@ -166,58 +180,7 @@ float4 frag(
 
         float3 finslBaseColor = lerp(ShadeMap, Diffuse, directContribution); // ７
 
-        // finalLight = lerp(ShadeMap,directLighting,directContribution)+coloredLight_sum;
-        // toonedMap = (Diffuse*directContribution + (ShadeMap * (1-directContribution)))*finalLight;
         toonedMap = finslBaseColor * finalLightColor; // ８
-        /*
-
-        １．サンプリングした最大の光の色 : directLighting
-            TODO:光の影響を受けたくない場合に「Lerp(directLighting, 1, 利用者がUnlitにさせたい割合（1＝完全Unlit）)」をする。していいかどうかは要確認
-
-        ２．サンプリングした最大の陰の色 : indirectLighting
-        Ａ．サンプリングした重要度の低いポイントライトの色：coloredLight_sum
-        ３．陰に対して陰の色をどの程度適用するか：[１] + lerp(0, [２] - [１], ShadowStrength) // ...あれ、ShadowStrengthってここでは？上の処理いらん気がしてきた
-        　　　ShadowStrengthがゼロの場合、陰に対しても最大の光が決定される。
-        ４．その地点にどの程度の光が降っているか（０～１で正規化済み）：directContribution
-        ５．その地点に提供すべき光の色：lerp([３], [１], [４]) + [Ａ]
-        ６．利用者が陰となるべき部分に適用したいテクスチャの色　: ShadeMap(ベースカラーから計算済み)
-        ７．その地点で使用すべきテクスチャの色：lerp([６], Diffuse, [４])
-        ８．その地点であるべき色：[５]＊[７]
-
-        + Shadow Rampを指定できる何か
-
-        空間にあるGIとライトで勝手に計算する価：
-        directLighting
-        indirectLighting
-        directContribution
-
-        利用者に弄ってもらいたいプロパティ：
-        ShadowStrength：陰の適用度
-        ShadeMap：影となるべき部分に適用したいテクスチャの色
-
-        TODO：
-        １．サンプリングした光の色もlerp(1, hoge, fuga)でコントロールできるようにしたい。望めばUnlitみたいにできるということ。
-        ２．上の計算式に影２を作る場合、どうやって作るべきか考える。ShadeMapの計算プロセスに介入すればいける？
-        ３．Addパスでの検討。Addは所詮Addなので、Diffuse*directLighting*directContributionの結果で終わりな気もする。
-
-        デフォルトの影の色といいかんじに陰色を混ぜる場合： lerp(ShadeMap, indirectLighting, どれだけ空間が作った影色を適用したいかバリュー) → mixedShadeとする
-        ベースカラー：Diffuse
-
-        案１：
-        directLightingAdjusted = lerp(1, directLIghting, lighterAffectedValue(0-1));
-        indirectLightingAdjusted = lerp(1, directLIghting, darkerAffectedValue(0-1));
-        ColorWhenLighted = Diffuse;
-        ColorWhenShaded = lerp(Diffuse, ShadeValue, CustomShadeAffectiveValue(0-1));
-        directCOntribution = directCOntribution(そのまま)
-
-        */
-
-        #ifdef AXCS_DEBUG_CONTRIBUTION
-            toonedMap = directContribution;
-        #endif
-        #ifdef AXCS_DEBUG_LIGHTCOLOR
-            toonedMap = finalLightColor;
-        #endif
     }
 
     float3 tmpToonedMapFactor = (Diffuse+(Diffuse*coloredLight_sum));
