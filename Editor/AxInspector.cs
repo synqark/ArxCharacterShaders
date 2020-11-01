@@ -170,13 +170,12 @@ namespace AxCharacterShaders
             bool isOpaque = shader.name.Contains("Opaque");
             bool isFade = shader.name.Contains("Fade");
             bool isCutout = shader.name.Contains("Cutout");
-            bool isStencilWriter = shader.name.Contains("Stencil/Writer") || shader.name.Contains("StencilWriter");
-            bool isStencilReader = shader.name.Contains("Stencil/Reader") || shader.name.Contains("StencilReader");
-            bool isStencilReaderDouble = shader.name.Contains("Stencil/Reader/Double");
-            bool isStencilWriterMask = shader.name.Contains("Stencil/WriterMask");
+            bool isStencilWriter = shader.name.Contains("StencilWriter");
+            bool isStencilReader = shader.name.Contains("StencilReader");
+            bool isStencilReaderDouble = shader.name.Contains("_StencilReader/Double");
             bool isRefracted = shader.name.Contains("Refracted");
-            bool isEmissiveFreak = shader.name.Contains("/EmissiveFreak/");
-            bool isOutline = shader.name.Contains("/Outline/");
+            bool isEmissiveFreak = shader.name.Contains("/_EmissiveFreak/");
+            bool isOutline = shader.name.Contains("/_Outline/");
 
             // Clear regitered props
             ClearRegisteredPropertiesList();
@@ -629,11 +628,9 @@ namespace AxCharacterShaders
                     UIHelper.ShurikenHeader("Stencil Writer");
                     UIHelper.DrawWithGroup(() => {
                         materialEditor.ShaderProperty(StencilNumber,"Stencil Number");
-                        if(isStencilWriterMask) {
-                            materialEditor.TexturePropertySingleLine(new GUIContent("Stencil Mask & Range", "Stencil Mask and Range"), StencilMaskTex, StencilMaskAdjust);
-                            materialEditor.TextureScaleOffsetPropertyIndent(StencilMaskTex);
-                        }
-                        if(isStencilWriterMask) materialEditor.ShaderProperty(StencilMaskAlphaDither, "Alpha(Dither)");
+                        materialEditor.TexturePropertySingleLine(new GUIContent("Stencil Mask & Range", "Stencil Mask and Range"), StencilMaskTex, StencilMaskAdjust);
+                        materialEditor.TextureScaleOffsetPropertyIndent(StencilMaskTex);
+                        materialEditor.ShaderProperty(StencilMaskAlphaDither, "Alpha(Dither)");
                     });
                 }
 

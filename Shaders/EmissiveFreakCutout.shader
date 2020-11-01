@@ -1,4 +1,4 @@
-Shader "ArxCharacterShaders/EmissiveFreak/AlphaCutout" {
+Shader "ArxCharacterShaders/_EmissiveFreak/AlphaCutout" {
     Properties {
         // Double Sided
         [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2

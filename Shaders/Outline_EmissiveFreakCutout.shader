@@ -1,7 +1,7 @@
-Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Opaque" {
+Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/AlphaCutout" {
     Properties {
         // Double Sided
-        [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0
+        [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
         [Toggle(_)]_DoubleSidedFlipBackfaceNormal ("Flip backface normal", Float ) = 0
         _DoubleSidedBackfaceLightIntensity ("Backface Light intensity", Range(0, 2) ) = 0.5
         [Toggle(_)]_DoubleSidedBackfaceUseColorShift("Backface Use Color Shift", Int) = 0
@@ -23,6 +23,8 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Opaque" {
         _EmissionParallaxDepth ("[Emission Parallax] Depth", Range(-1, 1) ) = 0
         _EmissionParallaxDepthMask ("[Emission Parallax] Depth Mask", 2D ) = "white" {}
         [Toggle(_)]_EmissionParallaxDepthMaskInvert ("[Emission Parallax] Invert Depth Mask", Float ) = 0
+        // Cutout
+        _CutoutCutoutAdjust ("Cutout Border Adjust", Range(0, 1)) = 0.5
         // Shadow (received from DirectionalLight, other Indirect(baked) Lights, including SH)
         _Shadowborder ("[Shadow] border ", Range(0, 1)) = 0.6
         _ShadowborderBlur ("[Shadow] border Blur", Range(0, 1)) = 0.05
@@ -42,7 +44,6 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Opaque" {
         [Toggle(_)]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
         _PointShadowSteps("[PointShadow] steps between borders", Range(2, 10)) = 2
         // Plan B
-        [Toggle(_)]_ShadowPlanBUsePlanB ("[Plan B] Use Plan B", Int ) = 0
         [Toggle(_)] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _ShadowPlanBSaturationFromBase ("[Plan B] Saturation From Base", Range(0, 2)) = 1
@@ -55,6 +56,19 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Opaque" {
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
+        // Outline
+        _OutlineWidth ("[Outline] Width", Range(0, 20)) = 0.1
+        _OutlineMask ("[Outline] Outline Mask", 2D) = "white" {}
+        _OutlineCutoffRange ("[Outline] Cutoff Range", Range(0, 1)) = 0.5
+        _OutlineColor ("[Outline] Color", Color) = (0,0,0,1)
+        _OutlineTexture ("[Outline] Texture", 2D) = "white" {}
+        _OutlineShadeMix ("[Outline] Shade Mix", Range(0, 1)) = 0
+        _OutlineTextureColorRate ("[Outline] Texture Color Rate", Range(0, 1)) = 0.05
+        _OutlineWidthMask ("[Outline] Outline Width Mask", 2D) = "white" {}
+        [Toggle(_)]_OutlineUseColorShift("[Outline] Use Outline Color Shift", Int) = 0
+        [PowerSlider(2.0)]_OutlineHueShiftFromBase("[Outline] Hue Shift From Base", Range(-0.5, 0.5)) = 0
+        _OutlineSaturationFromBase("[Outline] Saturation From Base", Range(0, 2)) = 1
+        _OutlineValueFromBase("[Outline] Value From Base", Range(0, 2)) = 1
         // MatCap
         [Enum(Add,0, Lighten,1, Screen,2, Unused,3)] _MatcapBlendMode ("[MatCap] Blend Mode", Int) = 3
         _MatcapBlend ("[MatCap] Blend", Range(0, 3)) = 1
@@ -126,18 +140,24 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Opaque" {
         _EmissiveFreak2BlinkIn ("[EmissiveFreak2] Blink In", Float ) = 0
         _EmissiveFreak2BlinkInMix ("[EmissiveFreak2] Blink In Factor", Range(0, 1) ) = 0
         _EmissiveFreak2HueShift ("[EmissiveFreak2] Hue Shift Speed", Float ) = 0
+        // Proximity color override
+        [Toggle(_)]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
+        _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
+        _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
+        _ProximityOverrideColor ("[ProximityOverride] Override Color", Color) = (0,0,0,1)
     }
     SubShader {
         Tags {
-			"Queue"="Geometry"
-            "RenderType"="Opaque"
+            "Queue"="AlphaTest"
+            "RenderType" = "TransparentCutout"
+            "IgnoreProjector"="True"
         }
         Pass {
             Name "FORWARD"
             Tags {
                 "LightMode"="ForwardBase"
             }
-            Cull Back
+            Cull [_Cull]
 
             CGPROGRAM
 
@@ -149,7 +169,9 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Opaque" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
+            #define AXCS_CUTOUT
             #define AXCS_EMISSIVE_FREAK
+            #define AXCS_OUTLINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -162,19 +184,21 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Opaque" {
             Tags {
                 "LightMode"="ForwardAdd"
             }
-            Cull Back
+            Cull [_Cull]
             Blend One One
 
             CGPROGRAM
 
             #pragma vertex vert
-			#pragma geometry geom
+            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdadd_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
+            #define AXCS_CUTOUT
             #define AXCS_ADD
+            #define AXCS_OUTLINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -199,7 +223,10 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Opaque" {
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
+            #pragma target 3.0
+            uniform float _CutoutCutoutAdjust;
+            uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
+            uniform float4 _Color;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float2 texcoord0 : TEXCOORD0;
@@ -216,6 +243,8 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Opaque" {
                 return o;
             }
             float4 frag(g2f i) : COLOR {
+                float4 _MainTex_var = tex2D(_MainTex,TRANSFORM_TEX(i.uv0, _MainTex));
+                clip((_MainTex_var.a * _Color.a) - _CutoutCutoutAdjust);
                 SHADOW_CASTER_FRAGMENT(i)
             }
             ENDCG

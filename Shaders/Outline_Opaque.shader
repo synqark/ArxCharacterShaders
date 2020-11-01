@@ -1,4 +1,4 @@
-Shader "ArxCharacterShaders/Outline/Opaque" {
+Shader "ArxCharacterShaders/_Outline/Opaque" {
     Properties {
         // Double Sided
         [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2

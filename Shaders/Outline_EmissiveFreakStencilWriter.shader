@@ -1,4 +1,4 @@
-Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
+Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" {
     Properties {
         // Double Sided
         [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
@@ -56,6 +56,19 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
+        // Outline
+        _OutlineWidth ("[Outline] Width", Range(0, 20)) = 0.1
+        _OutlineMask ("[Outline] Outline Mask", 2D) = "white" {}
+        _OutlineCutoffRange ("[Outline] Cutoff Range", Range(0, 1)) = 0.5
+        _OutlineColor ("[Outline] Color", Color) = (0,0,0,1)
+        _OutlineTexture ("[Outline] Texture", 2D) = "white" {}
+        _OutlineShadeMix ("[Outline] Shade Mix", Range(0, 1)) = 0
+        _OutlineTextureColorRate ("[Outline] Texture Color Rate", Range(0, 1)) = 0.05
+        _OutlineWidthMask ("[Outline] Outline Width Mask", 2D) = "white" {}
+        [Toggle(_)]_OutlineUseColorShift("[Outline] Use Outline Color Shift", Int) = 0
+        [PowerSlider(2.0)]_OutlineHueShiftFromBase("[Outline] Hue Shift From Base", Range(-0.5, 0.5)) = 0
+        _OutlineSaturationFromBase("[Outline] Saturation From Base", Range(0, 2)) = 1
+        _OutlineValueFromBase("[Outline] Value From Base", Range(0, 2)) = 1
         // MatCap
         [Enum(Add,0, Lighten,1, Screen,2, Unused,3)] _MatcapBlendMode ("[MatCap] Blend Mode", Int) = 3
         _MatcapBlend ("[MatCap] Blend", Range(0, 3)) = 1
@@ -101,6 +114,37 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         // advanced tweaking
         _OtherShadowAdjust ("[Advanced] Other Mesh Shadow Adjust", Range(-0.2, 0.2)) = -0.1
         _OtherShadowBorderSharpness ("[Advanced] Other Mesh Shadow Border Sharpness", Range(1, 5)) = 3
+        // EmissiveFreak
+        _EmissiveFreak1Tex ("[EmissiveFreak] Texture", 2D ) = "white" {}
+        [HDR]_EmissiveFreak1Color ("[EmissiveFreak] Color", Color ) = (0,0,0,1)
+        _EmissiveFreak1Mask ("[EmissiveFreak] Mask", 2D ) = "white" {}
+        _EmissiveFreak1U ("[EmissiveFreak] U Scroll", Float ) = 0
+        _EmissiveFreak1V ("[EmissiveFreak] V Scroll", Float ) = 0
+        _EmissiveFreak1Depth ("[EmissiveFreak] Depth", Range(-1, 1) ) = 0
+        _EmissiveFreak1DepthMask ("[EmissiveFreak] Depth Mask", 2D ) = "white" {}
+        [Toggle(_)]_EmissiveFreak1DepthMaskInvert ("[EmissiveFreak] Invert Depth Mask", Float ) = 0
+        _EmissiveFreak1Breathing ("[EmissiveFreak] Breathing Speed", Float ) = 0
+        _EmissiveFreak1BreathingMix ("[EmissiveFreak] Breathing Factor", Range(0, 1) ) = 0
+        _EmissiveFreak1BlinkOut ("[EmissiveFreak] Blink Out Speed", Float ) = 0
+        _EmissiveFreak1BlinkOutMix ("[EmissiveFreak] Blink Out Factor", Range(0, 1) ) = 0
+        _EmissiveFreak1BlinkIn ("[EmissiveFreak] Blink In", Float ) = 0
+        _EmissiveFreak1BlinkInMix ("[EmissiveFreak] Blink In Factor", Range(0, 1) ) = 0
+        _EmissiveFreak1HueShift ("[EmissiveFreak] Hue Shift Speed", Float ) = 0
+        _EmissiveFreak2Tex ("[EmissiveFreak2] Texture", 2D ) = "white" {}
+        [HDR]_EmissiveFreak2Color ("[EmissiveFreak2] Color", Color ) = (0,0,0,1)
+        _EmissiveFreak2Mask ("[EmissiveFreak2] Mask", 2D ) = "white" {}
+        _EmissiveFreak2U ("[EmissiveFreak2] U Scroll", Float ) = 0
+        _EmissiveFreak2V ("[EmissiveFreak2] V Scroll", Float ) = 0
+        _EmissiveFreak2Depth ("[EmissiveFreak2] Depth", Range(-1, 1) ) = 0
+        _EmissiveFreak2DepthMask ("[EmissiveFreak2] Depth Mask", 2D ) = "white" {}
+        [Toggle(_)]_EmissiveFreak2DepthMaskInvert ("[EmissiveFreak2] Invert Depth Mask", Float ) = 0
+        _EmissiveFreak2Breathing ("[EmissiveFreak2] Breathing Speed", Float ) = 0
+        _EmissiveFreak2BreathingMix ("[EmissiveFreak2] Breathing Factor", Range(0, 1) ) = 0
+        _EmissiveFreak2BlinkOut ("[EmissiveFreak2] Blink Out Speed", Float ) = 0
+        _EmissiveFreak2BlinkOutMix ("[EmissiveFreak2] Blink Out Factor", Range(0, 1) ) = 0
+        _EmissiveFreak2BlinkIn ("[EmissiveFreak2] Blink In", Float ) = 0
+        _EmissiveFreak2BlinkInMix ("[EmissiveFreak2] Blink In Factor", Range(0, 1) ) = 0
+        _EmissiveFreak2HueShift ("[EmissiveFreak2] Hue Shift Speed", Float ) = 0
         // Proximity color override
         [Toggle(_)]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
         _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
@@ -149,12 +193,16 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
 
 
             #pragma vertex vert
+            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdbase_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0
+            #pragma target 4.0
             #define AXCS_CUTOUT
+            #define AXCS_EMISSIVE_FREAK
+            #define AXCS_OUTLINE
+
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
@@ -172,13 +220,15 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
             CGPROGRAM
 
             #pragma vertex vert
+            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdadd_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0
+            #pragma target 4.0
             #define AXCS_CUTOUT
             #define AXCS_ADD
+            #define AXCS_OUTLINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"

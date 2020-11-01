@@ -1,16 +1,13 @@
-Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Fade" {
+Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
     Properties {
         // Double Sided
-        [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0
+        [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
         [Toggle(_)]_DoubleSidedFlipBackfaceNormal ("Flip backface normal", Float ) = 0
         _DoubleSidedBackfaceLightIntensity ("Backface Light intensity", Range(0, 2) ) = 0.5
         [Toggle(_)]_DoubleSidedBackfaceUseColorShift("Backface Use Color Shift", Int) = 0
         [PowerSlider(2.0)]_DoubleSidedBackfaceHueShiftFromBase("Backface Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _DoubleSidedBackfaceSaturationFromBase("Backface Saturation From Base", Range(0, 2)) = 1
         _DoubleSidedBackfaceValueFromBase("Backface Value From Base", Range(0, 2)) = 1
-        //
-        _Cull("[hidden] Shadow Caster Culling", Int) = 2 // None:0, Front:1, Back:2
-        [Enum(Off, 0, On, 1)]_ZWrite("ZWrite", Float) = 0
         // Common
         _MainTex ("[Common] Base Texture", 2D) = "white" {}
         _Color ("[Common] Base Color", Color) = (1,1,1,1)
@@ -18,8 +15,6 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Fade" {
         _BumpScale ("[Common] Normal scale", Range(0,2)) = 1
         _EmissionMap ("[Common] Emission map", 2D) = "white" {}
         [HDR]_EmissionColor ("[Common] Emission Color", Color) = (0,0,0,1)
-        // Alpha Mask
-        _AlphaMask ("[Alpha] AlphaMask", 2D ) = "white" {}
         // Emission Parallax
         [Toggle(_)]_UseEmissionParallax ("[Emission Parallax] Use Emission Parallax", Int ) = 0
         _EmissionParallaxTex ("[Emission Parallax] Texture", 2D ) = "black" {}
@@ -28,6 +23,8 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Fade" {
         _EmissionParallaxDepth ("[Emission Parallax] Depth", Range(-1, 1) ) = 0
         _EmissionParallaxDepthMask ("[Emission Parallax] Depth Mask", 2D ) = "white" {}
         [Toggle(_)]_EmissionParallaxDepthMaskInvert ("[Emission Parallax] Invert Depth Mask", Float ) = 0
+        // Cutout
+        _CutoutCutoutAdjust ("Cutout Border Adjust", Range(0, 1)) = 0.5
         // Shadow (received from DirectionalLight, other Indirect(baked) Lights, including SH)
         _Shadowborder ("[Shadow] border ", Range(0, 1)) = 0.6
         _ShadowborderBlur ("[Shadow] border Blur", Range(0, 1)) = 0.05
@@ -47,7 +44,6 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Fade" {
         [Toggle(_)]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
         _PointShadowSteps("[PointShadow] steps between borders", Range(2, 10)) = 2
         // Plan B
-        [Toggle(_)]_ShadowPlanBUsePlanB ("[Plan B] Use Plan B", Int ) = 0
         [Toggle(_)] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _ShadowPlanBSaturationFromBase ("[Plan B] Saturation From Base", Range(0, 2)) = 1
@@ -62,10 +58,6 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Fade" {
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
         // MatCap
         [Enum(Add,0, Lighten,1, Screen,2, Unused,3)] _MatcapBlendMode ("[MatCap] Blend Mode", Int) = 3
-        [Toggle(_)]_OutlineUseColorShift("[Outline] Use Outline Color Shift", Int) = 0
-        [PowerSlider(2.0)]_OutlineHueShiftFromBase("[Outline] Hue Shift From Base", Range(-0.5, 0.5)) = 0
-        _OutlineSaturationFromBase("[Outline] Saturation From Base", Range(0, 2)) = 1
-        _OutlineValueFromBase("[Outline] Value From Base", Range(0, 2)) = 1
         _MatcapBlend ("[MatCap] Blend", Range(0, 3)) = 1
         _MatcapBlendMask ("[MatCap] Blend Mask", 2D) = "white" {}
         _MatcapNormalMix ("[MatCap] Normal map mix", Range(0, 2)) = 1
@@ -98,6 +90,9 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Fade" {
         _ShadowCapBlendMask ("[ShadowCap] Blend Mask", 2D) = "white" {}
         _ShadowCapNormalMix ("[ShadowCap] Normal map mix", Range(0, 2)) = 1
         _ShadowCapTexture ("[ShadowCap] Texture", 2D) = "white" {}
+        // Stencil(Reader)
+        _StencilNumber ("[StencilReader] Number", int) = 5
+        [Enum(UnityEngine.Rendering.CompareFunction)] _StencilCompareAction ("[StencilReader] Compare Action", int) = 6
         // vertex color blend
         _VertexColorBlendDiffuse ("[VertexColor] Blend to diffuse", Range(0,1)) = 0
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
@@ -135,32 +130,39 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Fade" {
         _EmissiveFreak2BlinkIn ("[EmissiveFreak2] Blink In", Float ) = 0
         _EmissiveFreak2BlinkInMix ("[EmissiveFreak2] Blink In Factor", Range(0, 1) ) = 0
         _EmissiveFreak2HueShift ("[EmissiveFreak2] Hue Shift Speed", Float ) = 0
+        // Proximity color override
+        [Toggle(_)]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
+        _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
+        _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
+        _ProximityOverrideColor ("[ProximityOverride] Override Color", Color) = (0,0,0,1)
     }
     SubShader {
         Tags {
-            "Queue"="Transparent"
-            "RenderType"="Transparent"
+            "Queue"="AlphaTest+1"
+            "RenderType" = "TransparentCutout"
         }
         Pass {
             Name "FORWARD"
             Tags {
                 "LightMode"="ForwardBase"
             }
-            Cull Back
-            Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite [_ZWrite]
+            Cull [_Cull]
+
+            Stencil {
+                Ref [_StencilNumber]
+                Comp [_StencilCompareAction]
+            }
 
             CGPROGRAM
 
 
             #pragma vertex vert
-            #pragma geometry geom
             #pragma fragment frag
-            #pragma multi_compile_fwdbase
+            #pragma multi_compile_fwdbase_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
-            #define AXCS_FADE
+            #pragma target 3.0
+            #define AXCS_CUTOUT
             #define AXCS_EMISSIVE_FREAK
 
             #include "cginc/arkludeDecl.cginc"
@@ -174,20 +176,23 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Fade" {
             Tags {
                 "LightMode"="ForwardAdd"
             }
-            Cull Back
+            Cull [_Cull]
             Blend One One
-            ZWrite [_ZWrite]
+
+            Stencil {
+                Ref [_StencilNumber]
+                Comp [_StencilCompareAction]
+            }
 
             CGPROGRAM
 
             #pragma vertex vert
-            #pragma geometry geom
             #pragma fragment frag
-            #pragma multi_compile_fwdadd
+            #pragma multi_compile_fwdadd_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
-            #define AXCS_FADE
+            #pragma target 3.0
+            #define AXCS_CUTOUT
             #define AXCS_ADD
 
             #include "cginc/arkludeDecl.cginc"
@@ -196,27 +201,52 @@ Shader "ArxCharacterShaders/_Extra/EmissiveFreak/Fade" {
             #include "cginc/arkludeAdd.cginc"
             ENDCG
         }
-
-        // ------------------------------------------------------------------
-        //  Shadow rendering pass
         Pass {
-            Name "SHADOWCASTER"
-            Tags { "LightMode" = "ShadowCaster" }
-
-            ZWrite On ZTest LEqual
+            Name "ShadowCaster"
+            Tags {
+                "LightMode"="ShadowCaster"
+            }
+            Offset 1, 1
             Cull [_Cull]
 
+            Stencil {
+                Ref [_StencilNumber]
+                Comp [_StencilCompareAction]
+            }
+
             CGPROGRAM
-            #pragma target 3.0
-
-            // -------------------------------------
+            #pragma vertex vert
+            #pragma fragment frag
+            #include "UnityCG.cginc"
+            #include "Lighting.cginc"
+            #pragma fragmentoption ARB_precision_hint_fastest
             #pragma multi_compile_shadowcaster
-
-            #pragma vertex vertShadowCaster
-            #pragma fragment fragShadowCaster
-
-            #include "cginc/arkludeFadeShadowCaster.cginc"
-
+            #pragma multi_compile_fog
+            #pragma only_renderers d3d9 d3d11 glcore gles
+            #pragma target 3.0
+            uniform float _CutoutCutoutAdjust;
+            uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
+            uniform float4 _Color;
+            struct VertexInput {
+                float4 vertex : POSITION;
+                float2 texcoord0 : TEXCOORD0;
+            };
+            struct g2f {
+                V2F_SHADOW_CASTER;
+                float2 uv0 : TEXCOORD1;
+            };
+            g2f vert (VertexInput v) {
+                g2f o = (g2f)0;
+                o.uv0 = v.texcoord0;
+                o.pos = UnityObjectToClipPos( v.vertex );
+                TRANSFER_SHADOW_CASTER(o)
+                return o;
+            }
+            float4 frag(g2f i) : COLOR {
+                float4 _MainTex_var = tex2D(_MainTex,TRANSFORM_TEX(i.uv0, _MainTex));
+                clip((_MainTex_var.a * _Color.a) - _CutoutCutoutAdjust);
+                SHADOW_CASTER_FRAGMENT(i)
+            }
             ENDCG
         }
     }

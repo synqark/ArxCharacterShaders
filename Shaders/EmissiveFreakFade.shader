@@ -1,15 +1,13 @@
-Shader "ArxCharacterShaders/Stencil/Reader/Double/FadeFade" {
+Shader "ArxCharacterShaders/_EmissiveFreak/Fade" {
     Properties {
         // Double Sided
-        [Toggle(_)]_UseDoubleSided ("Double Sided", Int ) = 0
+        [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
         [Toggle(_)]_DoubleSidedFlipBackfaceNormal ("Flip backface normal", Float ) = 0
         _DoubleSidedBackfaceLightIntensity ("Backface Light intensity", Range(0, 2) ) = 0.5
         [Toggle(_)]_DoubleSidedBackfaceUseColorShift("Backface Use Color Shift", Int) = 0
         [PowerSlider(2.0)]_DoubleSidedBackfaceHueShiftFromBase("Backface Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _DoubleSidedBackfaceSaturationFromBase("Backface Saturation From Base", Range(0, 2)) = 1
         _DoubleSidedBackfaceValueFromBase("Backface Value From Base", Range(0, 2)) = 1
-        //
-        _Cull("[hidden] Shadow Caster Culling", Int) = 2 // None:0, Front:1, Back:2
         [Enum(Off, 0, On, 1)]_ZWrite("ZWrite", Float) = 0
         // Common
         _MainTex ("[Common] Base Texture", 2D) = "white" {}
@@ -18,13 +16,6 @@ Shader "ArxCharacterShaders/Stencil/Reader/Double/FadeFade" {
         _BumpScale ("[Common] Normal scale", Range(0,2)) = 1
         _EmissionMap ("[Common] Emission map", 2D) = "white" {}
         [HDR]_EmissionColor ("[Common] Emission Color", Color) = (0,0,0,1)
-        // Secondary Common
-        _MainTexSecondary ("[CommonSecondary] Base Texture", 2D) = "white" {}
-        _ColorSecondary ("[CommonSecondary] Base Color", Color) = (1,1,1,1)
-        _BumpMapSecondary ("[Common] Normal map", 2D) = "bump" {}
-        _BumpScaleSecondary ("[Common] Normal scale", Range(0,2)) = 1
-        _EmissionMapSecondary ("[Common] Emission map", 2D) = "white" {}
-        _EmissionColorSecondary ("[Common] Emission Color", Color) = (0,0,0,1)
         // Alpha Mask
         _AlphaMask ("[Alpha] AlphaMask", 2D ) = "white" {}
         // Emission Parallax
@@ -54,7 +45,6 @@ Shader "ArxCharacterShaders/Stencil/Reader/Double/FadeFade" {
         [Toggle(_)]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
         _PointShadowSteps("[PointShadow] steps between borders", Range(2, 10)) = 2
         // Plan B
-        [Toggle(_)]_ShadowPlanBUsePlanB ("[Plan B] Use Plan B", Int ) = 0
         [Toggle(_)] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _ShadowPlanBSaturationFromBase ("[Plan B] Saturation From Base", Range(0, 2)) = 1
@@ -101,17 +91,48 @@ Shader "ArxCharacterShaders/Stencil/Reader/Double/FadeFade" {
         _ShadowCapBlendMask ("[ShadowCap] Blend Mask", 2D) = "white" {}
         _ShadowCapNormalMix ("[ShadowCap] Normal map mix", Range(0, 2)) = 1
         _ShadowCapTexture ("[ShadowCap] Texture", 2D) = "white" {}
-        // Stencil(Reader)
-        _StencilNumber ("[StencilReader] Number", int) = 5
-        [Enum(UnityEngine.Rendering.CompareFunction)] _StencilCompareAction ("[StencilReader] Compare Action", int) = 6
-        _StencilNumberSecondary ("[StencilReaderSecondary] Number", int) = 5
-        [Enum(UnityEngine.Rendering.CompareFunction)] _StencilCompareActionSecondary ("[StencilReaderSecondary] Compare Action", int) = 6
         // vertex color blend
         _VertexColorBlendDiffuse ("[VertexColor] Blend to diffuse", Range(0,1)) = 0
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
         // advanced tweaking
         _OtherShadowAdjust ("[Advanced] Other Mesh Shadow Adjust", Range(-0.2, 0.2)) = -0.1
         _OtherShadowBorderSharpness ("[Advanced] Other Mesh Shadow Border Sharpness", Range(1, 5)) = 3
+        // EmissiveFreak
+        _EmissiveFreak1Tex ("[EmissiveFreak] Texture", 2D ) = "white" {}
+        [HDR]_EmissiveFreak1Color ("[EmissiveFreak] Color", Color ) = (0,0,0,1)
+        _EmissiveFreak1Mask ("[EmissiveFreak] Mask", 2D ) = "white" {}
+        _EmissiveFreak1U ("[EmissiveFreak] U Scroll", Float ) = 0
+        _EmissiveFreak1V ("[EmissiveFreak] V Scroll", Float ) = 0
+        _EmissiveFreak1Depth ("[EmissiveFreak] Depth", Range(-1, 1) ) = 0
+        _EmissiveFreak1DepthMask ("[EmissiveFreak] Depth Mask", 2D ) = "white" {}
+        [Toggle(_)]_EmissiveFreak1DepthMaskInvert ("[EmissiveFreak] Invert Depth Mask", Float ) = 0
+        _EmissiveFreak1Breathing ("[EmissiveFreak] Breathing Speed", Float ) = 0
+        _EmissiveFreak1BreathingMix ("[EmissiveFreak] Breathing Factor", Range(0, 1) ) = 0
+        _EmissiveFreak1BlinkOut ("[EmissiveFreak] Blink Out Speed", Float ) = 0
+        _EmissiveFreak1BlinkOutMix ("[EmissiveFreak] Blink Out Factor", Range(0, 1) ) = 0
+        _EmissiveFreak1BlinkIn ("[EmissiveFreak] Blink In", Float ) = 0
+        _EmissiveFreak1BlinkInMix ("[EmissiveFreak] Blink In Factor", Range(0, 1) ) = 0
+        _EmissiveFreak1HueShift ("[EmissiveFreak] Hue Shift Speed", Float ) = 0
+        _EmissiveFreak2Tex ("[EmissiveFreak2] Texture", 2D ) = "white" {}
+        [HDR]_EmissiveFreak2Color ("[EmissiveFreak2] Color", Color ) = (0,0,0,1)
+        _EmissiveFreak2Mask ("[EmissiveFreak2] Mask", 2D ) = "white" {}
+        _EmissiveFreak2U ("[EmissiveFreak2] U Scroll", Float ) = 0
+        _EmissiveFreak2V ("[EmissiveFreak2] V Scroll", Float ) = 0
+        _EmissiveFreak2Depth ("[EmissiveFreak2] Depth", Range(-1, 1) ) = 0
+        _EmissiveFreak2DepthMask ("[EmissiveFreak2] Depth Mask", 2D ) = "white" {}
+        [Toggle(_)]_EmissiveFreak2DepthMaskInvert ("[EmissiveFreak2] Invert Depth Mask", Float ) = 0
+        _EmissiveFreak2Breathing ("[EmissiveFreak2] Breathing Speed", Float ) = 0
+        _EmissiveFreak2BreathingMix ("[EmissiveFreak2] Breathing Factor", Range(0, 1) ) = 0
+        _EmissiveFreak2BlinkOut ("[EmissiveFreak2] Blink Out Speed", Float ) = 0
+        _EmissiveFreak2BlinkOutMix ("[EmissiveFreak2] Blink Out Factor", Range(0, 1) ) = 0
+        _EmissiveFreak2BlinkIn ("[EmissiveFreak2] Blink In", Float ) = 0
+        _EmissiveFreak2BlinkInMix ("[EmissiveFreak2] Blink In Factor", Range(0, 1) ) = 0
+        _EmissiveFreak2HueShift ("[EmissiveFreak2] Hue Shift Speed", Float ) = 0
+        // Proximity color override
+        [Toggle(_)]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
+        _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
+        _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
+        _ProximityOverrideColor ("[ProximityOverride] Override Color", Color) = (0,0,0,1)
     }
     SubShader {
         Tags {
@@ -119,30 +140,25 @@ Shader "ArxCharacterShaders/Stencil/Reader/Double/FadeFade" {
             "RenderType"="Transparent"
         }
         Pass {
-            Name "FORWARD_PRIMARY"
+            Name "FORWARD"
             Tags {
                 "LightMode"="ForwardBase"
             }
-            Cull Back
+            Cull [_Cull]
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite [_ZWrite]
-
-            Stencil {
-                Ref [_StencilNumber]
-                Comp [_StencilCompareAction]
-            }
 
             CGPROGRAM
 
 
             #pragma vertex vert
-            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
             #define AXCS_FADE
+            #define AXCS_EMISSIVE_FREAK
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -151,23 +167,17 @@ Shader "ArxCharacterShaders/Stencil/Reader/Double/FadeFade" {
             ENDCG
         }
         Pass {
-            Name "FORWARD_DELTA_PRIMARY"
+            Name "FORWARD_DELTA"
             Tags {
                 "LightMode"="ForwardAdd"
             }
-            Cull Back
+            Cull [_Cull]
             Blend One One
             ZWrite [_ZWrite]
-
-            Stencil {
-                Ref [_StencilNumber]
-                Comp [_StencilCompareAction]
-            }
 
             CGPROGRAM
 
             #pragma vertex vert
-            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdadd
             #pragma multi_compile_fog
@@ -175,72 +185,6 @@ Shader "ArxCharacterShaders/Stencil/Reader/Double/FadeFade" {
             #pragma target 4.0
             #define AXCS_FADE
             #define AXCS_ADD
-
-            #include "cginc/arkludeDecl.cginc"
-            #include "cginc/arkludeOther.cginc"
-            #include "cginc/arkludeVertGeom.cginc"
-            #include "cginc/arkludeAdd.cginc"
-            ENDCG
-        }
-        Pass {
-            Name "FORWARD_SECONDARY"
-            Tags {
-                "LightMode"="ForwardBase"
-            }
-            Cull Back
-            Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite [_ZWrite]
-
-            Stencil {
-                Ref [_StencilNumberSecondary]
-                Comp [_StencilCompareActionSecondary]
-            }
-
-            CGPROGRAM
-
-
-            #pragma vertex vert
-            #pragma geometry geom
-            #pragma fragment frag
-            #pragma multi_compile_fwdbase
-            #pragma multi_compile_fog
-            #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
-            #define AXCS_FADE
-            #define AXCS_SECONDARY
-
-            #include "cginc/arkludeDecl.cginc"
-            #include "cginc/arkludeOther.cginc"
-            #include "cginc/arkludeVertGeom.cginc"
-            #include "cginc/arkludeFrag.cginc"
-            ENDCG
-        }
-        Pass {
-            Name "FORWARD_DELTA_SECONDARY"
-            Tags {
-                "LightMode"="ForwardAdd"
-            }
-            Cull Back
-            Blend One One
-            ZWrite [_ZWrite]
-
-            Stencil {
-                Ref [_StencilNumberSecondary]
-                Comp [_StencilCompareActionSecondary]
-            }
-
-            CGPROGRAM
-
-            #pragma vertex vert
-            #pragma geometry geom
-            #pragma fragment frag
-            #pragma multi_compile_fwdadd
-            #pragma multi_compile_fog
-            #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
-            #define AXCS_FADE
-            #define AXCS_ADD
-            #define AXCS_SECONDARY
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"

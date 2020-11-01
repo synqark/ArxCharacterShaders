@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: materialEmissiveFreak
-  m_Shader: {fileID: 4800000, guid: 9ce3973bae37a5c43a3c22309be11936, type: 3}
+  m_Shader: {fileID: 4800000, guid: ed627574387225c449eaccd6fdbc6d15, type: 3}
   m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -112,6 +112,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OutlineMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -238,13 +242,14 @@ Material:
     - _OcclusionStrength: 1
     - _OtherShadowAdjust: -0.1
     - _OtherShadowBorderSharpness: 3
+    - _OutlineCutoffRange: 0.5
     - _OutlineHueShiftFromBase: 0.5
     - _OutlineSaturationFromBase: 1
     - _OutlineShadeMix: 0.634
-    - _OutlineTextureColorRate: 0.788
-    - _OutlineUseColorShift: 1
+    - _OutlineTextureColorRate: 0
+    - _OutlineUseColorShift: 0
     - _OutlineValueFromBase: 1
-    - _OutlineWidth: 12.1
+    - _OutlineWidth: 1.49
     - _Parallax: 0.02
     - _PointAddIntensity: 1
     - _PointShadowSteps: 2
@@ -328,7 +333,7 @@ Material:
     - _EmissiveFreak2Color: {r: 0, g: 0, b: 0, a: 1}
     - _GlossColor: {r: 1, g: 1, b: 1, a: 1}
     - _MatcapColor: {r: 1, g: 1, b: 1, a: 1}
-    - _OutlineColor: {r: 1, g: 0.80689657, b: 0, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _ProximityOverrideColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowCapColor: {r: 1, g: 1, b: 1, a: 1}
