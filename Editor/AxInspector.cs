@@ -331,19 +331,53 @@ namespace AxCharacterShaders
                 // バリエーションの説明
                 IsShowVariationTip = UIHelper.ShurikenFoldout(shader.name.Substring(20) + "について", IsShowVariationTip);
                 if (IsShowVariationTip) {
-                    var isShown = false;
-                    if (isOpaque && !isOutline) {
-                        EditorGUILayout.HelpBox(
-                            "Opaqueは、完全に不透明で、アウトラインの無いメッシュに対して効率よく適用できるバリエーションです。"
-                            + Environment.NewLine + "---"
-                            + Environment.NewLine + "アウトラインが欲しい→ Outline/Opaque"
-                            + Environment.NewLine + "メッシュの一部をアルファで抜きたい→ AlphaCutout"
-                            + Environment.NewLine + "メッシュの一部を半透明にしたい→ Fade"
-                            , MessageType.Info);
-                        isShown = true;
+                    if (isOutline) {
+                        EditorGUILayout.HelpBox("Outlineカテゴリは、メッシュにアウトラインを付けたいときに使用するバリエーションです。"
+                        + Environment.NewLine + "アウトラインと半透明（Fade）は相性の問題で使用できません。"
+                        + Environment.NewLine + "アウトラインが必要ない場合は、アウトラインカテゴリではない、同名シェーダーを使う方が効率良く描画できます。"
+                        , MessageType.Info);
                     }
-                    if (!isShown) {
-                        EditorGUILayout.HelpBox("準備中です", MessageType.Info);
+                    if (isEmissiveFreak) {
+                        EditorGUILayout.HelpBox("EmissiveFreakカテゴリは、メッシュの一部分を躍動的に1680万色に光らせたい貴方の為に用意したバリエーションです。"
+                        + Environment.NewLine + "1680万色も必要ない場合は、このカテゴリの存在は忘れましょう。"
+                        , MessageType.Info);
+                    }
+                    if (isStencilWriter) {
+                        EditorGUILayout.HelpBox("StencilWriterは、空間にステンシルバッファを書き込む機能を持ったシェーダーです。"
+                        + Environment.NewLine + "「StencilReader」や、その他ステンシルバッファを参照するシェーダーと合わせて利用することが前提になっています。"
+                        , MessageType.Info);
+                    }
+                    if (isStencilReader && !isStencilReaderDouble) {
+                        EditorGUILayout.HelpBox("StencilReaderは、書き込まれたステンシルバッファを参照し、描画をどうするか設定できるバリエーションです"
+                        + Environment.NewLine + "「StencilWriter」やその他ステンシルバッファを操作するシェーダーと合わせて利用することが前提になっています。"
+                        , MessageType.Info);
+                    }
+                    if (isStencilReaderDouble) {
+                        EditorGUILayout.HelpBox("StencilReader/Doubleって何だっけ？？？"
+                        + Environment.NewLine + "なんかこう、ステンシルの値を別々に2回参照できて、それぞれで別の色を出すとか、そんな感じで作った気がします。"
+                        + Environment.NewLine + "意味が分からない人は通常の「StencilReader」使ってください。私も忘れました。"
+                        , MessageType.Info);
+                    }
+                    if (isCutout) {
+                        EditorGUILayout.HelpBox("AlphaCutoutは、メッシュ上に「不透明」と「完全に透明」の２つのパターンがある時に効率よく利用できるバリエーションです"
+                        + Environment.NewLine + "メッシュ全体が不透明であれば「Opaque」、半透明な部分を含みたい場合は「Fade」を利用してください。"
+                        , MessageType.Info);
+                    }
+                    if (isOpaque) {
+                        EditorGUILayout.HelpBox("Opaqueは、完全に不透明なメッシュに効率よく適用できるバリエーションです。"
+                        + Environment.NewLine + "不透明＋完全に透明の２パターンであれば「AlphaCutout」、半透明な部分を含みたい場合は「Fade」を使用してください。"
+                        , MessageType.Info);
+                    }
+                    if (isFade) {
+                        EditorGUILayout.HelpBox("Fadeは、メッシュに半透明を部分的に含む場合に使用するバリエーションです。"
+                        + Environment.NewLine + "半透明とアウトラインは相性の問題で使用できません。"
+                        + Environment.NewLine + "完全に不透明であれば「Opaque」、不透明＋完全に透明の２パターンであれば「AlphaCutout」を使用すると、効率よく描画できます。"
+                        , MessageType.Info);
+                    }
+                    if (isRefracted) {
+                        EditorGUILayout.HelpBox("Refractedは、半透明の奥に見える光景を疑似的に屈折させることのできるバリエーションです。"
+                        + Environment.NewLine + "屈折表現が重要な場合にご利用いただき、そうでない場合は通常の「Fade」の利用を推奨します。"
+                        , MessageType.Info);
                     }
                 }
 
