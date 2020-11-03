@@ -314,7 +314,7 @@ Material:
     - _UseOutline: 1
     - _UseOutlineWidthMask: 0
     - _UsePositionRelatedCalc: 0
-    - _UseProximityOverride: 0
+    - _UseProximityOverride: 1
     - _UseReflection: 0
     - _UseReflectionProbe: 0
     - _UseRim: 0
