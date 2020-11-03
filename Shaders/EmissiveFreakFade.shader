@@ -133,6 +133,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/Fade" {
         _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
         _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
         _ProximityOverrideColor ("[ProximityOverride] Override Color", Color) = (0,0,0,1)
+        [AXCSToggle]_ProximityOverrideAlphaOnly ("[ProximityOverride] Alpha Only", Int) = 0
     }
     SubShader {
         Tags {
