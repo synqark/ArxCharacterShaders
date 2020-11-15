@@ -384,7 +384,7 @@ namespace AxCharacterShaders
                 }
 
                 // Common
-                UIHelper.ShurikenHeader("Common");
+                UIHelper.ShurikenHeader("Common", () => new AxTips.Common());
                 UIHelper.DrawWithGroup(() => {
 					UIHelper.DrawWithGroup(() => {
                         materialEditor.TexturePropertySingleLine(new GUIContent("Main Texture", "Base Color Texture (RGB)"), BaseTexture, BaseColor);
@@ -424,7 +424,7 @@ namespace AxCharacterShaders
 
                 // Secondary Common
                 if(isStencilReaderDouble) {
-                    UIHelper.ShurikenHeader("Secondary Common");
+                    UIHelper.ShurikenHeader("Secondary Common", ()=> new AxTips.SecondaryCommon());
                     UIHelper.DrawWithGroup(() => {
                         materialEditor.TexturePropertySingleLine(new GUIContent("Main Texture", "Base Color Texture (RGB)"), BaseTextureSecondary, BaseColorSecondary);
                         materialEditor.TexturePropertySingleLine(new GUIContent("Normal Map", "Normal Map (RGB)"), NormalmapSecondary, BumpScaleSecondary);
@@ -434,7 +434,7 @@ namespace AxCharacterShaders
 
                 // AlphaMask
                 if(isFade){
-                    IsShowAlphaMask = UIHelper.ShurikenFoldout("AlphaMask", IsShowAlphaMask);
+                    IsShowAlphaMask = UIHelper.ShurikenFoldout("AlphaMask", IsShowAlphaMask, ()=> new AxTips.AlphaMask());
                     if (IsShowAlphaMask) {
                         UIHelper.DrawWithGroup(() => {
                             materialEditor.ShaderProperty(AlphaMask, "Alpha Mask");
@@ -444,7 +444,7 @@ namespace AxCharacterShaders
 
                 // Refraction
                 if(isRefracted){
-                    UIHelper.ShurikenHeader("Refraction");
+                    UIHelper.ShurikenHeader("Refraction", ()=> new AxTips.Refraction());
                     UIHelper.DrawWithGroup(() => {
                         materialEditor.ShaderProperty(RefractionFresnelExp, "Fresnel Exp");
                         materialEditor.ShaderProperty(RefractionStrength, "Strength");
@@ -453,14 +453,14 @@ namespace AxCharacterShaders
 
                 // Alpha Cutout
                 if(isCutout){
-                    UIHelper.ShurikenHeader("Alpha Cutout");
+                    UIHelper.ShurikenHeader("Alpha Cutout", ()=> new AxTips.AlphaCutout());
                     UIHelper.DrawWithGroup(() => {
                         materialEditor.ShaderProperty(CutoutCutoutAdjust, "Cutoff Adjust");
                     });
                 }
 
                 // Shadow
-                UIHelper.ShurikenHeader("Shadow");
+                UIHelper.ShurikenHeader("Shading / Shadow", () => new AxTips.Shading());
                 UIHelper.DrawWithGroup(() => {
                     UIHelper.DrawWithGroup(() => {
                         EditorGUILayout.LabelField("Border & blur", EditorStyles.boldLabel);
@@ -517,7 +517,7 @@ namespace AxCharacterShaders
 
                 // Outline
                 if(!isRefracted && isOutline) {
-                    UIHelper.ShurikenHeader("Outline");
+                    UIHelper.ShurikenHeader("Outline", () => new AxTips.Outline());
                     {
                         UIHelper.DrawWithGroup(() => {
                             UIHelper.DrawWithGroup(() => {
@@ -552,8 +552,8 @@ namespace AxCharacterShaders
                 }
 
                 // Gloss
-                UIHelper.ShurikenHeader("Gloss");
-                materialEditor.DrawShaderPropertySameLIne(UseGloss);
+                UIHelper.ShurikenHeader("Gloss", () => new AxTips.Gloss());
+                materialEditor.DrawShaderPropertySameLine(UseGloss, true);
                 var isEnabledGloss = UseGloss.floatValue;
                 if(isEnabledGloss > 0)
                 {
@@ -568,8 +568,8 @@ namespace AxCharacterShaders
                 }
 
                 // MatCap
-                UIHelper.ShurikenHeader("MatCap");
-                materialEditor.DrawShaderPropertySameLIne(MatcapBlendMode);
+                UIHelper.ShurikenHeader("MatCap", () => new AxTips.MatCap());
+                materialEditor.DrawShaderPropertySameLine(MatcapBlendMode, true);
                 var useMatcap = MatcapBlendMode.floatValue;
                 if(useMatcap != 3) // Not 'Unused'
                 {
@@ -588,8 +588,8 @@ namespace AxCharacterShaders
                 }
 
                 // Reflection
-                UIHelper.ShurikenHeader("Reflection");
-                materialEditor.DrawShaderPropertySameLIne(UseReflection);
+                UIHelper.ShurikenHeader("Reflection", ()=> new AxTips.Reflection());
+                materialEditor.DrawShaderPropertySameLine(UseReflection, true);
                 var useReflection = UseReflection.floatValue;
                 if(useReflection > 0)
                 {
@@ -615,8 +615,8 @@ namespace AxCharacterShaders
                 }
 
                 // Rim Light
-                UIHelper.ShurikenHeader("Rim");
-                materialEditor.DrawShaderPropertySameLIne(UseRim);
+                UIHelper.ShurikenHeader("Rim", ()=> new AxTips.Rim());
+                materialEditor.DrawShaderPropertySameLine(UseRim, true);
                 var useRim = UseRim.floatValue;
                 if(useRim > 0)
                 {
@@ -640,8 +640,8 @@ namespace AxCharacterShaders
                 }
 
                 // Shade Cap
-                UIHelper.ShurikenHeader("Shade Cap");
-                materialEditor.DrawShaderPropertySameLIne(ShadowCapBlendMode);
+                UIHelper.ShurikenHeader("Shade Cap", ()=> new AxTips.ShadeCap());
+                materialEditor.DrawShaderPropertySameLine(ShadowCapBlendMode, true);
                 var useShadowCap = ShadowCapBlendMode.floatValue;
                 if(useShadowCap != 3) // Not 'Unused'
                 {
@@ -661,7 +661,7 @@ namespace AxCharacterShaders
                 // Stencil Writer
                 if(isStencilWriter)
                 {
-                    UIHelper.ShurikenHeader("Stencil Writer");
+                    UIHelper.ShurikenHeader("Stencil Writer", ()=> new AxTips.StencilWriter());
                     UIHelper.DrawWithGroup(() => {
                         materialEditor.ShaderProperty(StencilNumber,"Stencil Number");
                         materialEditor.TexturePropertySingleLine(new GUIContent("Stencil Mask & Range", "Stencil Mask and Range"), StencilMaskTex, StencilMaskAdjust);
@@ -673,20 +673,20 @@ namespace AxCharacterShaders
                 // Stencil Reader
                 if(isStencilReader)
                 {
-                    UIHelper.ShurikenHeader("Stencil Reader");
+                    UIHelper.ShurikenHeader("Stencil Reader", ()=> new AxTips.StencilReader());
                     if(isStencilReaderDouble) {
                         UIHelper.DrawWithGroup(() => {
                             UIHelper.DrawWithGroup(() => {
                                 EditorGUILayout.LabelField("Primary", EditorStyles.boldLabel);
                                 EditorGUI.indentLevel++;
-                                materialEditor.ShaderProperty(StencilNumber,"Number");
+                                materialEditor.ShaderProperty(StencilNumber,"Stencil Number");
                                 materialEditor.ShaderProperty(StencilCompareAction,"Compare Action");
                                 EditorGUI.indentLevel--;
                             });
                             UIHelper.DrawWithGroup(() => {
                                 EditorGUILayout.LabelField("Secondary", EditorStyles.boldLabel);
                                 EditorGUI.indentLevel++;
-                                materialEditor.ShaderProperty(StencilNumberSecondary,"Number");
+                                materialEditor.ShaderProperty(StencilNumberSecondary,"Stencil Number");
                                 materialEditor.ShaderProperty(StencilCompareActionSecondary,"Compare Action");
                                 EditorGUI.indentLevel--;
                             });
@@ -700,8 +700,8 @@ namespace AxCharacterShaders
                 }
 
                 // Parallax Emission
-                UIHelper.ShurikenHeader("Parallaxed Emission");
-                materialEditor.DrawShaderPropertySameLIne(UseEmissionParallax);
+                UIHelper.ShurikenHeader("Parallaxed Emission", () => new AxTips.ParallaxedEmission());
+                materialEditor.DrawShaderPropertySameLine(UseEmissionParallax, true);
                 var useEmissionPara = UseEmissionParallax.floatValue;
                 if(useEmissionPara > 0){
                     UIHelper.DrawWithGroup(() => {
@@ -724,7 +724,7 @@ namespace AxCharacterShaders
                 // Scrolled Emission
                 if(isEmissiveFreak)
                 {
-                    UIHelper.ShurikenHeader("Emissive Freak");
+                    UIHelper.ShurikenHeader("Emissive Freak", () => new AxTips.EmissiveFreak());
                     UIHelper.DrawWithGroup(() => {
                         UIHelper.DrawWithGroup(() => {
                             EditorGUILayout.LabelField("1st", EditorStyles.boldLabel);
@@ -785,9 +785,9 @@ namespace AxCharacterShaders
                 }
 
                 // Proximity color override
-                UIHelper.ShurikenHeader("Proximity Color Override");
+                UIHelper.ShurikenHeader("Proximity Color Override", () => new AxTips.ProximityColorOverride());
                 var useProximityOverride = MatP("_UseProximityOverride", props, false);
-                materialEditor.DrawShaderPropertySameLIne(useProximityOverride);
+                materialEditor.DrawShaderPropertySameLine(useProximityOverride, true);
                 if(useProximityOverride.floatValue > 0)
                 {
                     UIHelper.DrawWithGroup(() => {
@@ -803,12 +803,10 @@ namespace AxCharacterShaders
                     });
                 }
 
-
                 // Advanced / Experimental
-                IsShowAdvanced = UIHelper.ShurikenFoldout("Advanced / Experimental (Click to Open)", IsShowAdvanced);
+                IsShowAdvanced = UIHelper.ShurikenFoldout("Advanced / Experimental", IsShowAdvanced, () => new AxTips.Advanced());
                 if (IsShowAdvanced) {
                     UIHelper.DrawWithGroup(() => {
-                        EditorGUILayout.HelpBox("These are some shade tweaking. no need to change usually." + Environment.NewLine + "ほとんどのケースで触る必要のないやつら。",MessageType.Info);
                         if (GUILayout.Button("Revert advanced params.")){
                             PointAddIntensity.floatValue = 1f;
                             PointShadowStrength.floatValue = 0.5f;
@@ -856,7 +854,7 @@ namespace AxCharacterShaders
                 }
 
                 // Unregisteredprops
-                IsShowNonRegistered = UIHelper.ShurikenFoldout("NonRegisteredProperties", IsShowNonRegistered);
+                IsShowNonRegistered = UIHelper.ShurikenFoldout("Non-Registered Properties", IsShowNonRegistered, () => new AxTips.NonRegisteredProperties());
                 if(IsShowNonRegistered) {
                      DrawNonRegisteredProperties(materialEditor, props);
                 }
@@ -893,31 +891,54 @@ namespace AxCharacterShaders
     {
         static int HEADER_HEIGHT = 22;
 
-        public static void DrawShaderPropertySameLIne(this MaterialEditor editor, MaterialProperty property) {
+        static float HEADER_TEXT_PADDING = 6f;
+        static float HEADER_TEXT_FOLDOUT_MARGIN = 14f;
+
+        public static void DrawShaderPropertySameLine(this MaterialEditor editor, MaterialProperty property, bool hasTooltip = false) {
             Rect r = EditorGUILayout.GetControlRect(true,0,EditorStyles.layerMaskField);
             r.y -= HEADER_HEIGHT;
             r.height = MaterialEditor.GetDefaultPropertyHeight(property);
+            r.width -= HEADER_TEXT_PADDING + (hasTooltip ? 24 : 0);
             editor.ShaderProperty(r, property, " ");
         }
 
-        private static Rect DrawShuriken(string title, Vector2 contentOffset) {
+        private static Rect DrawShuriken(string title, Vector2 contentOffset, Func<AxTips.AxcsTip> func) {
             var style = new GUIStyle("ShurikenModuleTitle");
             style.margin = new RectOffset(0, 0, 8, 0);
             style.font = new GUIStyle(EditorStyles.boldLabel).font;
             style.border = new RectOffset(15, 7, 4, 4);
             style.fixedHeight = HEADER_HEIGHT;
             style.contentOffset = contentOffset;
+
+            if (func != null) {
+                style.margin.right = 24;
+            }
+
             var rect = GUILayoutUtility.GetRect(16f, HEADER_HEIGHT, style);
             GUI.Box(rect, title, style);
+
+            if (func != null) {
+                var name = "_Help";
+                var icon = EditorGUIUtility.IconContent( name );
+                var r = GUILayoutUtility.GetLastRect();
+                r.x += r.width;
+                r.width = 24;
+                style = new GUIStyle();
+                style.alignment = TextAnchor.MiddleCenter;
+                if (GUI.Button(r, icon, style )){
+                    AxTips.AxTipWindow.ShowTips(func);
+                }
+            }
+
             return rect;
         }
-        public static void ShurikenHeader(string title)
+        public static void ShurikenHeader(string title, Func<AxTips.AxcsTip> func = null)
         {
-            DrawShuriken(title,new Vector2(6f, -2f));
+            DrawShuriken(title,new Vector2(HEADER_TEXT_PADDING, -2f), func);
         }
-        public static bool ShurikenFoldout(string title, bool display)
+        public static bool ShurikenFoldout(string title, bool display, Func<AxTips.AxcsTip> func = null)
         {
-            var rect = DrawShuriken(title,new Vector2(20f, -2f));
+            var rect = DrawShuriken(title,new Vector2(HEADER_TEXT_FOLDOUT_MARGIN + HEADER_TEXT_PADDING, -2f), func);
             var e = Event.current;
             var toggleRect = new Rect(rect.x + 4f, rect.y + 2f, 13f, 13f);
             if (e.type == EventType.Repaint) {

@@ -64,7 +64,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveFreak1Mask:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: e5299c3e58f1f4b498f47a9485ceb4a5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveFreak1Tex:
@@ -212,7 +212,7 @@ Material:
     - _EmissiveFreak1Depth: 0
     - _EmissiveFreak1DepthMaskInvert: 0
     - _EmissiveFreak1HueShift: 30
-    - _EmissiveFreak1U: 0
+    - _EmissiveFreak1U: 1
     - _EmissiveFreak1V: 0
     - _EmissiveFreak2BlinkIn: 0
     - _EmissiveFreak2BlinkInMix: 0
@@ -303,7 +303,7 @@ Material:
     - _SrcBlend: 1
     - _StencilCompareAction: 6
     - _StencilMaskAdjust: 0.5
-    - _StencilMaskAlphaDither: 0.5
+    - _StencilMaskAlphaDither: 1
     - _StencilNumber: 5
     - _UVSec: 0
     - _UseDoubleSided: 0
