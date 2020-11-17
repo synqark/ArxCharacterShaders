@@ -146,7 +146,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/Opaque" {
     }
     SubShader {
         Tags {
-			"Queue"="Geometry"
+            "Queue"="Geometry"
             "RenderType"="Opaque"
         }
         Pass {
@@ -157,7 +157,6 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/Opaque" {
             Cull [_Cull]
 
             CGPROGRAM
-
 
             #pragma vertex vert
             #pragma geometry geom
@@ -218,7 +217,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/Opaque" {
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0
+            #pragma target 4.0
             struct VertexInput {
                 float4 vertex : POSITION;
                 float2 texcoord0 : TEXCOORD0;

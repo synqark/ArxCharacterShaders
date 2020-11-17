@@ -161,7 +161,6 @@ Shader "ArxCharacterShaders/_Outline/_StencilWriter/AlphaCutout" {
 
             CGPROGRAM
 
-
             #pragma vertex vert
             #pragma geometry geom
             #pragma fragment frag
@@ -171,6 +170,7 @@ Shader "ArxCharacterShaders/_Outline/_StencilWriter/AlphaCutout" {
             #pragma target 4.0
             #define AXCS_CUTOUT
             #define AXCS_OUTLINE
+
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
@@ -221,7 +221,7 @@ Shader "ArxCharacterShaders/_Outline/_StencilWriter/AlphaCutout" {
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0
+            #pragma target 4.0
             uniform float _CutoutCutoutAdjust;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform float4 _Color;

@@ -56,6 +56,7 @@ Shader "ArxCharacterShaders/_StencilReader/AlphaCutout" {
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
+        // AXCS_GENERATOR:OUTLINE_PROPERTIES
         // MatCap
         [Enum(Add,0, Lighten,1, Screen,2, Unused,3)] _MatcapBlendMode ("[MatCap] Blend Mode", Int) = 3
         _MatcapBlend ("[MatCap] Blend", Range(0, 3)) = 1
@@ -125,14 +126,16 @@ Shader "ArxCharacterShaders/_StencilReader/AlphaCutout" {
 
             CGPROGRAM
 
-
             #pragma vertex vert
+            // AXCS_GENERATOR:OUTLINE_USE_GEOM
             #pragma fragment frag
             #pragma multi_compile_fwdbase_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0
+            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
             #define AXCS_CUTOUT
+            // AXCS_GENERATOR:OUTLINE_DEFINE
+
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
@@ -155,13 +158,15 @@ Shader "ArxCharacterShaders/_StencilReader/AlphaCutout" {
             CGPROGRAM
 
             #pragma vertex vert
+            // AXCS_GENERATOR:OUTLINE_USE_GEOM
             #pragma fragment frag
             #pragma multi_compile_fwdadd_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0
+            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
             #define AXCS_CUTOUT
             #define AXCS_ADD
+            // AXCS_GENERATOR:OUTLINE_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -191,7 +196,7 @@ Shader "ArxCharacterShaders/_StencilReader/AlphaCutout" {
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0
+            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
             uniform float _CutoutCutoutAdjust;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform float4 _Color;
