@@ -163,7 +163,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/FadeRefracted" {
             #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
+            #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_REFRACTED
             #define AXCS_EMISSIVE_FREAK
@@ -190,7 +190,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/FadeRefracted" {
             #pragma multi_compile_fwdadd
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
+            #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_ADD
             #define AXCS_REFRACTED
