@@ -98,6 +98,7 @@ Shader "ArxCharacterShaders/Fade" {
         // advanced tweaking
         _OtherShadowAdjust ("[Advanced] Other Mesh Shadow Adjust", Range(-0.2, 0.2)) = -0.1
         _OtherShadowBorderSharpness ("[Advanced] Other Mesh Shadow Border Sharpness", Range(1, 5)) = 3
+        // AXCS_GENERATOR:EMISSIVE_FREAK_PROPERTIES
         // Proximity color override
         [AXCSToggle]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
         _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
@@ -130,6 +131,7 @@ Shader "ArxCharacterShaders/Fade" {
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
             #define AXCS_FADE
+            // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
