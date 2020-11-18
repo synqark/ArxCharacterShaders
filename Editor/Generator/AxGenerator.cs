@@ -114,14 +114,9 @@ namespace AxCharacterShaders.Generator
             AssetDatabase.Refresh();
         }
 
-        [MenuItem("AXCS/GenerateTest_3")]
-        public static void generateOutlineVariation()
+        [MenuItem("AXCS/GenerateEmissiveFreak")]
+        public static void generateEmissiveFreakVariation()
         {
-            // StencilWriterジェネレーター
-            // TBD
-
-            // StencilReaderジェネレーター
-            // TBD
 
             // EmissiveFreakジェネレーター
             var emissiveFreakGenerator = new AxGenerator(){
@@ -171,6 +166,20 @@ namespace AxCharacterShaders.Generator
                 "EMISSIVE_FREAK_DEFINE",
                 $@"#define AXCS_EMISSIVE_FREAK"
             );
+
+            emissiveFreakGenerator.variationName = new KeyValuePair<int, string>(1, "_EmissiveFreak");
+            emissiveFreakGenerator.run();
+        }
+
+        [MenuItem("AXCS/GenerateOutline")]
+        public static void generateOutlineVariation()
+        {
+            // StencilWriterジェネレーター
+            // TBD
+
+            // StencilReaderジェネレーター
+            // TBD
+
 
             // Outlineジェネレーター
             var outlineGenerator = new AxGenerator(){
