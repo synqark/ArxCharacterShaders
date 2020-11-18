@@ -104,22 +104,29 @@ namespace AxCharacterShaders.Generator
                         }
                     }
                 }
-                // Debug.Log(string.Join("\r\n", shaderCode));
-
+                // Debug.Log(string.Join("\r\n", shaderCode))
                 Debug.Log("ファイルパス：" + destFilename + Environment.NewLine + "シェーダー名：" + destShaderName);
 
                 // 変換結果を出力
-
                 SaveTextfileToDisk(shaderCode, destFilename);
-                // AssetDatabase.ImportAsset(destFilename, ImportAssetOptions.ForceUpdate);
-                // シェーダーをReimport
             }
+            // シェーダーをReimport
             AssetDatabase.Refresh();
         }
 
         [MenuItem("AXCS/GenerateTest_3")]
         public static void generateOutlineVariation()
         {
+            // StencilWriterジェネレーター
+            // TBD
+
+            // StencilReaderジェネレーター
+            // TBD
+
+            // EmissiveFreakジェネレーター
+            // TBD
+
+            // Outlineジェネレーター
             var outlineGenerator = new AxGenerator(){
                 includeShaderNames = new string[]{"Opaque", "Cutout", "Stencil", "EmissiveFreak"},
                 excludeShaderNames = new string[]{"Fade", "Outline"},
@@ -167,66 +174,13 @@ namespace AxCharacterShaders.Generator
                 _OutlineSaturationFromBase(""[Outline] Saturation From Base"", Range(0, 2)) = 1
                 _OutlineValueFromBase(""[Outline] Value From Base"", Range(0, 2)) = 1"
             );
-
             outlineGenerator.replaceCodes.Add(
                 "OUTLINE_DEFINE",
                 $@"#define AXCS_OUTLINE"
             );
 
-
-
             outlineGenerator.variationName = new KeyValuePair<int, string>(1, "_Outline");
-
             outlineGenerator.run();
-        }
-
-        [MenuItem("AXCS/GenerateTest")]
-        public static void runTest()
-        {
-            // 対象シェーダーファイルを収集
-            var shaders = AssetDatabase.FindAssets("t:Shader", new string[]{"Assets/ArxCharacterShaders/Shaders"});
-            foreach (var shader in shaders){
-                var path = AssetDatabase.GUIDToAssetPath(shader);
-                var filename = Path.GetFileName(path);
-
-                // Debug.Log(path);
-                if (path.Contains("Assets/ArxCharacterShaders/Shaders/Cutout.shader")) {
-                    // シェーダーコードの変換
-                    var result = LoadTextFileFromDisk(path);
-                    for (var line = 0; line < result.Count ; line++) {
-                        // シェーダー名の変更
-
-                        // キーワードの置換
-                        if (result[line].Contains("AXCS_GENERATOR")) {
-                            var keyword = result[line].Substring(result[line].IndexOf(":")+1);
-                            // 先頭についているスペースとタブ文字数を取得
-                            var spacing = 0;
-                            foreach(var c in result[line]) {
-                                if (!Char.IsWhiteSpace(c)) break;
-                                spacing++;
-                            }
-                            var whitespace = new string(' ', spacing);
-
-                            if(keyword == "OUTLINE_USE_GEOM") {
-                                result.RemoveAt(line);
-                                result.InsertRange(line, new string[]{whitespace + "a", whitespace + "b"});
-                            }
-                        }
-                    }
-                    // 変換結果を出力
-                    var exportPath = "Assets/fugafuga.shader";
-                    SaveTextfileToDisk(result, exportPath);
-                    AssetDatabase.ImportAsset(exportPath, ImportAssetOptions.ForceUpdate);
-                    // シェーダーをReimport
-                }
-            }
-
-            // 対象シェーダーごとに変換処理
-                // シェーダーファイルの行配列を回す
-                // 定型文が埋め込まれている行を見つけた場合に、定型文の無いように対応する定義済みのコードを差し替え（挿入）
-                // 変換が完了したシェーダーファイルを 〇〇_もともとのシェーダー名.shader で再出力する。 同名のシェーダーがある場合は上書きする。
-
-            // シェーダーディレクトリを再インポートする。
         }
 
 		public static List<string> LoadTextFileFromDisk( string pathName )
