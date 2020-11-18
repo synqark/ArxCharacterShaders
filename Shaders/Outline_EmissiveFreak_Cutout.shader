@@ -223,6 +223,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/AlphaCutout" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
+
             uniform float _CutoutCutoutAdjust;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform float4 _Color;

@@ -54,7 +54,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/Opaque" {
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
-        // AXCS_GENERATOR:OUTLINE_PROPERTIES
+        // AXCS_GENERATOR:OUTLINE_PROPERTIES_OPAQUE
         // MatCap
         [Enum(Add,0, Lighten,1, Screen,2, Unused,3)] _MatcapBlendMode ("[MatCap] Blend Mode", Int) = 3
         _MatcapBlend ("[MatCap] Blend", Range(0, 3)) = 1

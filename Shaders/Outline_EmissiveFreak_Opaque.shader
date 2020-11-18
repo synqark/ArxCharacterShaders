@@ -56,8 +56,6 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/Opaque" {
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
         // Outline
         _OutlineWidth ("[Outline] Width", Range(0, 20)) = 0.1
-        _OutlineMask ("[Outline] Outline Mask", 2D) = "white" {}
-        _OutlineCutoffRange ("[Outline] Cutoff Range", Range(0, 1)) = 0.5
         _OutlineColor ("[Outline] Color", Color) = (0,0,0,1)
         _OutlineTexture ("[Outline] Texture", 2D) = "white" {}
         _OutlineShadeMix ("[Outline] Shade Mix", Range(0, 1)) = 0

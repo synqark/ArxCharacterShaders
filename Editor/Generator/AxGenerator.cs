@@ -160,8 +160,6 @@ namespace AxCharacterShaders.Generator
                 _EmissiveFreak2BlinkInMix (""[EmissiveFreak2] Blink In Factor"", Range(0, 1) ) = 0
                 _EmissiveFreak2HueShift (""[EmissiveFreak2] Hue Shift Speed"", Float ) = 0"
             );
-
-            emissiveFreakGenerator.replaceCodes = new Dictionary<string, string>();
             emissiveFreakGenerator.replaceCodes.Add(
                 "EMISSIVE_FREAK_DEFINE",
                 $@"#define AXCS_EMISSIVE_FREAK"

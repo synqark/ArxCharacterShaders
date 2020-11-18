@@ -105,6 +105,7 @@ Shader "ArxCharacterShaders/_Outline/Opaque" {
         // advanced tweaking
         _OtherShadowAdjust ("[Advanced] Other Mesh Shadow Adjust", Range(-0.2, 0.2)) = -0.1
         _OtherShadowBorderSharpness ("[Advanced] Other Mesh Shadow Border Sharpness", Range(1, 5)) = 3
+        // AXCS_GENERATOR:EMISSIVE_FREAK_PROPERTIES
         // Proximity color override
         [AXCSToggle]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
         _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
@@ -132,6 +133,7 @@ Shader "ArxCharacterShaders/_Outline/Opaque" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
+            // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
             #define AXCS_OUTLINE
 
             #include "cginc/arkludeDecl.cginc"
