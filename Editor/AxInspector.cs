@@ -345,11 +345,13 @@ namespace AxCharacterShaders
                     if (isStencilWriter) {
                         EditorGUILayout.HelpBox("StencilWriterは、空間にステンシルバッファを書き込む機能を持ったシェーダーです。"
                         + Environment.NewLine + "「StencilReader」や、その他ステンシルバッファを参照するシェーダーと合わせて利用することが前提になっています。"
+                        + Environment.NewLine + "不透明メッシュでStencilを使用する場合は、Opaqueは無いので代わりにAlphaCutoutを使ってください。"
                         , MessageType.Info);
                     }
                     if (isStencilReader && !isStencilReaderDouble) {
                         EditorGUILayout.HelpBox("StencilReaderは、書き込まれたステンシルバッファを参照し、描画をどうするか設定できるバリエーションです"
                         + Environment.NewLine + "「StencilWriter」やその他ステンシルバッファを操作するシェーダーと合わせて利用することが前提になっています。"
+                        + Environment.NewLine + "不透明メッシュでStencilを使用する場合は、Opaqueは無いので代わりにAlphaCutoutを使ってください。"
                         , MessageType.Info);
                     }
                     if (isStencilReaderDouble) {

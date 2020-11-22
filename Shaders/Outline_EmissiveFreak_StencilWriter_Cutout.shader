@@ -103,7 +103,8 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
         _ShadowCapBlendMask ("[ShadowCap] Blend Mask", 2D) = "white" {}
         _ShadowCapNormalMix ("[ShadowCap] Normal map mix", Range(0, 2)) = 1
         _ShadowCapTexture ("[ShadowCap] Texture", 2D) = "white" {}
-        // Stencil(Writer)
+        // AXCS_GENERATOR:STENCIL_READER_PROPERTIES
+        // Stencil Writer
         _StencilNumber ("[StencilWriter] Number", int) = 5
         _StencilMaskTex ("[StencilWriter] Mask Texture", 2D) = "white" {}
         _StencilMaskAdjust ("[StencilWriter] Mask Texture Adjust", Range(0, 1)) = 0.5
@@ -153,7 +154,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
     }
     SubShader {
         Tags {
-            "Queue"="AlphaTest"
+            "Queue"="AlphaTest" // AXCS_GENERATOR:STENCIL_READER_QUEUE
             "RenderType" = "TransparentCutout"
             "IgnoreProjector"="True"
         }
@@ -190,6 +191,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
             }
             Cull [_Cull]
 
+            // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
             #pragma vertex vert
@@ -217,6 +219,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
             Cull [_Cull]
             Blend One One
 
+            // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
             #pragma vertex vert
@@ -254,6 +257,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 4.0
+
             uniform float _CutoutCutoutAdjust;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform float4 _Color;

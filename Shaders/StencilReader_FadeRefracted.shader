@@ -1,4 +1,4 @@
-Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
+Shader "ArxCharacterShaders/_StencilReader/FadeRefracted" {
     Properties {
         // Double Sided
         [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
@@ -8,6 +8,8 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         [PowerSlider(2.0)]_DoubleSidedBackfaceHueShiftFromBase("Backface Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _DoubleSidedBackfaceSaturationFromBase("Backface Saturation From Base", Range(0, 2)) = 1
         _DoubleSidedBackfaceValueFromBase("Backface Value From Base", Range(0, 2)) = 1
+        //
+        [Enum(Off, 0, On, 1)]_ZWrite("ZWrite", Float) = 0
         // Common
         _MainTex ("[Common] Base Texture", 2D) = "white" {}
         _Color ("[Common] Base Color", Color) = (1,1,1,1)
@@ -15,6 +17,8 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         _BumpScale ("[Common] Normal scale", Range(0,2)) = 1
         _EmissionMap ("[Common] Emission map", 2D) = "white" {}
         [HDR]_EmissionColor ("[Common] Emission Color", Color) = (0,0,0,1)
+        // Alpha Mask
+        _AlphaMask ("[Alpha] AlphaMask", 2D ) = "white" {}
         // Emission Parallax
         [AXCSToggle]_UseEmissionParallax ("[Emission Parallax] Use Emission Parallax", Int ) = 0
         _EmissionParallaxTex ("[Emission Parallax] Texture", 2D ) = "black" {}
@@ -23,8 +27,9 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         _EmissionParallaxDepth ("[Emission Parallax] Depth", Range(-1, 1) ) = 0
         _EmissionParallaxDepthMask ("[Emission Parallax] Depth Mask", 2D ) = "white" {}
         [AXCSToggle]_EmissionParallaxDepthMaskInvert ("[Emission Parallax] Invert Depth Mask", Float ) = 0
-        // Cutout
-        _CutoutCutoutAdjust ("Cutout Border Adjust", Range(0, 1)) = 0.5
+        // refraction
+        _RefractionFresnelExp ("[Refraction] Fresnel Exp",  Range(0, 10)) = 0
+        _RefractionStrength ("[Refraction] Strength",  Range(-2, 2)) = 0
         // Shadow (received from DirectionalLight, other Indirect(baked) Lights, including SH)
         _Shadowborder ("[Shadow] border ", Range(0, 1)) = 0.6
         _ShadowborderBlur ("[Shadow] border Blur", Range(0, 1)) = 0.05
@@ -56,7 +61,6 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
-        // AXCS_GENERATOR:OUTLINE_PROPERTIES
         // MatCap
         [Enum(Add,0, Lighten,1, Screen,2, Unused,3)] _MatcapBlendMode ("[MatCap] Blend Mode", Int) = 3
         _MatcapBlend ("[MatCap] Blend", Range(0, 3)) = 1
@@ -91,12 +95,9 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         _ShadowCapBlendMask ("[ShadowCap] Blend Mask", 2D) = "white" {}
         _ShadowCapNormalMix ("[ShadowCap] Normal map mix", Range(0, 2)) = 1
         _ShadowCapTexture ("[ShadowCap] Texture", 2D) = "white" {}
-        // AXCS_GENERATOR:STENCIL_READER_PROPERTIES
-        // Stencil Writer
-        _StencilNumber ("[StencilWriter] Number", int) = 5
-        _StencilMaskTex ("[StencilWriter] Mask Texture", 2D) = "white" {}
-        _StencilMaskAdjust ("[StencilWriter] Mask Texture Adjust", Range(0, 1)) = 0.5
-        _StencilMaskAlphaDither ("[StencilWriter] StencilAlpha(Dither)", Range(0, 1)) = 1.0
+        // Stencil(Reader)
+        _StencilNumber ("[StencilReader] Number", int) = 5
+        [Enum(UnityEngine.Rendering.CompareFunction)] _StencilCompareAction ("[StencilReader] Compare Action", int) = 6
         // vertex color blend
         _VertexColorBlendDiffuse ("[VertexColor] Blend to diffuse", Range(0,1)) = 0
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
@@ -109,59 +110,41 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
         _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
         _ProximityOverrideColor ("[ProximityOverride] Override Color", Color) = (0,0,0,1)
+        [AXCSToggle]_ProximityOverrideAlphaOnly ("[ProximityOverride] Alpha Only", Int) = 0
     }
     SubShader {
         Tags {
-            "Queue"="AlphaTest" // AXCS_GENERATOR:STENCIL_READER_QUEUE
-            "RenderType" = "TransparentCutout"
+            "Queue"="Transparent"
+            "RenderType"="Transparent"
             "IgnoreProjector"="True"
         }
-        Pass {
-            Name "STENCIL_WRITER"
-            Tags {
-            }
-            Cull [_Cull]
-
-            Stencil {
-                Ref [_StencilNumber]
-                Comp Always
-                Pass Replace
-            }
-
-            CGPROGRAM
-
-            #pragma vertex vert
-            #pragma fragment frag
-            #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0
-            #define AXCS_CUTOUT
-
-            #include "cginc/arkludeDecl.cginc"
-            #include "cginc/arkludeOther.cginc"
-            #include "cginc/arkludeVertGeom.cginc"
-            #include "cginc/arkludeFragOnlyStencilWrite.cginc"
-            ENDCG
-        }
+        GrabPass{ }
         Pass {
             Name "FORWARD"
             Tags {
                 "LightMode"="ForwardBase"
             }
             Cull [_Cull]
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite [_ZWrite]
 
-            // AXCS_GENERATOR:STENCIL_READER_STATEMENT
+            Stencil {
+                Ref [_StencilNumber]
+                Comp [_StencilCompareAction]
+            }
+
             CGPROGRAM
 
+
             #pragma vertex vert
-            // AXCS_GENERATOR:OUTLINE_USE_GEOM
             #pragma fragment frag
-            #pragma multi_compile_fwdbase_fullshadows
+            #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
-            #define AXCS_CUTOUT
+            #pragma target 3.0
+            #define AXCS_FADE
+            #define AXCS_REFRACTED
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
-            // AXCS_GENERATOR:OUTLINE_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -176,20 +159,24 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
             }
             Cull [_Cull]
             Blend One One
+            ZWrite [_ZWrite]
 
-            // AXCS_GENERATOR:STENCIL_READER_STATEMENT
+            Stencil {
+                Ref [_StencilNumber]
+                Comp [_StencilCompareAction]
+            }
+
             CGPROGRAM
 
             #pragma vertex vert
-            // AXCS_GENERATOR:OUTLINE_USE_GEOM
             #pragma fragment frag
-            #pragma multi_compile_fwdadd_fullshadows
+            #pragma multi_compile_fwdadd
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
-            #define AXCS_CUTOUT
+            #pragma target 3.0
+            #define AXCS_FADE
             #define AXCS_ADD
-            // AXCS_GENERATOR:OUTLINE_DEFINE
+            #define AXCS_REFRACTED
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -197,48 +184,27 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
             #include "cginc/arkludeAdd.cginc"
             ENDCG
         }
+
+        // ------------------------------------------------------------------
+        //  Shadow rendering pass
         Pass {
-            Name "ShadowCaster"
-            Tags {
-                "LightMode"="ShadowCaster"
-            }
-            Offset 1, 1
+            Name "SHADOWCASTER"
+            Tags { "LightMode" = "ShadowCaster" }
+
+            ZWrite On ZTest LEqual
             Cull [_Cull]
 
             CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-            #include "UnityCG.cginc"
-            #include "Lighting.cginc"
-            #pragma fragmentoption ARB_precision_hint_fastest
-            #pragma multi_compile_shadowcaster
-            #pragma multi_compile_fog
-            #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
+            #pragma target 3.0
 
-            uniform float _CutoutCutoutAdjust;
-            uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
-            uniform float4 _Color;
-            struct VertexInput {
-                float4 vertex : POSITION;
-                float2 texcoord0 : TEXCOORD0;
-            };
-            struct g2f {
-                V2F_SHADOW_CASTER;
-                float2 uv0 : TEXCOORD1;
-            };
-            g2f vert (VertexInput v) {
-                g2f o = (g2f)0;
-                o.uv0 = v.texcoord0;
-                o.pos = UnityObjectToClipPos( v.vertex );
-                TRANSFER_SHADOW_CASTER(o)
-                return o;
-            }
-            float4 frag(g2f i) : COLOR {
-                float4 _MainTex_var = tex2D(_MainTex,TRANSFORM_TEX(i.uv0, _MainTex));
-                clip((_MainTex_var.a * _Color.a) - _CutoutCutoutAdjust);
-                SHADOW_CASTER_FRAGMENT(i)
-            }
+            // -------------------------------------
+            #pragma multi_compile_shadowcaster
+
+            #pragma vertex vertShadowCaster
+            #pragma fragment fragShadowCaster
+
+            #include "cginc/arkludeFadeShadowCaster.cginc"
+
             ENDCG
         }
     }

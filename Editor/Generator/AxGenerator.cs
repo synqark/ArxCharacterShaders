@@ -94,13 +94,19 @@ namespace AxCharacterShaders.Generator
                             if (!Char.IsWhiteSpace(c)) break;
                             spacing++;
                         }
-                        var whitespace = new string(' ', spacing);
-
                         if (replaceCodes.ContainsKey(keyword)) {
                             var code = replaceCodes[keyword];
                             var lines = code.Split(new[]{"\r\n","\n","\r"}, StringSplitOptions.None);
                             shaderCode.RemoveAt(line);
-                            shaderCode.InsertRange(line, lines.Select(text => whitespace + text.Trim()));
+                            shaderCode.InsertRange(line, lines.Select(text => {
+                                    text = text.Trim();
+                                    if (text.Length == 0) return text;
+                                    if (text.StartsWith(@"}")) spacing-=4;
+                                    text = new string(' ', spacing) + text;
+                                    if (text.EndsWith(@"{")) spacing+=4;
+                                    return text;
+                                }
+                            ));
                         }
                     }
                 }
@@ -112,6 +118,95 @@ namespace AxCharacterShaders.Generator
             }
             // シェーダーをReimport
             AssetDatabase.Refresh();
+        }
+
+        [MenuItem("AXCS/GenerateStencilWriter")]
+        public static void generateStencilWriterVariation()
+        {
+
+            // EmissiveFreakジェネレーター
+            var stencilWriterGenerator = new AxGenerator(){
+                includeShaderNames = new string[]{"Cutout"},
+                excludeShaderNames = new string[]{"Stencil", "Outline", "EmissiveFreak"},
+                namePrefix = "",
+                fileNamePrefix = "StencilWriter_",
+            };
+            stencilWriterGenerator.replaceCodes = new Dictionary<string, string>();
+            stencilWriterGenerator.replaceCodes.Add(
+                "STENCIL_WRITER_PROPERTIES",
+                $@"// Stencil Writer
+                _StencilNumber (""[StencilWriter] Number"", int) = 5
+                _StencilMaskTex (""[StencilWriter] Mask Texture"", 2D) = ""white"" {{}}
+                _StencilMaskAdjust (""[StencilWriter] Mask Texture Adjust"", Range(0, 1)) = 0.5
+                _StencilMaskAlphaDither (""[StencilWriter] StencilAlpha(Dither)"", Range(0, 1)) = 1.0"
+            );
+            stencilWriterGenerator.replaceCodes.Add(
+                "STENCIL_WRITER_SHADER_PASS",
+                $@"Pass {{
+                    Name ""STENCIL_WRITER""
+                    Tags {{
+                    }}
+                    Cull [_Cull]
+
+                    Stencil {{
+                        Ref [_StencilNumber]
+                        Comp Always
+                        Pass Replace
+                    }}
+
+                    CGPROGRAM
+
+                    #pragma vertex vert
+                    #pragma fragment frag
+                    #pragma only_renderers d3d9 d3d11 glcore gles
+                    #pragma target 3.0
+                    #define AXCS_CUTOUT
+
+                    #include ""cginc/arkludeDecl.cginc""
+                    #include ""cginc/arkludeOther.cginc""
+                    #include ""cginc/arkludeVertGeom.cginc""
+                    #include ""cginc/arkludeFragOnlyStencilWrite.cginc""
+                    ENDCG
+                }}"
+            );
+
+            stencilWriterGenerator.variationName = new KeyValuePair<int, string>(1, "_StencilWriter");
+            stencilWriterGenerator.run();
+        }
+
+        [MenuItem("AXCS/GenerateStencilReader")]
+        public static void generateStencilReaderVariation()
+        {
+
+            // EmissiveFreakジェネレーター
+            var stencilReaderGenerator = new AxGenerator(){
+                includeShaderNames = new string[]{"Cutout", "Fade"},
+                excludeShaderNames = new string[]{"Stencil", "Outline", "EmissiveFreak"},
+                namePrefix = "",
+                fileNamePrefix = "StencilReader_",
+            };
+            stencilReaderGenerator.replaceCodes = new Dictionary<string, string>();
+            stencilReaderGenerator.replaceCodes.Add(
+                "STENCIL_READER_PROPERTIES",
+                $@"// Stencil(Reader)
+                _StencilNumber (""[StencilReader] Number"", int) = 5
+                [Enum(UnityEngine.Rendering.CompareFunction)] _StencilCompareAction (""[StencilReader] Compare Action"", int) = 6"
+            );
+            stencilReaderGenerator.replaceCodes.Add(
+                "STENCIL_READER_QUEUE",
+                $@"""Queue""=""AlphaTest+1"""
+            );
+            stencilReaderGenerator.replaceCodes.Add(
+                "STENCIL_READER_STATEMENT",
+                $@"Stencil {{
+                    Ref [_StencilNumber]
+                    Comp [_StencilCompareAction]
+                }}
+                "
+            );
+
+            stencilReaderGenerator.variationName = new KeyValuePair<int, string>(1, "_StencilReader");
+            stencilReaderGenerator.run();
         }
 
         [MenuItem("AXCS/GenerateEmissiveFreak")]

@@ -94,6 +94,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
         // Stencil(Reader)
         _StencilNumber ("[StencilReader] Number", int) = 5
         [Enum(UnityEngine.Rendering.CompareFunction)] _StencilCompareAction ("[StencilReader] Compare Action", int) = 6
+        // AXCS_GENERATOR:STENCIL_WRITER_PROPERTIES
         // vertex color blend
         _VertexColorBlendDiffuse ("[VertexColor] Blend to diffuse", Range(0,1)) = 0
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
@@ -143,6 +144,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
             "RenderType" = "TransparentCutout"
             "IgnoreProjector"="True"
         }
+        // AXCS_GENERATOR:STENCIL_WRITER_SHADER_PASS
         Pass {
             Name "FORWARD"
             Tags {
@@ -214,11 +216,6 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
             Offset 1, 1
             Cull [_Cull]
 
-            Stencil {
-                Ref [_StencilNumber]
-                Comp [_StencilCompareAction]
-            }
-
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -229,6 +226,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
+
             uniform float _CutoutCutoutAdjust;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform float4 _Color;

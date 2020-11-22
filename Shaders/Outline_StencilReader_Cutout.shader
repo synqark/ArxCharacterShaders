@@ -1,4 +1,4 @@
-Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
+Shader "ArxCharacterShaders/_Outline/_StencilReader/AlphaCutout" {
     Properties {
         // Double Sided
         [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
@@ -56,7 +56,19 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
-        // AXCS_GENERATOR:OUTLINE_PROPERTIES
+        // Outline
+        _OutlineWidth ("[Outline] Width", Range(0, 20)) = 0.1
+        _OutlineMask ("[Outline] Outline Mask", 2D) = "white" {}
+        _OutlineCutoffRange ("[Outline] Cutoff Range", Range(0, 1)) = 0.5
+        _OutlineColor ("[Outline] Color", Color) = (0,0,0,1)
+        _OutlineTexture ("[Outline] Texture", 2D) = "white" {}
+        _OutlineShadeMix ("[Outline] Shade Mix", Range(0, 1)) = 0
+        _OutlineTextureColorRate ("[Outline] Texture Color Rate", Range(0, 1)) = 0.05
+        _OutlineWidthMask ("[Outline] Outline Width Mask", 2D) = "white" {}
+        [AXCSToggle]_OutlineUseColorShift("[Outline] Use Outline Color Shift", Int) = 0
+        [PowerSlider(2.0)]_OutlineHueShiftFromBase("[Outline] Hue Shift From Base", Range(-0.5, 0.5)) = 0
+        _OutlineSaturationFromBase("[Outline] Saturation From Base", Range(0, 2)) = 1
+        _OutlineValueFromBase("[Outline] Value From Base", Range(0, 2)) = 1
         // MatCap
         [Enum(Add,0, Lighten,1, Screen,2, Unused,3)] _MatcapBlendMode ("[MatCap] Blend Mode", Int) = 3
         _MatcapBlend ("[MatCap] Blend", Range(0, 3)) = 1
@@ -91,12 +103,10 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
         _ShadowCapBlendMask ("[ShadowCap] Blend Mask", 2D) = "white" {}
         _ShadowCapNormalMix ("[ShadowCap] Normal map mix", Range(0, 2)) = 1
         _ShadowCapTexture ("[ShadowCap] Texture", 2D) = "white" {}
-        // AXCS_GENERATOR:STENCIL_READER_PROPERTIES
-        // Stencil Writer
-        _StencilNumber ("[StencilWriter] Number", int) = 5
-        _StencilMaskTex ("[StencilWriter] Mask Texture", 2D) = "white" {}
-        _StencilMaskAdjust ("[StencilWriter] Mask Texture Adjust", Range(0, 1)) = 0.5
-        _StencilMaskAlphaDither ("[StencilWriter] StencilAlpha(Dither)", Range(0, 1)) = 1.0
+        // Stencil(Reader)
+        _StencilNumber ("[StencilReader] Number", int) = 5
+        [Enum(UnityEngine.Rendering.CompareFunction)] _StencilCompareAction ("[StencilReader] Compare Action", int) = 6
+        // AXCS_GENERATOR:STENCIL_WRITER_PROPERTIES
         // vertex color blend
         _VertexColorBlendDiffuse ("[VertexColor] Blend to diffuse", Range(0,1)) = 0
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
@@ -112,36 +122,11 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
     }
     SubShader {
         Tags {
-            "Queue"="AlphaTest" // AXCS_GENERATOR:STENCIL_READER_QUEUE
+            "Queue"="AlphaTest+1"
             "RenderType" = "TransparentCutout"
             "IgnoreProjector"="True"
         }
-        Pass {
-            Name "STENCIL_WRITER"
-            Tags {
-            }
-            Cull [_Cull]
-
-            Stencil {
-                Ref [_StencilNumber]
-                Comp Always
-                Pass Replace
-            }
-
-            CGPROGRAM
-
-            #pragma vertex vert
-            #pragma fragment frag
-            #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0
-            #define AXCS_CUTOUT
-
-            #include "cginc/arkludeDecl.cginc"
-            #include "cginc/arkludeOther.cginc"
-            #include "cginc/arkludeVertGeom.cginc"
-            #include "cginc/arkludeFragOnlyStencilWrite.cginc"
-            ENDCG
-        }
+        // AXCS_GENERATOR:STENCIL_WRITER_SHADER_PASS
         Pass {
             Name "FORWARD"
             Tags {
@@ -149,19 +134,23 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
             }
             Cull [_Cull]
 
-            // AXCS_GENERATOR:STENCIL_READER_STATEMENT
+            Stencil {
+                Ref [_StencilNumber]
+                Comp [_StencilCompareAction]
+            }
+
             CGPROGRAM
 
             #pragma vertex vert
-            // AXCS_GENERATOR:OUTLINE_USE_GEOM
+            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdbase_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
+            #pragma target 4.0
             #define AXCS_CUTOUT
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
-            // AXCS_GENERATOR:OUTLINE_DEFINE
+            #define AXCS_OUTLINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -177,19 +166,23 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
             Cull [_Cull]
             Blend One One
 
-            // AXCS_GENERATOR:STENCIL_READER_STATEMENT
+            Stencil {
+                Ref [_StencilNumber]
+                Comp [_StencilCompareAction]
+            }
+
             CGPROGRAM
 
             #pragma vertex vert
-            // AXCS_GENERATOR:OUTLINE_USE_GEOM
+            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdadd_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
+            #pragma target 4.0
             #define AXCS_CUTOUT
             #define AXCS_ADD
-            // AXCS_GENERATOR:OUTLINE_DEFINE
+            #define AXCS_OUTLINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
@@ -214,7 +207,7 @@ Shader "ArxCharacterShaders/_StencilWriter/AlphaCutout" {
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
+            #pragma target 4.0
 
             uniform float _CutoutCutoutAdjust;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;

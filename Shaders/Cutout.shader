@@ -91,6 +91,8 @@ Shader "ArxCharacterShaders/AlphaCutout" {
         _ShadowCapBlendMask ("[ShadowCap] Blend Mask", 2D) = "white" {}
         _ShadowCapNormalMix ("[ShadowCap] Normal map mix", Range(0, 2)) = 1
         _ShadowCapTexture ("[ShadowCap] Texture", 2D) = "white" {}
+        // AXCS_GENERATOR:STENCIL_READER_PROPERTIES
+        // AXCS_GENERATOR:STENCIL_WRITER_PROPERTIES
         // vertex color blend
         _VertexColorBlendDiffuse ("[VertexColor] Blend to diffuse", Range(0,1)) = 0
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
@@ -106,10 +108,11 @@ Shader "ArxCharacterShaders/AlphaCutout" {
     }
     SubShader {
         Tags {
-            "Queue"="AlphaTest"
+            "Queue"="AlphaTest" // AXCS_GENERATOR:STENCIL_READER_QUEUE
             "RenderType" = "TransparentCutout"
             "IgnoreProjector"="True"
         }
+        // AXCS_GENERATOR:STENCIL_WRITER_SHADER_PASS
         Pass {
             Name "FORWARD"
             Tags {
@@ -117,6 +120,7 @@ Shader "ArxCharacterShaders/AlphaCutout" {
             }
             Cull [_Cull]
 
+            // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
             #pragma vertex vert
@@ -144,6 +148,7 @@ Shader "ArxCharacterShaders/AlphaCutout" {
             Cull [_Cull]
             Blend One One
 
+            // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
             #pragma vertex vert

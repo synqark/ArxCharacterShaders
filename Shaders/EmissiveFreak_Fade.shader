@@ -92,6 +92,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/Fade" {
         _ShadowCapBlendMask ("[ShadowCap] Blend Mask", 2D) = "white" {}
         _ShadowCapNormalMix ("[ShadowCap] Normal map mix", Range(0, 2)) = 1
         _ShadowCapTexture ("[ShadowCap] Texture", 2D) = "white" {}
+        // AXCS_GENERATOR:STENCIL_READER_PROPERTIES
         // vertex color blend
         _VertexColorBlendDiffuse ("[VertexColor] Blend to diffuse", Range(0,1)) = 0
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
@@ -151,6 +152,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/Fade" {
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite [_ZWrite]
 
+            // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
 
@@ -178,6 +180,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/Fade" {
             Blend One One
             ZWrite [_ZWrite]
 
+            // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
             #pragma vertex vert
