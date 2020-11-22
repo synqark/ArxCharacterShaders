@@ -120,11 +120,10 @@ namespace AxCharacterShaders.Generator
             AssetDatabase.Refresh();
         }
 
-        [MenuItem("AXCS/GenerateStencilWriter")]
+        [MenuItem("AXCS/Generator/1.GenerateStencilWriter")]
         public static void generateStencilWriterVariation()
         {
-
-            // EmissiveFreakジェネレーター
+            // StencilWriterジェネレーター
             var stencilWriterGenerator = new AxGenerator(){
                 includeShaderNames = new string[]{"Cutout"},
                 excludeShaderNames = new string[]{"Stencil", "Outline", "EmissiveFreak"},
@@ -174,11 +173,10 @@ namespace AxCharacterShaders.Generator
             stencilWriterGenerator.run();
         }
 
-        [MenuItem("AXCS/GenerateStencilReader")]
+        [MenuItem("AXCS/Generator/2.GenerateStencilReader")]
         public static void generateStencilReaderVariation()
         {
-
-            // EmissiveFreakジェネレーター
+            // StencilReaderジェネレーター
             var stencilReaderGenerator = new AxGenerator(){
                 includeShaderNames = new string[]{"Cutout", "Fade"},
                 excludeShaderNames = new string[]{"Stencil", "Outline", "EmissiveFreak"},
@@ -209,10 +207,9 @@ namespace AxCharacterShaders.Generator
             stencilReaderGenerator.run();
         }
 
-        [MenuItem("AXCS/GenerateEmissiveFreak")]
+        [MenuItem("AXCS/Generator/3.GenerateEmissiveFreak")]
         public static void generateEmissiveFreakVariation()
         {
-
             // EmissiveFreakジェネレーター
             var emissiveFreakGenerator = new AxGenerator(){
                 includeShaderNames = new string[]{"Opaque", "Cutout", "Stencil", "Fade"},
@@ -264,16 +261,9 @@ namespace AxCharacterShaders.Generator
             emissiveFreakGenerator.run();
         }
 
-        [MenuItem("AXCS/GenerateOutline")]
+        [MenuItem("AXCS/Generator/4.GenerateOutline")]
         public static void generateOutlineVariation()
         {
-            // StencilWriterジェネレーター
-            // TBD
-
-            // StencilReaderジェネレーター
-            // TBD
-
-
             // Outlineジェネレーター
             var outlineGenerator = new AxGenerator(){
                 includeShaderNames = new string[]{"Opaque", "Cutout", "Stencil", "EmissiveFreak"},
