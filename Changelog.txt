@@ -7,6 +7,9 @@
 「AXCS/Generator」メニューから実行できますが、シェーダー改変の予定がなければ使用する意味もありません。
 　・↑に伴い、EmissiveFreakとOutlineバリエーションにいくつかシェーダーバリエーションが増えた気がする、たぶん。
 
+※ build 7 以前をインポートしている場合、正常に動作しない可能性がありますので、
+一度「ArxCharacterShaders」フォルダを削除した上で、改めてbuild8をインポートしてください。
+
 2020/11/04 build 7----------------------
 ・以下のシェーダーバリエーションでAmbient Light Intensityが使用出来なくなっていた問題を修正
 EmissiveFreakFade
