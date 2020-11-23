@@ -120,7 +120,13 @@ namespace AxCharacterShaders.Generator
             AssetDatabase.Refresh();
         }
 
-        [MenuItem("AXCS/Generator/1.GenerateStencilWriter")]
+        [MenuItem("AXCS/Generator/ジェネレーターについて" , priority = 1)]
+        public static void ShowGeneratorIs()
+        {
+            AxTips.AxTipWindow.ShowTips(() => new AxTips.AxcsGenerator());
+        }
+
+        [MenuItem("AXCS/Generator/1.GenerateStencilWriter", priority = 21)]
         public static void generateStencilWriterVariation()
         {
             // StencilWriterジェネレーター
@@ -173,7 +179,7 @@ namespace AxCharacterShaders.Generator
             stencilWriterGenerator.run();
         }
 
-        [MenuItem("AXCS/Generator/2.GenerateStencilReader")]
+        [MenuItem("AXCS/Generator/2.GenerateStencilReader", priority = 22)]
         public static void generateStencilReaderVariation()
         {
             // StencilReaderジェネレーター
@@ -207,7 +213,7 @@ namespace AxCharacterShaders.Generator
             stencilReaderGenerator.run();
         }
 
-        [MenuItem("AXCS/Generator/3.GenerateEmissiveFreak")]
+        [MenuItem("AXCS/Generator/3.GenerateEmissiveFreak", priority = 23)]
         public static void generateEmissiveFreakVariation()
         {
             // EmissiveFreakジェネレーター
@@ -261,7 +267,7 @@ namespace AxCharacterShaders.Generator
             emissiveFreakGenerator.run();
         }
 
-        [MenuItem("AXCS/Generator/4.GenerateOutline")]
+        [MenuItem("AXCS/Generator/4.GenerateOutline", priority = 24)]
         public static void generateOutlineVariation()
         {
             // Outlineジェネレーター
