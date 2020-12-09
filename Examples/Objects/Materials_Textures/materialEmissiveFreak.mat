@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: materialEmissiveFreak
-  m_Shader: {fileID: 4800000, guid: ed627574387225c449eaccd6fdbc6d15, type: 3}
+  m_Shader: {fileID: 4800000, guid: 82b077c6cd0a1bf49924f2e40bbaa11a, type: 3}
   m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -64,11 +64,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveFreak1Mask:
-        m_Texture: {fileID: 2800000, guid: 47c95c2343f176e47b666b929de8f68c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 45fdda763b21e774b88fe8a7736e4164, type: 3}
         m_Scale: {x: 3, y: 3}
         m_Offset: {x: 0, y: 0}
     - _EmissiveFreak1Tex:
-        m_Texture: {fileID: 2800000, guid: 358ad584c99802b4da2965f294fdfe92, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0993a6e1132b1ad4fa2d52aa2ac048af, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveFreak2DepthMask:
@@ -171,6 +171,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadowPlanBCustomShadowDetailMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ShadowPlanBCustomShadowTexture:
         m_Texture: {fileID: 2800000, guid: 6f8126a606442fb4fb00b0dfcd94eaf7, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -193,6 +197,7 @@ Material:
     - _CustomShadow2nd: 0
     - _Cutoff: 0.5
     - _CutoutCutoutAdjust: 0.741
+    - _DetailAlbedoScale: 1
     - _DetailNormalMapScale: 1
     - _DoubleSidedBackfaceHueShiftFromBase: 0
     - _DoubleSidedBackfaceLightIntensity: 0.5

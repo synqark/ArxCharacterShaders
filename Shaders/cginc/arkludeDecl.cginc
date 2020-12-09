@@ -33,6 +33,13 @@
 #   define REF_EMISSIONCOLOR _EmissionColor
 #endif
 
+// Detail
+UNITY_DECLARE_TEX2D(_DetailAlbedoMap); uniform float4 _DetailAlbedoMap_ST;
+UNITY_DECLARE_TEX2D(_DetailNormalMap); uniform float4 _DetailNormalMap_ST;
+uniform float _DetailNormalMapScale;
+UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailMask); uniform float4 _DetailMask_ST;
+uniform float _DetailAlbedoScale;
+
 // Alpha Mask
 UNITY_DECLARE_TEX2D_NOSAMPLER(_AlphaMask); uniform float4 _AlphaMask_ST;
 
@@ -69,8 +76,8 @@ uniform float _ShadowPlanBSaturationFromBase;
 uniform float _ShadowPlanBValueFromBase;
 uniform int _ShadowPlanBUseCustomShadowTexture;
 UNITY_DECLARE_TEX2D_NOSAMPLER(_ShadowPlanBCustomShadowTexture); uniform float4 _ShadowPlanBCustomShadowTexture_ST;
+UNITY_DECLARE_TEX2D_NOSAMPLER(_ShadowPlanBCustomShadowDetailMap); /* _DetailAlbedoMap_ST を使う*/
 uniform float4 _ShadowPlanBCustomShadowTextureRGB;
-
 
 // Outline
 #ifdef AXCS_OUTLINE

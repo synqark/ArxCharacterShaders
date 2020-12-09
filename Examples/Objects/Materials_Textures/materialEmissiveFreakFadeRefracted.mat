@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: materialEmissiveFreakFadeRefracted
   m_Shader: {fileID: 4800000, guid: 64c7ca6ee0374bb49928cc04ae72e564, type: 3}
-  m_ShaderKeywords: _NORMALMAP
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -31,6 +31,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 28b7665efe9dab84f85cdb2c8169f6b0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BumpMapSecondary:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -44,6 +48,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMapSecondary:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -68,11 +76,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveFreak1Mask:
-        m_Texture: {fileID: 2800000, guid: 47c95c2343f176e47b666b929de8f68c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 45fdda763b21e774b88fe8a7736e4164, type: 3}
         m_Scale: {x: 3, y: 3}
         m_Offset: {x: 0, y: 0}
     - _EmissiveFreak1Tex:
-        m_Texture: {fileID: 2800000, guid: 358ad584c99802b4da2965f294fdfe92, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0993a6e1132b1ad4fa2d52aa2ac048af, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveFreak2DepthMask:
@@ -93,6 +101,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 7e7cd7b6a5999d8449acf559d795c8e6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTexSecondary:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MatcapBlendMask:
@@ -171,6 +183,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadowPlanBCustomShadowDetailMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ShadowPlanBCustomShadowTexture:
         m_Texture: {fileID: 2800000, guid: 6f8126a606442fb4fb00b0dfcd94eaf7, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -189,10 +205,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
+    - _BumpScaleSecondary: 1
     - _Cull: 2
     - _CustomShadow2nd: 0
     - _Cutoff: 0.5
     - _CutoutCutoutAdjust: 0.741
+    - _DetailAlbedoScale: 1
     - _DetailNormalMapScale: 1
     - _DoubleSidedBackfaceHueShiftFromBase: 0
     - _DoubleSidedBackfaceLightIntensity: 0.5
@@ -256,6 +274,7 @@ Material:
     - _PointShadowUseStep: 0
     - _PointShadowborder: 0.5
     - _PointShadowborderBlur: 0.01
+    - _ProximityOverrideAlphaOnly: 0
     - _ProximityOverrideBegin: 0.15
     - _ProximityOverrideEnd: 0.03
     - _ReflectionCubemapMix: 0
@@ -303,9 +322,11 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _StencilCompareAction: 6
+    - _StencilCompareActionSecondary: 6
     - _StencilMaskAdjust: 0.5
     - _StencilMaskAlphaDither: 0.5
     - _StencilNumber: 5
+    - _StencilNumberSecondary: 5
     - _UVSec: 0
     - _UseDoubleSided: 0
     - _UseEmissionParallax: 0
@@ -328,7 +349,9 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.992647, g: 0.5474156, b: 0.5474156, a: 1}
     - _Color: {r: 0.30543095, g: 0.50980395, b: 0, a: 0.40784314}
+    - _ColorSecondary: {r: 1, g: 1, b: 1, a: 0.19607843}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColorSecondary: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionParallaxColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveFreak1Color: {r: 1, g: 0, b: 0, a: 1}
     - _EmissiveFreak2Color: {r: 0, g: 0, b: 0, a: 1}

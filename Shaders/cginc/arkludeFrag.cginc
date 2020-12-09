@@ -19,7 +19,29 @@ float4 frag(
     // 後の計算に使う変数を予め定義
     float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir * lerp(1, faceSign, _DoubleSidedFlipBackfaceNormal));
     float3 viewDirection = normalize(UnityWorldSpaceViewDir(i.posWorld.xyz));
+
+    // Main color(Common + Detail)
+    float4 mainColor = UNITY_SAMPLE_TEX2D(REF_MAINTEX, TRANSFORM_TEX(i.uv0, REF_MAINTEX)) * REF_COLOR.rgba;
+    // Detail
+    half3 detail = UNITY_SAMPLE_TEX2D(_DetailAlbedoMap, TRANSFORM_TEX(i.uv0, _DetailAlbedoMap)); /* i.uv1? */
+    half detailMask = UNITY_SAMPLE_TEX2D_SAMPLER(_DetailMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _DetailMask));
+    mainColor.rgb *= LerpWhiteTo(detail * unity_ColorSpaceDouble.rgb, detailMask * _DetailAlbedoScale);
+
+    // Normal map(Common + Detail)
     float3 normalLocal = UnpackScaleNormal(tex2D(REF_BUMPMAP,TRANSFORM_TEX(i.uv0, REF_BUMPMAP)), REF_BUMPSCALE);
+    half3 detailNormalTangent = UnpackScaleNormal(UNITY_SAMPLE_TEX2D(_DetailNormalMap, TRANSFORM_TEX(i.uv0, _DetailNormalMap)), _DetailNormalMapScale);
+    normalLocal = lerp(
+        normalLocal,
+        BlendNormals(normalLocal, detailNormalTangent),
+        detailMask
+    );
+
+    // 頂点カラーを加味し、拡散色を決定。
+    float3 Diffuse = lerp(mainColor.rgb, mainColor.rgb * i.color, _VertexColorBlendDiffuse);
+    // 透明度を確定
+    half alpha = mainColor.a;
+
+    //
     float3 normalDirection = normalize(mul( normalLocal, tangentTransform )); // Perturbed normals
     float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz + float3(0, +0.0000000001, 0));
     float3 lightColor = _LightColor0.rgb;
@@ -32,15 +54,9 @@ float4 frag(
         UNITY_LIGHT_ATTENUATION(attenuation, i, i.posWorld.xyz);
     #endif
 
-    // 拡散色（基本色）を決定
-    // テクスチャカラー×プロパティカラー×頂点カラー（頂点ブレンドを設定している場合）
-    float4 _MainTex_var = UNITY_SAMPLE_TEX2D(REF_MAINTEX, TRANSFORM_TEX(i.uv0, REF_MAINTEX));
-    float3 Diffuse = (_MainTex_var.rgb*REF_COLOR.rgb);
-    Diffuse = lerp(Diffuse, Diffuse * i.color, _VertexColorBlendDiffuse);
-
     // Cutoutの場合、アルファが決定したのでここでクリップする。
     #ifdef AXCS_CUTOUT
-        clip((_MainTex_var.a * REF_COLOR.a) - _CutoutCutoutAdjust);
+        clip(alpha - _CutoutCutoutAdjust);
     #endif
 
     #ifdef AXCS_OUTLINE
@@ -164,6 +180,9 @@ float4 frag(
         float3 ShadeMap = float3(0,0,0);
         if (_ShadowPlanBUseCustomShadowTexture) {
             float4 _ShadowPlanBCustomShadowTexture_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowPlanBCustomShadowTexture, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowPlanBCustomShadowTexture));
+            // Detail
+            half3 customShadowDetailMap = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowPlanBCustomShadowDetailMap, _DetailAlbedoMap, TRANSFORM_TEX(i.uv0, _DetailAlbedoMap));
+            _ShadowPlanBCustomShadowTexture_var.rgb *= LerpWhiteTo(customShadowDetailMap * unity_ColorSpaceDouble.rgb, detailMask * _DetailAlbedoScale);
             float3 shadowCustomTexture = _ShadowPlanBCustomShadowTexture_var.rgb * _ShadowPlanBCustomShadowTextureRGB.rgb;
             ShadeMap = shadowCustomTexture;
         } else {
@@ -268,7 +287,7 @@ float4 frag(
                 specularPBL = 0.0;
             #endif
             specularPBL *= any(specularColor) ? 1.0 : 0.0;
-            float3 attenColor = attenuation * _LightColor0.xyz;
+            float3 attenColor = attenuation * lightColor;
             float3 directSpecular = attenColor*specularPBL*FresnelTerm(specularColor, LdotH);
             half grazingTerm = saturate( gloss + specularMonochrome );
             specular = attenuation * directSpecular * _GlossColor.rgb;
@@ -400,9 +419,9 @@ float4 frag(
     #ifdef AXCS_FADE
         fixed _AlphaMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_AlphaMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _AlphaMask)).r;
         #ifdef AXCS_REFRACTED
-            fixed4 finalRGBA = fixed4(lerp(sceneColor, finalColor, (_MainTex_var.a*REF_COLOR.a*_AlphaMask_var)),1);
+            fixed4 finalRGBA = fixed4(lerp(sceneColor, finalColor, alpha * _AlphaMask_var), 1);
         #else
-            fixed4 finalRGBA = fixed4(finalColor,(_MainTex_var.a*REF_COLOR.a*_AlphaMask_var));
+            fixed4 finalRGBA = fixed4(finalColor, alpha * _AlphaMask_var);
         #endif
         if (_UseProximityOverride) {
             float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;

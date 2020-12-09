@@ -381,4 +381,18 @@ namespace AxCharacterShaders.AxTips
             };
         }
     }
+    class DetailMap : AxcsTip
+    {
+        public DetailMap()
+        {
+            Title = "Detail Map";
+            Description = "CommonおよびShading（テクスチャ利用中）で決定された色にオーバーレイで追加のテクスチャを指定します。 基本的にはStandardシェーダーのDetail Mapsを同じ用法を想定しています。";
+            properties = new Property[]{
+                //Mask
+                //Detail map
+                //Detail map (When shaded)
+                //Normal map
+            };
+        }
+    }
 }

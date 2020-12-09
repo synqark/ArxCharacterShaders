@@ -29,6 +29,11 @@ namespace AxCharacterShaders
         MaterialProperty EmissionParallaxDepth;
         MaterialProperty EmissionParallaxDepthMask;
         MaterialProperty EmissionParallaxDepthMaskInvert;
+        MaterialProperty DetailMask;
+        MaterialProperty DetailAlbedoMap;
+        MaterialProperty DetailAlbedoScale;
+        MaterialProperty DetailNormalMap;
+        MaterialProperty DetailNormalMapScale;
         MaterialProperty Shadowborder;
         MaterialProperty ShadowborderBlur;
         MaterialProperty ShadowborderBlurMask;
@@ -51,6 +56,7 @@ namespace AxCharacterShaders
         MaterialProperty ShadowPlanBSaturationFromBase;
         MaterialProperty ShadowPlanBValueFromBase;
         MaterialProperty ShadowPlanBCustomShadowTexture;
+        MaterialProperty ShadowPlanBCustomShadowDetailMap;
         MaterialProperty ShadowPlanBCustomShadowTextureRGB;
         MaterialProperty UseGloss;
         MaterialProperty GlossBlend;
@@ -158,7 +164,7 @@ namespace AxCharacterShaders
         static bool IsShowAlphaMask = false;
         static bool IsShowNonRegistered = false;
         static bool IsShowVariationTip = false;
-
+        static bool IsShowDetailMap = false;
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] props)
         {
@@ -201,6 +207,11 @@ namespace AxCharacterShaders
             EmissionParallaxDepth = MatP("_EmissionParallaxDepth", props, false);
             EmissionParallaxDepthMask = MatP("_EmissionParallaxDepthMask", props, false);
             EmissionParallaxDepthMaskInvert = MatP("_EmissionParallaxDepthMaskInvert", props, false);
+            DetailMask = MatP("_DetailMask", props, false);
+            DetailAlbedoMap = MatP("_DetailAlbedoMap", props, false);
+            DetailAlbedoScale = MatP("_DetailAlbedoScale", props, false);
+            DetailNormalMap = MatP("_DetailNormalMap", props, false);
+            DetailNormalMapScale = MatP("_DetailNormalMapScale", props, false);
             CutoutCutoutAdjust = MatP("_CutoutCutoutAdjust", props, false);
             Shadowborder = MatP("_Shadowborder", props, false);
             ShadowborderBlur = MatP("_ShadowborderBlur", props, false);
@@ -222,6 +233,7 @@ namespace AxCharacterShaders
             ShadowPlanBSaturationFromBase = MatP("_ShadowPlanBSaturationFromBase", props, false);
             ShadowPlanBValueFromBase = MatP("_ShadowPlanBValueFromBase", props, false);
             ShadowPlanBCustomShadowTexture = MatP("_ShadowPlanBCustomShadowTexture", props, false);
+            ShadowPlanBCustomShadowDetailMap = MatP("_ShadowPlanBCustomShadowDetailMap", props, false);
             ShadowPlanBCustomShadowTextureRGB = MatP("_ShadowPlanBCustomShadowTextureRGB", props, false);
             UseGloss = MatP("_UseGloss", props, false);
             GlossBlend = MatP("_GlossBlend", props, false);
@@ -516,6 +528,26 @@ namespace AxCharacterShaders
                         EditorGUI.indentLevel --;
                     });
                 });
+
+                // Advanced / Experimental
+                IsShowDetailMap = UIHelper.ShurikenFoldout("Detail Maps", IsShowDetailMap, () => new AxTips.DetailMap());
+                if (IsShowDetailMap) {
+                    UIHelper.DrawWithGroup(() => {
+                        UIHelper.DrawWithGroup(() => {
+                            materialEditor.TexturePropertySingleLine(new GUIContent("Mask", "Mask"), DetailMask);
+                            materialEditor.TextureScaleOffsetPropertyIndent(DetailMask);
+                        });
+                        UIHelper.DrawWithGroup(() => {
+                            materialEditor.TexturePropertySingleLine(new GUIContent("Detail Map", "Detail Map"), DetailAlbedoMap, DetailAlbedoScale);
+                            materialEditor.TexturePropertySingleLine(new GUIContent("Detail Map (when Shaded) ", "Detail Map (when Shaded)"), ShadowPlanBCustomShadowDetailMap);
+                            materialEditor.TextureScaleOffsetPropertyIndent(DetailAlbedoMap);
+                        });
+                        UIHelper.DrawWithGroup(() => {
+                            materialEditor.TexturePropertySingleLine(new GUIContent("Normal Map", "Normal Map (RGB)"), DetailNormalMap, DetailNormalMapScale);
+                            materialEditor.TextureScaleOffsetPropertyIndent(DetailNormalMap);
+                        });
+                    });
+                }
 
                 // Outline
                 if(!isRefracted && isOutline) {

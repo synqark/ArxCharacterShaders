@@ -25,6 +25,12 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
         _EmissionColorSecondary ("[Common] Emission Color", Color) = (0,0,0,1)
         // Alpha Mask
         _AlphaMask ("[Alpha] AlphaMask", 2D ) = "white" {}
+        // DetailMap
+        _DetailMask ("[Detail] Mask texture", 2D) = "white" {}
+        _DetailAlbedoMap ("[Detail] Albedo map ", 2D) = "gray" {}
+        _DetailAlbedoScale ("[Detail] Albedo map scale", Range(0, 1)) = 1
+        _DetailNormalMap ("[Detail] Normal map", 2D) = "bump" {}
+        _DetailNormalMapScale ("[Detail] Normal scale", Range(0, 2)) = 1
         // Emission Parallax
         [AXCSToggle]_UseEmissionParallax ("[Emission Parallax] Use Emission Parallax", Int ) = 0
         _EmissionParallaxTex ("[Emission Parallax] Texture", 2D ) = "black" {}
@@ -57,6 +63,7 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
         _ShadowPlanBSaturationFromBase ("[Plan B] Saturation From Base", Range(0, 2)) = 1
         _ShadowPlanBValueFromBase ("[Plan B] Value From Base", Range(0, 2)) = 1
         _ShadowPlanBCustomShadowTexture ("[Plan B] Custom Shadow Texture", 2D) = "black" {}
+        _ShadowPlanBCustomShadowDetailMap ("[Plan B] Custom Shadow Detail Texture ", 2D) = "gray" {}
         _ShadowPlanBCustomShadowTextureRGB ("[Plan B] Custom Shadow Texture RGB", Color) = (1,1,1,1)
         // Gloss
         [AXCSToggle]_UseGloss ("[Gloss] Enabled", Int) = 0
