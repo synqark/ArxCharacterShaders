@@ -207,4 +207,7 @@ uniform float _ProximityOverrideBegin;
 uniform float _ProximityOverrideEnd;
 uniform float4 _ProximityOverrideColor;
 uniform int _ProximityOverrideAlphaOnly;
-
+uniform float _ProximityOverrideHueShiftFromBase;
+uniform float _ProximityOverrideSaturationFromBase;
+uniform float _ProximityOverrideValueFromBase;
+uniform float _ProximityOverrideAlphaScale;

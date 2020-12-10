@@ -418,29 +418,38 @@ float4 frag(
 
     #ifdef AXCS_FADE
         fixed _AlphaMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_AlphaMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _AlphaMask)).r;
+        alpha = alpha * _AlphaMask_var;
+        if (_UseProximityOverride) {
+            float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
+            float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd) / overrideDistance , 0.0 , 1.0 ).x;
+            finalColor = CalculateHSV(
+                finalColor,
+                lerp(0, _ProximityOverrideHueShiftFromBase, overrideFactor),
+                lerp(1, _ProximityOverrideSaturationFromBase, overrideFactor),
+                lerp(1, _ProximityOverrideValueFromBase, overrideFactor)
+            );
+            alpha = lerp(alpha, alpha * _ProximityOverrideAlphaScale, overrideFactor);
+        }
         #ifdef AXCS_REFRACTED
             fixed4 finalRGBA = fixed4(lerp(sceneColor, finalColor, alpha * _AlphaMask_var), 1);
         #else
             fixed4 finalRGBA = fixed4(finalColor, alpha * _AlphaMask_var);
         #endif
-        if (_UseProximityOverride) {
-            float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
-            float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd) / overrideDistance , 0.0 , 1.0 ).x;
-            finalRGBA = lerp(finalRGBA, fixed4(lerp(_ProximityOverrideColor.rgb, finalRGBA.rgb, _ProximityOverrideAlphaOnly), _ProximityOverrideColor.a), overrideFactor);
-        }
         UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
         return finalRGBA;
     #else
         if (_UseProximityOverride) {
             float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
             float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd) / overrideDistance , 0.0 , 1.0 ).x;
-            fixed4 finalRGBA = fixed4(lerp(finalColor, _ProximityOverrideColor.xyz, overrideFactor),1);
-            UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
-            return finalRGBA;
-        } else {
-            fixed4 finalRGBA = fixed4(finalColor,1);
-            UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
-            return finalRGBA;
+            finalColor = CalculateHSV(
+                finalColor,
+                lerp(0, _ProximityOverrideHueShiftFromBase, overrideFactor),
+                lerp(1, _ProximityOverrideSaturationFromBase, overrideFactor),
+                lerp(1, _ProximityOverrideValueFromBase, overrideFactor)
+            );
         }
+        fixed4 finalRGBA = fixed4(finalColor, 1);
+        UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
+        return finalRGBA;
     #endif
 }

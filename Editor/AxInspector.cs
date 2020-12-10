@@ -530,7 +530,7 @@ namespace AxCharacterShaders
                 });
 
                 // Advanced / Experimental
-                IsShowDetailMap = UIHelper.ShurikenFoldout("Detail Maps", IsShowDetailMap, () => new AxTips.DetailMap());
+                IsShowDetailMap = UIHelper.ShurikenFoldout("Details", IsShowDetailMap, () => new AxTips.DetailMap());
                 if (IsShowDetailMap) {
                     UIHelper.DrawWithGroup(() => {
                         UIHelper.DrawWithGroup(() => {
@@ -826,15 +826,36 @@ namespace AxCharacterShaders
                 {
                     UIHelper.DrawWithGroup(() => {
                         UIHelper.DrawWithGroup(() => {
-                            if (isFade) materialEditor.ShaderProperty(MatP("_ProximityOverrideAlphaOnly", props, false), "Alpha channel only");
+                            // if (isFade) materialEditor.ShaderProperty(MatP("_ProximityOverrideAlphaOnly", props, false), "Alpha channel only");
 
                             var begin = MatP("_ProximityOverrideBegin", props, false);
                             var end = MatP("_ProximityOverrideEnd", props, false);
-                            materialEditor.ShaderProperty(MatP("_ProximityOverrideColor", props, false), "Color");
+                            // materialEditor.ShaderProperty(MatP("_ProximityOverrideColor", props, false), "Color");
                             materialEditor.ShaderProperty(begin, "Begin(far)");
                             materialEditor.ShaderProperty(end, "End(near)");
+                            EditorGUILayout.LabelField("Override Color", EditorStyles.boldLabel);
+                            EditorGUI.indentLevel ++;
+                            materialEditor.ShaderProperty(MatP("_ProximityOverrideHueShiftFromBase", props, false), "Hue Shift");
+                            materialEditor.ShaderProperty(MatP("_ProximityOverrideSaturationFromBase", props, false), "Saturation");
+                            materialEditor.ShaderProperty(MatP("_ProximityOverrideValueFromBase", props, false), "Value");
+                            EditorGUI.indentLevel --;
+                            if (isFade) {
+                                EditorGUILayout.LabelField("Alpha", EditorStyles.boldLabel);
+                                EditorGUI.indentLevel ++;
+                                materialEditor.ShaderProperty(MatP("_ProximityOverrideAlphaScale", props, false), "Scale");
+                                EditorGUI.indentLevel --;
+                            }
                         });
                     });
+                } else {
+                    MatPVoid(
+                        "_ProximityOverrideBegin",
+                        "_ProximityOverrideEnd",
+                        "_ProximityOverrideHueShiftFromBase",
+                        "_ProximityOverrideSaturationFromBase",
+                        "_ProximityOverrideValueFromBase",
+                        "_ProximityOverrideAlphaScale"
+                    );
                 }
 
                 // Advanced / Experimental
@@ -907,8 +928,11 @@ namespace AxCharacterShaders
             return FindProperty(propertyName, properties, propertyIsMandatory);
         }
 
-        public void DrawNonRegisteredProperties(MaterialEditor materialEditor, MaterialProperty[] props) {
+        public void MatPVoid(params string[] propertyNames) {
+            if (!registeredProperties.Any(propertyNames.Contains)) registeredProperties.AddRange(propertyNames);
+        }
 
+        public void DrawNonRegisteredProperties(MaterialEditor materialEditor, MaterialProperty[] props) {
             Material material = materialEditor.target as Material;
             var propCounts = ShaderUtil.GetPropertyCount(material.shader);
             for(var i = 0; i < propCounts; ++i) {

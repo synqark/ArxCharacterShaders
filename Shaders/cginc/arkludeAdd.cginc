@@ -210,7 +210,13 @@ float4 frag(
         if (_UseProximityOverride) {
             float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
             float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd) / overrideDistance , 0.0 , 1.0 ).x;
-            finalRGBA = lerp(finalRGBA, fixed4(lerp(_ProximityOverrideColor.rgb, finalRGBA.rgb, _ProximityOverrideAlphaOnly), _ProximityOverrideColor.a), overrideFactor);
+            float3 overrideColor = CalculateHSV(
+                finalColor,
+                lerp(0, _ProximityOverrideHueShiftFromBase, overrideFactor),
+                lerp(1, _ProximityOverrideSaturationFromBase, overrideFactor),
+                lerp(1, _ProximityOverrideValueFromBase, overrideFactor)
+            );
+            finalRGBA = fixed4(overrideColor, lerp(finalRGBA.a, finalRGBA.a * _ProximityOverrideAlphaScale, overrideFactor));
         }
         UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
         return finalRGBA;
@@ -218,13 +224,15 @@ float4 frag(
         if (_UseProximityOverride) {
             float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
             float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd) / overrideDistance , 0.0 , 1.0 ).x;
-            fixed4 finalRGBA = fixed4(lerp(finalColor, _ProximityOverrideColor.xyz, overrideFactor),1);
-            UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
-            return finalRGBA;
-        } else {
-            fixed4 finalRGBA = fixed4(finalColor,1);
-            UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
-            return finalRGBA;
+            finalColor = CalculateHSV(
+                finalColor,
+                lerp(0, _ProximityOverrideHueShiftFromBase, overrideFactor),
+                lerp(1, _ProximityOverrideSaturationFromBase, overrideFactor),
+                lerp(1, _ProximityOverrideValueFromBase, overrideFactor)
+            );
         }
+        fixed4 finalRGBA = fixed4(finalColor,1);
+        UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
+        return finalRGBA;
     #endif
 }
