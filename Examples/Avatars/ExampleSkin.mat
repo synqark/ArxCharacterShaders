@@ -182,8 +182,8 @@ Material:
     - _ProximityOverrideAlphaScale: 1
     - _ProximityOverrideBegin: 0.1
     - _ProximityOverrideEnd: 0.01
-    - _ProximityOverrideHueShiftFromBase: -0.026
-    - _ProximityOverrideSaturationFromBase: 1.578
+    - _ProximityOverrideHueShiftFromBase: -0.01
+    - _ProximityOverrideSaturationFromBase: 1.5
     - _ProximityOverrideValueFromBase: 0
     - _ReflectionNormalMix: 1
     - _ReflectionReflectionPower: 1

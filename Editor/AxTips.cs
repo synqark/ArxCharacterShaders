@@ -129,9 +129,10 @@ namespace AxCharacterShaders.AxTips
             Title = "Proximity Color Override";
             Description = "カメラからの距離に応じて、指定された色または透明度に変更していくカテゴリです。";
             properties = new Property[]{
-                new Property("Color", "色または透明度を指定"),
                 new Property("Begin(far)", "変色を開始するカメラからの距離を設定"),
                 new Property("End(near)", "変色を終了する（完全に指定された色になる）カメラからの距離を設定"),
+                new Property("Override Color", "接近時の色をもともとの色からのHSV変換で指定"),
+                new Property("Alpha", "Fade系のみ。接近時の透明度を、もともとの透明度からの乗算で指定"),
             };
         }
     }
@@ -388,10 +389,10 @@ namespace AxCharacterShaders.AxTips
             Title = "Detail Map";
             Description = "CommonおよびShading（テクスチャ利用中）で決定された色にオーバーレイで追加のテクスチャを指定します。 基本的にはStandardシェーダーのDetail Mapsを同じ用法を想定しています。";
             properties = new Property[]{
-                //Mask
-                //Detail map
-                //Detail map (When shaded)
-                //Normal map
+                new Property("Mask", "Detail Mapを適用する箇所を白黒のマスクで指定します。"),
+                new Property("Detail Map", "追加のテクスチャを指定します。グレー(128, 128, 128）を基準として、各色の差がオブジェクトの色に加算されます。"),
+                new Property("Detail Map (when Shaded)", "Shading / ShadowカテゴリでCustom color shading且つUse Textureがオンの時に、陰用のDetail Mapを指定できます。 それ以外の設定では効果はありません。"),
+                new Property("Normal Map", "Normal Mapを指定します。Commonで指定したNormal Mapと合算されます。"),
             };
         }
     }

@@ -175,6 +175,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadowPlanBCustomShadowDetailMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ShadowPlanBCustomShadowTexture:
         m_Texture: {fileID: 2800000, guid: 6f8126a606442fb4fb00b0dfcd94eaf7, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -193,6 +197,7 @@ Material:
     - _CustomShadow2nd: 0
     - _Cutoff: 0.5
     - _CutoutCutoutAdjust: 0.741
+    - _DetailAlbedoScale: 1
     - _DetailNormalMapScale: 1
     - _DoubleSidedBackfaceHueShiftFromBase: 0
     - _DoubleSidedBackfaceLightIntensity: 0.5
@@ -258,8 +263,12 @@ Material:
     - _PointShadowborder: 0.5
     - _PointShadowborderBlur: 0.01
     - _ProximityOverrideAlphaOnly: 1
+    - _ProximityOverrideAlphaScale: 0
     - _ProximityOverrideBegin: 0.463
     - _ProximityOverrideEnd: 0.186
+    - _ProximityOverrideHueShiftFromBase: -0.01
+    - _ProximityOverrideSaturationFromBase: 1.5
+    - _ProximityOverrideValueFromBase: 0
     - _ReflectionCubemapMix: 0
     - _ReflectionNormalMix: 1
     - _ReflectionReflectionPower: 0.561
