@@ -1,11 +1,7 @@
 #include "Lighting.cginc"
 
-float3 grayscale_vector_node(){
-    return float3(0, 0.3823529, 0.01845836);
-}
-
-float3 grayscale_for_light(){
-    return float3(0.298912, 0.586611, 0.114478);
+float3 grayscale(float3 color){
+    return dot(color, float3(0.298912, 0.586611, 0.114478));
 }
 
 float3 ShadeSH9Normal( float3 normalDirection ){

@@ -90,27 +90,26 @@ float4 frag(
     float3 indirectLighting = saturate(ShadeSH9Minus);
 
     // 最も明るい部分と最も暗い部分をそれぞれグレースケールに変換し、その差を取得
-    float3 grayscale_vector = grayscale_vector_node();
-    float grayscalelightcolor = dot(lightColor,grayscale_vector);
-    float bottomIndirectLighting = dot(ShadeSH9Minus,grayscale_vector);
-    float topIndirectLighting = dot(ShadeSH9Plus,grayscale_vector);
+    float grayscalelightcolor = grayscale(lightColor);
+    float bottomIndirectLighting = grayscale(ShadeSH9Minus);
+    float topIndirectLighting = grayscale(ShadeSH9Plus);
     float lightDifference = (topIndirectLighting+grayscalelightcolor)-bottomIndirectLighting;
 
     // 陰と光のグラデーション強度を決定
-    fixed _ShadowborderBlur_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowborderBlurMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowborderBlurMask)).r * _ShadowborderBlur;
-    float ShadowborderMin = saturate(_Shadowborder - _ShadowborderBlur_var/2);//この場合saturateはコスト０でmaxより軽量です
-    float ShadowborderMax = saturate(_Shadowborder + _ShadowborderBlur_var/2);//この場合saturateはコスト０でminより軽量です
+    fixed shadowBlur = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowborderBlurMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowborderBlurMask)).r * _ShadowborderBlur;
+    float ShadowborderMin = saturate(_Shadowborder - shadowBlur/2);//この場合saturateはコスト０でmaxより軽量です
+    float ShadowborderMax = saturate(_Shadowborder + shadowBlur/2);//この場合saturateはコスト０でminより軽量です
 
     // 計算済みの「明るい部分」「暗い部分」「それらの差」を利用し、現在描画しているピクセルの明るさがどれだけなのかを０（最も暗い）～１（最も明るい）で正規化して取得する
     // →受光強度とする
-    float grayscaleDirectLighting2 = ((dot(lightDirection,normalDirection)*0.5+0.5)*grayscalelightcolor) + dot(ShadeSH9Normal( normalDirection ),grayscale_vector);
-    float remappedLight2 = ((grayscaleDirectLighting2-bottomIndirectLighting)/lightDifference);
-    float directContribution = 1.0 - ((1.0 - saturate(( (saturate(remappedLight2) - ShadowborderMin)) / (ShadowborderMax - ShadowborderMin))));
+    float grayscaleDirectLighting2 = (dot(lightDirection,normalDirection)*0.5+0.5) * grayscalelightcolor + grayscale(ShadeSH9Normal(normalDirection));
+    float remappedLight = (grayscaleDirectLighting2-bottomIndirectLighting) / lightDifference;
+    float directContribution = 1.0 - ((1.0 - saturate( (saturate(remappedLight) - ShadowborderMin) / (ShadowborderMax - ShadowborderMin))));
 
     // （若干おまじない）周囲のオブジェクトから受けた「影」の明るさを補正する。
     float selfShade = saturate(dot(lightDirection,normalDirection)+1+_OtherShadowAdjust);
-    float otherShadow = saturate(saturate(mad(attenuation,2 ,-1))+mad(_OtherShadowBorderSharpness,-selfShade,_OtherShadowBorderSharpness));
-    float tmpDirectContributionFactor0 = saturate(dot(lightColor,grayscale_for_light())*1.5);
+    float otherShadow = saturate(saturate(mad(attenuation, 2, -1))+mad(_OtherShadowBorderSharpness,-selfShade,_OtherShadowBorderSharpness));
+    float tmpDirectContributionFactor0 = saturate(grayscalelightcolor * 1.5);
     directContribution = lerp(0, directContribution, saturate(1-(mad(tmpDirectContributionFactor0,-otherShadow,tmpDirectContributionFactor0))));
 
     // 設定されていれば、受光強度をステップ化する

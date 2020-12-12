@@ -71,9 +71,9 @@ float4 frag(
         }
     #endif
 
-    fixed _PointShadowborderBlur_var = UNITY_SAMPLE_TEX2D_SAMPLER(_PointShadowborderBlurMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _PointShadowborderBlurMask)).r * _PointShadowborderBlur;
-    float ShadowborderMin = saturate(-_PointShadowborderBlur_var*0.5 + _PointShadowborder);
-    float ShadowborderMax = saturate( _PointShadowborderBlur_var*0.5 + _PointShadowborder);
+    fixed shadowBlur = UNITY_SAMPLE_TEX2D_SAMPLER(_PointShadowborderBlurMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _PointShadowborderBlurMask)).r * _PointShadowborderBlur;
+    float ShadowborderMin = saturate(-shadowBlur*0.5 + _PointShadowborder);
+    float ShadowborderMax = saturate( shadowBlur*0.5 + _PointShadowborder);
 
     float lightContribution = dot(lightDirection, normalDirection)*attenuation;
     float directContribution = 1.0 - ((1.0 - saturate(( (saturate(lightContribution) - ShadowborderMin)) / (ShadowborderMax - ShadowborderMin))));
