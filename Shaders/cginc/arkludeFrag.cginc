@@ -102,9 +102,13 @@ float4 frag(
 
     // 計算済みの「明るい部分」「暗い部分」「それらの差」を利用し、現在描画しているピクセルの明るさがどれだけなのかを０（最も暗い）～１（最も明るい）で正規化して取得する
     // →受光強度とする
-    float grayscaleDirectLighting2 = (dot(lightDirection,normalDirection)*0.5+0.5) * grayscalelightcolor + grayscale(ShadeSH9Normal(normalDirection));
+    float halfLambert = dot(lightDirection,normalDirection) * 0.5 + 0.5;
+    float grayscaleDirectLighting2 = halfLambert * grayscalelightcolor + grayscale(ShadeSH9Normal(normalDirection));
     float remappedLight = (grayscaleDirectLighting2-bottomIndirectLighting) / lightDifference;
     float directContribution = 1.0 - ((1.0 - saturate( (saturate(remappedLight) - ShadowborderMin) / (ShadowborderMax - ShadowborderMin))));
+
+    // TODO:directContributionにRampテクスチャの色を使って変換する
+
 
     // （若干おまじない）周囲のオブジェクトから受けた「影」の明るさを補正する。
     float selfShade = saturate(dot(lightDirection,normalDirection)+1+_OtherShadowAdjust);

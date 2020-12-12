@@ -524,7 +524,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 1
-  m_Color: {r: 0.96880007, g: 1, b: 0.8584906, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -1745,19 +1745,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 695a55d0643fd6a4099e2c1f906ef260, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.6318352
+      value: 0.41396165
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 695a55d0643fd6a4099e2c1f906ef260, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.10271029
+      value: 0.30098027
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 695a55d0643fd6a4099e2c1f906ef260, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.23435342
+      value: -0.09818067
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 695a55d0643fd6a4099e2c1f906ef260, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.7316511
+      value: -0.8534677
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 695a55d0643fd6a4099e2c1f906ef260, type: 3}
       propertyPath: m_RootOrder
@@ -1765,15 +1765,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 695a55d0643fd6a4099e2c1f906ef260, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -61.214005
+      value: -40.354
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 695a55d0643fd6a4099e2c1f906ef260, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -67.989006
+      value: -51.337
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 695a55d0643fd6a4099e2c1f906ef260, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -280.981
+      value: -326.845
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 695a55d0643fd6a4099e2c1f906ef260, type: 3}
       propertyPath: m_LocalScale.x
