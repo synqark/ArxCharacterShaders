@@ -107,17 +107,14 @@ float4 frag(
     float remappedLight = (grayscaleDirectLighting2-bottomIndirectLighting) / lightDifference;
     float directContribution = 1.0 - ((1.0 - saturate( (saturate(remappedLight) - ShadowborderMin) / (ShadowborderMax - ShadowborderMin))));
 
-    // TODO:directContributionにRampテクスチャの色を使って変換する
-
+    // Rampテクスチャの反映
+    directContribution = _ShadowRamp.Sample(my_linear_clamp_sampler, float2(directContribution, 0));
 
     // （若干おまじない）周囲のオブジェクトから受けた「影」の明るさを補正する。
     float selfShade = saturate(dot(lightDirection,normalDirection)+1+_OtherShadowAdjust);
     float otherShadow = saturate(saturate(mad(attenuation, 2, -1))+mad(_OtherShadowBorderSharpness,-selfShade,_OtherShadowBorderSharpness));
     float tmpDirectContributionFactor0 = saturate(grayscalelightcolor * 1.5);
     directContribution = lerp(0, directContribution, saturate(1-(mad(tmpDirectContributionFactor0,-otherShadow,tmpDirectContributionFactor0))));
-
-    // 設定されていれば、受光強度をステップ化する
-    directContribution = lerp(directContribution, min(1,floor(directContribution * _ShadowSteps) / (_ShadowSteps - 1)), _ShadowUseStep);
 
     // 各種プロパティから受光強度を直接補正する
     // １：裏面専用の倍率を受光強度に乗算
@@ -142,7 +139,14 @@ float4 frag(
     float VertexShadowborderMin = saturate(-_PointShadowborderBlur_var*0.5 + _PointShadowborder);
     float VertexShadowborderMax = saturate( _PointShadowborderBlur_var*0.5 + _PointShadowborder);
     float4 directContributionVertex = 1.0 - ((1.0 - saturate(( (saturate(i.ambientAttenuation) - VertexShadowborderMin)) / (VertexShadowborderMax - VertexShadowborderMin))));
-    directContributionVertex = lerp(directContributionVertex, min(1,floor(directContributionVertex * _PointShadowSteps) / (_PointShadowSteps - 1)), _PointShadowUseStep) * additionalContributionMultiplier;
+
+    directContributionVertex = float4(
+        _ShadowRamp.Sample(my_linear_clamp_sampler, float2(directContributionVertex.g, 0)).x,
+        _ShadowRamp.Sample(my_linear_clamp_sampler, float2(directContributionVertex.g, 0)).x,
+        _ShadowRamp.Sample(my_linear_clamp_sampler, float2(directContributionVertex.b, 0)).x,
+        _ShadowRamp.Sample(my_linear_clamp_sampler, float2(directContributionVertex.a, 0)).x
+        );
+    directContributionVertex = directContributionVertex * additionalContributionMultiplier;
     //ベクトル演算を減らしつつ、複数のスカラー演算を一つのベクトル演算にまとめました。
     //現代のPC向けGPUはほぼ100%がスカラー型であり、ベクトル演算は基本的にその次元数分ALU負荷が倍増します。
     //複数の掛け算は基本的にスカラーを左に寄せるだけでベクトル演算が減って最適化に繋がります。

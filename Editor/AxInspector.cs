@@ -37,18 +37,16 @@ namespace AxCharacterShaders
         MaterialProperty Shadowborder;
         MaterialProperty ShadowborderBlur;
         MaterialProperty ShadowborderBlurMask;
+        MaterialProperty ShadowRamp;
+        MaterialProperty ShadowRampInit;
         MaterialProperty ShadowStrength;
         MaterialProperty ShadowStrengthMask;
         MaterialProperty ShadowAmbientIntensity;
-        MaterialProperty ShadowUseStep;
-        MaterialProperty ShadowSteps;
         MaterialProperty PointAddIntensity;
         MaterialProperty PointShadowStrength;
         MaterialProperty PointShadowborder;
         MaterialProperty PointShadowborderBlur;
         MaterialProperty PointShadowborderBlurMask;
-        MaterialProperty PointShadowUseStep;
-        MaterialProperty PointShadowSteps;
         MaterialProperty CutoutCutoutAdjust;
         MaterialProperty ShadowPlanBDefaultShadowMix;
         MaterialProperty ShadowPlanBUseCustomShadowTexture;
@@ -216,18 +214,16 @@ namespace AxCharacterShaders
             Shadowborder = MatP("_Shadowborder", props, false);
             ShadowborderBlur = MatP("_ShadowborderBlur", props, false);
             ShadowborderBlurMask = MatP("_ShadowborderBlurMask", props, false);
+            ShadowRamp = MatP("_ShadowRamp", props, false);
+            ShadowRampInit = MatP("_ShadowRampInit", props, false);
             ShadowStrength = MatP("_ShadowStrength", props, false);
             ShadowStrengthMask = MatP("_ShadowStrengthMask", props, false);
             ShadowAmbientIntensity = MatP("_ShadowAmbientIntensity", props, false);
-            ShadowUseStep = MatP("_ShadowUseStep", props, false);
-            ShadowSteps = MatP("_ShadowSteps", props, false);
             PointAddIntensity = MatP("_PointAddIntensity", props, false);
             PointShadowStrength = MatP("_PointShadowStrength", props, false);
             PointShadowborder = MatP("_PointShadowborder", props, false);
             PointShadowborderBlur = MatP("_PointShadowborderBlur", props, false);
             PointShadowborderBlurMask= MatP("_PointShadowborderBlurMask", props, false);
-            PointShadowUseStep = MatP("_PointShadowUseStep", props, false);
-            PointShadowSteps = MatP("_PointShadowSteps", props, false);
             ShadowPlanBUseCustomShadowTexture = MatP("_ShadowPlanBUseCustomShadowTexture", props, false);
             ShadowPlanBHueShiftFromBase = MatP("_ShadowPlanBHueShiftFromBase", props, false);
             ShadowPlanBSaturationFromBase = MatP("_ShadowPlanBSaturationFromBase", props, false);
@@ -477,27 +473,39 @@ namespace AxCharacterShaders
                 UIHelper.ShurikenHeader("Shading / Shadow", () => new AxTips.Shading());
                 UIHelper.DrawWithGroup(() => {
                     UIHelper.DrawWithGroup(() => {
-                        EditorGUILayout.LabelField("Border & blur", EditorStyles.boldLabel);
+                        EditorGUILayout.LabelField("Border & Range", EditorStyles.boldLabel);
                         EditorGUI.indentLevel ++;
                         materialEditor.ShaderProperty(Shadowborder, "Border");
-                        materialEditor.TexturePropertySingleLine(new GUIContent("Blur & Mask", "Blur and Mask Texture"), ShadowborderBlurMask, ShadowborderBlur);
+                        materialEditor.TexturePropertySingleLine(new GUIContent("Range & Mask", "Transition Range and Mask Texture"), ShadowborderBlurMask, ShadowborderBlur);
                         materialEditor.TextureScaleOffsetPropertyIndent(ShadowborderBlurMask);
-                        materialEditor.ShaderProperty(ShadowUseStep, "Use Step");
-                        var useStep = ShadowUseStep.floatValue;
-                        if(useStep > 0)
-                        {
-                            EditorGUI.indentLevel ++;
-                            ShadowSteps.floatValue = EditorGUILayout.IntSlider(
-                                new GUIContent("Steps"),
-                                (int)ShadowSteps.floatValue,
-                                (int)ShadowSteps.rangeLimits.x,
-                                (int)ShadowSteps.rangeLimits.y)
-                            ;
-                            EditorGUI.indentLevel --;
+                        EditorGUI.indentLevel --;
+                    });
+                    UIHelper.DrawWithGroup(() => {
+                        // EditorGUILayout.LabelField("Shading Ramp", EditorStyles.boldLabel);
+                        Rect controlRect = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight, EditorStyles.layerMaskField);
+                        GUI.Label(controlRect, "Shading Ramp", EditorStyles.boldLabel);
+                        var p = GUI.Button(
+                            new Rect(controlRect.x + EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth, controlRect.y, controlRect.width - EditorGUIUtility.labelWidth - EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight),
+                            "Revert"
+                        );
+                        if (p) {
+                            AssignDefaultRampTexture(ShadowRamp);
+                        }
+
+                        EditorGUI.indentLevel ++;
+                        materialEditor.TexturePropertySingleLine(new GUIContent("Texture", "Ramp Texture"), ShadowRamp, ShadowRamp);
+                        if (ShadowRamp.textureValue == null) {
+                            if (ShadowRampInit.floatValue == 0) {
+                                // Rampテクスチャの初期設定処理を行う
+                                AssignDefaultRampTexture(ShadowRamp);
+                                ShadowRampInit.floatValue = 1;
+                            } else {
+                                // 初期設定後に削除された可能性があるので警告
+                                EditorGUILayout.HelpBox("Rampテクスチャは必ず指定してください。心当たりがない場合は、上の「Revert」を押してください。", MessageType.Warning);
+                            }
                         }
                         EditorGUI.indentLevel --;
                     });
-
                     UIHelper.DrawWithGroup(() => {
                         EditorGUILayout.LabelField("Default color shading", EditorStyles.boldLabel);
                         EditorGUI.indentLevel ++;
@@ -870,8 +878,6 @@ namespace AxCharacterShaders
                             PointShadowborderBlurMask.textureValue = null;
                             OtherShadowAdjust.floatValue = -0.1f;
                             OtherShadowBorderSharpness.floatValue = 3;
-                            PointShadowUseStep.floatValue = 0;
-                            PointShadowSteps.floatValue = 2;
                             VertexColorBlendDiffuse.floatValue = 0f;
                             VertexColorBlendEmissive.floatValue = 0f;
                         }
@@ -890,12 +896,6 @@ namespace AxCharacterShaders
                             materialEditor.ShaderProperty(PointShadowborder, "Shadow Border (def:0.5)");
                             materialEditor.ShaderProperty(PointShadowborderBlur, "Shadow Border blur (def:0.01)");
                             materialEditor.ShaderProperty(PointShadowborderBlurMask, "Shadow Border blur Mask(def:none)");
-                            materialEditor.ShaderProperty(PointShadowUseStep, "Use Shadow Steps");
-                            var usePointStep = PointShadowUseStep.floatValue;
-                            if(usePointStep > 0)
-                            {
-                                materialEditor.ShaderProperty(PointShadowSteps, " ");
-                            }
                             EditorGUI.indentLevel --;
                         });
                         UIHelper.DrawWithGroup(() => {
@@ -942,6 +942,11 @@ namespace AxCharacterShaders
                     materialEditor.ShaderProperty(p, shName);
                 }
             }
+        }
+
+        // デフォルトのRampテクスチャを割り当てる
+        private void AssignDefaultRampTexture(MaterialProperty rampProperty) {
+            rampProperty.textureValue = (Texture2D)AssetDatabase.LoadAssetAtPath(AxCommon.GetBaseDir() + "Textures/Ramp_Default.png", typeof(Texture2D));
         }
     }
 
@@ -1099,6 +1104,66 @@ namespace AxCharacterShaders
                 return;
 
             SetKeyword(prop, (Math.Abs(prop.floatValue) > 0.001f));
+        }
+    }
+
+    // Rampテクスチャのためのプロパティ
+    internal class MaterialAXCSRampDrawer : MaterialPropertyDrawer
+    {
+        public override void OnGUI(Rect position, MaterialProperty prop, GUIContent label, MaterialEditor editor)
+        {
+            var texture = prop.textureValue;
+            var pos = new Rect(position.x+1, position.y+1, position.width-2, position.height-2);
+
+            // 枠
+            GUI.DrawTexture(position, Texture2D.whiteTexture, ScaleMode.StretchToFill, false, 0, Color.grey, 1, 1);
+
+            // テクスチャが設定されていれば
+            if (texture != null)
+            {
+                EditorGUI.DrawPreviewTexture(pos, texture);
+            }
+
+            // クリック時（シングル：アセットコンテンツをハイライト　ダブル：Pickerウィンドウ）
+            if (Event.current.isMouse && Event.current.type == EventType.MouseDown)
+            {
+                if(pos.Contains(Event.current.mousePosition))
+                {
+                    if (Event.current.clickCount == 2) {
+                        var controlId = EditorGUIUtility.GetControlID(FocusType.Passive);
+                        EditorGUIUtility.ShowObjectPicker<Texture>(texture, false, "", controlId);
+                    }
+                    else {
+                        EditorGUIUtility.PingObject(texture);
+                    }
+                    return;
+                }
+            }
+
+            // PickerでPickされたテクスチャを反映
+            if (Event.current.commandName == "ObjectSelectorUpdated" ||
+                Event.current.commandName == "ObjectSelectorClosed") {
+                prop.textureValue = (Texture)EditorGUIUtility.GetObjectPickerObject ();
+                return;
+            }
+
+            // ドラッグ＆ドロップ
+            if (Event.current.type == EventType.DragUpdated || Event.current.type == EventType.DragPerform) {
+                if(pos.Contains(Event.current.mousePosition)) {
+                    var objs = DragAndDrop.objectReferences;
+                    if (objs.Length == 1 && objs[0].GetType() == typeof(Texture2D)) {
+                        DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                        if (Event.current.type == EventType.DragPerform)
+                        {
+                            DragAndDrop.activeControlID = 0;
+                            DragAndDrop.AcceptDrag();
+                            prop.textureValue = (Texture)objs[0];
+                            return;
+                        }
+                        DragAndDrop.activeControlID = GUIUtility.GetControlID(FocusType.Passive);
+                    }
+                }
+            }
         }
     }
 }

@@ -65,12 +65,11 @@ uniform float _Shadowborder;
 uniform float _ShadowborderBlur;
 UNITY_DECLARE_TEX2D_NOSAMPLER(_ShadowborderBlurMask); uniform float4 _ShadowborderBlurMask_ST;
 uniform float _ShadowStrength;
-uniform float _ShadowUseStep;
-uniform int _ShadowSteps;
+uniform texture2D _ShadowRamp; SamplerState my_linear_clamp_sampler;
 uniform sampler2D _ShadowStrengthMask; uniform float4 _ShadowStrengthMask_ST;
 uniform float _ShadowAmbientIntensity;
 
-// Custom shade1
+// Custom shade
 uniform float _ShadowPlanBHueShiftFromBase;
 uniform float _ShadowPlanBSaturationFromBase;
 uniform float _ShadowPlanBValueFromBase;
@@ -109,8 +108,6 @@ uniform float _PointShadowStrength;
 uniform float _PointShadowborder;
 uniform float _PointShadowborderBlur;
 UNITY_DECLARE_TEX2D_NOSAMPLER(_PointShadowborderBlurMask); uniform float4 _PointShadowborderBlurMask_ST;
-uniform float _PointShadowUseStep;
-uniform int _PointShadowSteps;
 
 // MatCap
 uniform int _MatcapBlendMode;

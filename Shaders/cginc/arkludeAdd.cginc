@@ -77,7 +77,9 @@ float4 frag(
 
     float lightContribution = dot(lightDirection, normalDirection)*attenuation;
     float directContribution = 1.0 - ((1.0 - saturate(( (saturate(lightContribution) - ShadowborderMin)) / (ShadowborderMax - ShadowborderMin))));
-    directContribution = lerp(directContribution, saturate(floor(directContribution * _PointShadowSteps) / (_PointShadowSteps - 1)), _PointShadowUseStep);
+
+    // Rampテクスチャの反映
+    directContribution = _ShadowRamp.Sample(my_linear_clamp_sampler, float2(directContribution, 0));
 
     // 光の受光に関する更なる補正
     // ・LightIntensityIfBackface(裏面を描画中に変動する受光倍率)

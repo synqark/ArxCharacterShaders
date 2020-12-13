@@ -119,8 +119,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadowPlanBCustomShadowDetailMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ShadowPlanBCustomShadowTexture:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadowRamp:
+        m_Texture: {fileID: 2800000, guid: 242351f50fe050d40879c196cfd8b0a8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShadowStrengthMask:
@@ -136,6 +144,7 @@ Material:
     - _Cull: 2
     - _CustomShadow2nd: 0
     - _Cutoff: 0.5
+    - _DetailAlbedoScale: 1
     - _DetailNormalMapScale: 1
     - _DoubleSidedBackfaceHueShiftFromBase: 0
     - _DoubleSidedBackfaceLightIntensity: 0.5
@@ -177,6 +186,9 @@ Material:
     - _PointShadowborderBlur: 0.01
     - _ProximityOverrideBegin: 0.15
     - _ProximityOverrideEnd: 0.03
+    - _ProximityOverrideHueShiftFromBase: -0.01
+    - _ProximityOverrideSaturationFromBase: 1.5
+    - _ProximityOverrideValueFromBase: 0
     - _ReflectionNormalMix: 2
     - _ReflectionReflectionPower: 0.561
     - _ReflectionShadeMix: 0
@@ -189,6 +201,7 @@ Material:
     - _RimShadeMix: 0
     - _RimUpperSideWidth: 0
     - _RimUseBaseTexture: 0
+    - _ShadowAmbientIntensity: 0.75
     - _ShadowCapBlend: 1
     - _ShadowCapBlendMode: 3
     - _ShadowCapNormalMix: 1
@@ -205,6 +218,7 @@ Material:
     - _ShadowPlanBUseCustomShadowTexture: 0
     - _ShadowPlanBUsePlanB: 0
     - _ShadowPlanBValueFromBase: 1
+    - _ShadowRampInit: 1
     - _ShadowSteps: 4
     - _ShadowStrength: 1
     - _ShadowUseStep: 0

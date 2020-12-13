@@ -146,6 +146,10 @@ VertexOutput vert(appdata_full v) {
     TRANSFER_SHADOW(o);
     UNITY_TRANSFER_FOG(o, o.pos);
 
+    #ifdef AXCS_REFRACTED
+        o.grabUV = ComputeGrabScreenPos (o.pos).xy/o.pos.w;
+    #endif
+
     #ifndef AXCS_ADD
         // 頂点ライティングが必要な場合に取得
         #if UNITY_SHOULD_SAMPLE_SH && defined(VERTEXLIGHT_ON)
@@ -161,10 +165,6 @@ VertexOutput vert(appdata_full v) {
             o.lightColor3 = 0;
             o.ambientAttenuation = o.ambientIndirect = 0;
         #endif
-    #endif
-
-    #ifdef AXCS_REFRACTED
-        o.grabUV = ComputeGrabScreenPos (o.pos).xy/o.pos.w;
     #endif
 
     return o;

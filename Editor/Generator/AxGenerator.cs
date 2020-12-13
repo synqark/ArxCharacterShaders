@@ -32,7 +32,7 @@ namespace AxCharacterShaders.Generator
         public void run(bool isCheckOnly = false)
         {
             // 対象シェーダーファイルを収集
-            var shaders = AssetDatabase.FindAssets("t:Shader", new string[]{"Assets/ArxCharacterShaders/Shaders"});
+            var shaders = AssetDatabase.FindAssets("t:Shader", new string[]{AxCommon.GetBaseDir() + "Shaders"});
 
             // includeShaderNamesを含み、excludeShaderNamesを含まないシェーダーに絞る
             var targets = shaders.Where(item => {
@@ -110,7 +110,6 @@ namespace AxCharacterShaders.Generator
                         }
                     }
                 }
-                // Debug.Log(string.Join("\r\n", shaderCode))
                 Debug.Log("ファイルパス：" + destFilename + Environment.NewLine + "シェーダー名：" + destShaderName);
 
                 // 変換結果を出力

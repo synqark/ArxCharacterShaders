@@ -91,6 +91,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Ramp:
+        m_Texture: {fileID: 2800000, guid: 9384d986d3c93e84b896716821787d47, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ReflectionCubemap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -125,6 +129,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _ShadowPlanBCustomShadowTexture:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadowRamp:
+        m_Texture: {fileID: 2800000, guid: 9384d986d3c93e84b896716821787d47, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShadowStrengthMask:
@@ -206,14 +214,15 @@ Material:
     - _ShadowPlanB2border: 0.55
     - _ShadowPlanB2borderBlur: 0.55
     - _ShadowPlanBHueShiftFromBase: -0.011
-    - _ShadowPlanBSaturationFromBase: 1.138
+    - _ShadowPlanBSaturationFromBase: 1.346
     - _ShadowPlanBUseCustomShadowTexture: 0
-    - _ShadowPlanBValueFromBase: 0.914
+    - _ShadowPlanBValueFromBase: 0.746
+    - _ShadowRampInit: 0
     - _ShadowSteps: 2
     - _ShadowStrength: 0
     - _ShadowUseStep: 0
     - _Shadowborder: 0.6
-    - _ShadowborderBlur: 0.5
+    - _ShadowborderBlur: 0.25
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
