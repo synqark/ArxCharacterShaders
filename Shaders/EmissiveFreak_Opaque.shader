@@ -43,7 +43,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/Opaque" {
         _PointShadowStrength ("[PointShadow] Strength", Range(0, 1)) = 0.5
         _PointShadowborder ("[PointShadow] border ", Range(0, 1)) = 0.5
         _PointShadowborderBlur ("[PointShadow] border Blur", Range(0, 1)) = 0.01
-        _PointShadowborderBlurMask ("[PointShadow] border Blur Mask", 2D) = "white" {}
+        _PointShadowborderBlurMask ("[PointShadow] border Blur Mask", 2D) = "white"  {}
         // Plan B
         [AXCSToggle] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0

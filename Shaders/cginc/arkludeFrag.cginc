@@ -61,6 +61,7 @@ float4 frag(
 
     #ifdef AXCS_OUTLINE
         // 描画しているものがアウトラインの場合
+        float4 _OutlineTexture_var = UNITY_SAMPLE_TEX2D_SAMPLER(_OutlineTexture, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _OutlineTexture));
         if (isOutline) {
             // アウトラインクリップ処理
             #if defined(AXCS_CUTOUT) || defined(AXCS_FADE)
@@ -68,7 +69,6 @@ float4 frag(
                 clip(_OutlineMask_var.r - _OutlineCutoffRange);
             #endif
             // アウトライン用のテクスチャと色を使う場合は、その割合でDiffuseを更新する
-            float4 _OutlineTexture_var = UNITY_SAMPLE_TEX2D_SAMPLER(_OutlineTexture, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _OutlineTexture));
             float3 outlineColor = lerp(float3(_OutlineColor.rgb * _OutlineTexture_var.rgb), Diffuse, _OutlineTextureColorRate);
             if (_OutlineUseColorShift) {
                 float3 Outline_Diff_HSV = CalculateHSV(outlineColor, _OutlineHueShiftFromBase, _OutlineSaturationFromBase, _OutlineValueFromBase);
@@ -197,6 +197,20 @@ float4 frag(
             ShadeMap = Diff_HSV;
         }
 
+        #ifdef AXCS_OUTLINE
+            // 描画しているものがアウトラインの場合
+            if (isOutline) {
+                // アウトライン用のテクスチャと色を使う場合は、その割合でShadeMapを更新する
+                float3 outlineShadeColor = lerp(float3(_OutlineColor.rgb * _OutlineTexture_var.rgb), ShadeMap, _OutlineTextureColorRate);
+                if (_OutlineUseColorShift) {
+                    float3 Outline_Diff_HSV = CalculateHSV(outlineShadeColor, _OutlineHueShiftFromBase, _OutlineSaturationFromBase, _OutlineValueFromBase);
+                    ShadeMap = Outline_Diff_HSV;
+                } else {
+                    ShadeMap = outlineShadeColor;
+                }
+            }
+        #endif
+
         float _ShadowStrengthMask_var = tex2D(_ShadowStrengthMask, TRANSFORM_TEX(i.uv0, _ShadowStrengthMask));
         float shadowStrength = _ShadowStrengthMask_var * _ShadowStrength;
 
@@ -208,12 +222,6 @@ float4 frag(
 
         toonedMap = finslBaseColor * finalLightColor; // ８
     }
-
-    float3 tmpToonedMapFactor = (Diffuse+(Diffuse*coloredLight_sum));
-    #ifdef AXCS_OUTLINE
-        // アウトラインであればShadeMixを反映
-        toonedMap = lerp(toonedMap, (toonedMap * _OutlineShadeMix + mad(tmpToonedMapFactor,-_OutlineShadeMix,tmpToonedMapFactor)), isOutline);
-    #endif
 
     // 裏面であればHSVShiftを反映
     if(_DoubleSidedBackfaceUseColorShift) {

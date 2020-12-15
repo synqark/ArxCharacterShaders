@@ -46,17 +46,14 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/DoubleFade" {
         _ShadowStrength ("[Shadow] Strength", Range(0, 1)) = 0.5
         _ShadowStrengthMask ("[Shadow] Strength Mask", 2D) = "white" {}
         _ShadowAmbientIntensity ("[Shadow] Ambient Intensity", Range(0, 1)) = 0.75
-        // Shadow steps
-        [AXCSToggle]_ShadowUseStep ("[Shadow] use step", Float ) = 0
-        _ShadowSteps("[Shadow] steps between borders", Range(2, 10)) = 4
+        [AXCSRamp]_ShadowRamp("[Shadow] Ramp Texture", 2D) = "white"  {}
+        [HideInInspector]_ShadowRampInit("[Shadow] Ramp Texture Initialized", Int) = 0
         // PointShadow (received from Point/Spot Lights as Pixel/Vertex Lights)
         _PointAddIntensity ("[PointShadow] Light Intensity", Range(0,1)) = 1
         _PointShadowStrength ("[PointShadow] Strength", Range(0, 1)) = 0.5
         _PointShadowborder ("[PointShadow] border ", Range(0, 1)) = 0.5
         _PointShadowborderBlur ("[PointShadow] border Blur", Range(0, 1)) = 0.01
         _PointShadowborderBlurMask ("[PointShadow] border Blur Mask", 2D) = "white" {}
-        [AXCSToggle]_PointShadowUseStep ("[PointShadow] use step", Float ) = 0
-        _PointShadowSteps("[PointShadow] steps between borders", Range(2, 10)) = 2
         // Plan B
         [AXCSToggle] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0

@@ -66,7 +66,6 @@ namespace AxCharacterShaders
         MaterialProperty OutlineCutoffRange;
         MaterialProperty OutlineColor;
         MaterialProperty OutlineTexture;
-        MaterialProperty OutlineShadeMix;
         MaterialProperty OutlineTextureColorRate;
         MaterialProperty OutlineWidthMask;
         MaterialProperty OutlineUseColorShift;
@@ -241,7 +240,6 @@ namespace AxCharacterShaders
             OutlineCutoffRange = MatP("_OutlineCutoffRange", props, false);
             OutlineColor = MatP("_OutlineColor", props, false);
             OutlineTexture = MatP("_OutlineTexture", props, false);
-            OutlineShadeMix = MatP("_OutlineShadeMix", props, false);
             OutlineTextureColorRate = MatP("_OutlineTextureColorRate", props, false);
             OutlineWidthMask = MatP("_OutlineWidthMask", props, false);
             OutlineUseColorShift = MatP("_OutlineUseColorShift", props, false);
@@ -577,7 +575,7 @@ namespace AxCharacterShaders
                             UIHelper.DrawWithGroup(() => {
                                 materialEditor.TexturePropertySingleLine(new GUIContent("Texture & Color", "Texture and Color"), OutlineTexture, OutlineColor);
                                 materialEditor.TextureScaleOffsetPropertyIndent(OutlineTexture);
-                                materialEditor.ShaderProperty(OutlineTextureColorRate,"Base Color Mix");
+                                materialEditor.ShaderProperty(OutlineTextureColorRate,"Base & Shading Mix");
                                 materialEditor.ShaderProperty(OutlineUseColorShift, "Use Color Shift");
                                 var isEnabledOutlineColorShift = OutlineUseColorShift.floatValue;
                                 if(isEnabledOutlineColorShift > 0) {
@@ -588,7 +586,6 @@ namespace AxCharacterShaders
                                     EditorGUI.indentLevel --;
                                 }
                             });
-                            materialEditor.ShaderProperty(OutlineShadeMix,"Shadow mix");
                         });
                     }
                 }
