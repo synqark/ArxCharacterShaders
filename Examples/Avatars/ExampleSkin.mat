@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ExampleSkin
-  m_Shader: {fileID: 4800000, guid: acaabbe907212b94c85ab392bb1306a1, type: 3}
+  m_Shader: {fileID: 4800000, guid: 87d1c60aa88359946943a8f85f3f67ce, type: 3}
   m_ShaderKeywords: _
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -128,11 +128,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShadowPlanBCustomShadowTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: f03a76cde03963e49813cb5bfbb9382d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShadowRamp:
-        m_Texture: {fileID: 2800000, guid: 9384d986d3c93e84b896716821787d47, type: 3}
+        m_Texture: {fileID: 2800000, guid: 242351f50fe050d40879c196cfd8b0a8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShadowStrengthMask:
@@ -173,13 +173,13 @@ Material:
     - _OcclusionStrength: 1
     - _OtherShadowAdjust: -0.1
     - _OtherShadowBorderSharpness: 3
-    - _OutlineHueShiftFromBase: 0
-    - _OutlineSaturationFromBase: 1
+    - _OutlineHueShiftFromBase: -0.009
+    - _OutlineSaturationFromBase: 2
     - _OutlineShadeMix: 1
-    - _OutlineTextureColorRate: 0.5
-    - _OutlineUseColorShift: 0
-    - _OutlineValueFromBase: 1
-    - _OutlineWidth: 0.13
+    - _OutlineTextureColorRate: 1
+    - _OutlineUseColorShift: 1
+    - _OutlineValueFromBase: 0.22
+    - _OutlineWidth: 0.21
     - _Parallax: 0.02
     - _PointAddIntensity: 1
     - _PointShadowSteps: 2
@@ -213,9 +213,9 @@ Material:
     - _ShadowPlanB2ValueFromBase: 1
     - _ShadowPlanB2border: 0.55
     - _ShadowPlanB2borderBlur: 0.55
-    - _ShadowPlanBHueShiftFromBase: -0.011
-    - _ShadowPlanBSaturationFromBase: 1.346
-    - _ShadowPlanBUseCustomShadowTexture: 0
+    - _ShadowPlanBHueShiftFromBase: -0.084
+    - _ShadowPlanBSaturationFromBase: 1.8
+    - _ShadowPlanBUseCustomShadowTexture: 1
     - _ShadowPlanBValueFromBase: 0.746
     - _ShadowRampInit: 0
     - _ShadowSteps: 2
@@ -248,4 +248,5 @@ Material:
     - _ProximityOverrideColor: {r: 0.91610515, g: 1, b: 0.21698111, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowPlanB2CustomShadowTextureRGB: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowPlanBCustomShadowTextureRGB: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadowPlanBCustomShadowTextureRGB: {r: 0.6981132, g: 0.42150232, b: 0.42150232,
+        a: 1}

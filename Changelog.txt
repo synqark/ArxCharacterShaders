@@ -1,3 +1,7 @@
+2020/12/?? build 11----------------------
+・「Outline」カテゴリからShadow Mixを削除しました。
+・「Base Color Mix」を→「Base&Shading Mix」に変更しました。
+
 2020/12/?? build 10----------------------
 機能追加・変更点：
 ・「Shading / Shadow」カテゴリに「Shading Ramp」を追加しました。
