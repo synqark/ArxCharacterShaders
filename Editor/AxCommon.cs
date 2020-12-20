@@ -18,4 +18,15 @@ namespace AxCharacterShaders
             return path;
         }
     }
+
+    public class AxDocs
+    {
+        private const string baseUrl = "https://synqark.github.io/AXCS_Docs/";
+        private const string docPath = "3-documents/";
+
+        public static void Open(string path)
+        {
+            Application.OpenURL(baseUrl + docPath + path);
+        }
+    }
 }

@@ -213,16 +213,16 @@ Material:
     - _ShadowPlanB2ValueFromBase: 1
     - _ShadowPlanB2border: 0.55
     - _ShadowPlanB2borderBlur: 0.55
-    - _ShadowPlanBHueShiftFromBase: -0.084
+    - _ShadowPlanBHueShiftFromBase: -0.03
     - _ShadowPlanBSaturationFromBase: 1.8
-    - _ShadowPlanBUseCustomShadowTexture: 1
+    - _ShadowPlanBUseCustomShadowTexture: 0
     - _ShadowPlanBValueFromBase: 0.746
     - _ShadowRampInit: 0
     - _ShadowSteps: 2
     - _ShadowStrength: 0
     - _ShadowUseStep: 0
-    - _Shadowborder: 0.6
-    - _ShadowborderBlur: 0.25
+    - _Shadowborder: 0
+    - _ShadowborderBlur: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
