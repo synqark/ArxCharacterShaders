@@ -56,6 +56,8 @@ namespace AxCharacterShaders
         MaterialProperty ShadowPlanBCustomShadowTexture;
         MaterialProperty ShadowPlanBCustomShadowDetailMap;
         MaterialProperty ShadowPlanBCustomShadowTextureRGB;
+        MaterialProperty ShadowReceivingIntensity;
+        MaterialProperty ShadowReceivingMask;
         MaterialProperty UseGloss;
         MaterialProperty GlossBlend;
         MaterialProperty GlossBlendMask;
@@ -228,6 +230,8 @@ namespace AxCharacterShaders
             ShadowPlanBCustomShadowTexture = MatP("_ShadowPlanBCustomShadowTexture", props, false);
             ShadowPlanBCustomShadowDetailMap = MatP("_ShadowPlanBCustomShadowDetailMap", props, false);
             ShadowPlanBCustomShadowTextureRGB = MatP("_ShadowPlanBCustomShadowTextureRGB", props, false);
+            ShadowReceivingIntensity = MatP("_ShadowReceivingIntensity", props, false);
+            ShadowReceivingMask = MatP("_ShadowReceivingMask", props, false);
             UseGloss = MatP("_UseGloss", props, false);
             GlossBlend = MatP("_GlossBlend", props, false);
             GlossBlendMask = MatP("_GlossBlendMask", props, false);
@@ -472,12 +476,10 @@ namespace AxCharacterShaders
                         materialEditor.ShaderProperty(Shadowborder, "Border");
                         materialEditor.TexturePropertySingleLine(new GUIContent("Range & Mask", "Transition Range and Mask Texture"), ShadowborderBlurMask, ShadowborderBlur);
                         materialEditor.TextureScaleOffsetPropertyIndent(ShadowborderBlurMask);
-                        EditorGUI.indentLevel --;
-                    });
-                    UIHelper.DrawWithGroup(() => {
-                        // EditorGUILayout.LabelField("Shading Ramp", EditorStyles.boldLabel);
+
+                        // Ramp
                         Rect controlRect = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight, EditorStyles.layerMaskField);
-                        GUI.Label(controlRect, "Shading Ramp", EditorStyles.boldLabel);
+                        GUI.Label(controlRect, "Ramp in Range", EditorStyles.boldLabel);
                         var p = GUI.Button(
                             new Rect(controlRect.x + EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth, controlRect.y, controlRect.width - EditorGUIUtility.labelWidth - EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight),
                             "Revert"
@@ -486,7 +488,6 @@ namespace AxCharacterShaders
                             AssignDefaultRampTexture(ShadowRamp);
                         }
 
-                        EditorGUI.indentLevel ++;
                         materialEditor.TexturePropertySingleLine(new GUIContent("Texture", "Ramp Texture"), ShadowRamp, ShadowRamp);
                         if (ShadowRamp.textureValue == null) {
                             if (ShadowRampInit.floatValue == 0) {
@@ -500,6 +501,16 @@ namespace AxCharacterShaders
                         }
                         EditorGUI.indentLevel --;
                     });
+
+                    if(!isFade){
+                        UIHelper.DrawWithGroup(() => {
+                            EditorGUILayout.LabelField("Shadow Receiving", EditorStyles.boldLabel);
+                            EditorGUI.indentLevel ++;
+                            materialEditor.TexturePropertySingleLine(new GUIContent("Intensity", "Intensity + Mask"), ShadowReceivingMask, ShadowReceivingIntensity);
+                            EditorGUI.indentLevel --;
+                        });
+                    }
+
                     UIHelper.DrawWithGroup(() => {
                         EditorGUILayout.LabelField("Default color shading", EditorStyles.boldLabel);
                         EditorGUI.indentLevel ++;
@@ -1094,6 +1105,8 @@ namespace AxCharacterShaders
     // Rampテクスチャのためのプロパティ
     internal class MaterialAXCSRampDrawer : MaterialPropertyDrawer
     {
+        int pickerControlId;
+
         public override void OnGUI(Rect position, MaterialProperty prop, GUIContent label, MaterialEditor editor)
         {
             var texture = prop.textureValue;
@@ -1114,8 +1127,8 @@ namespace AxCharacterShaders
                 if(pos.Contains(Event.current.mousePosition))
                 {
                     if (Event.current.clickCount == 2) {
-                        var controlId = EditorGUIUtility.GetControlID(FocusType.Passive);
-                        EditorGUIUtility.ShowObjectPicker<Texture>(texture, false, "", controlId);
+                        pickerControlId = EditorGUIUtility.GetControlID(FocusType.Passive);
+                        EditorGUIUtility.ShowObjectPicker<Texture>(texture, false, "", pickerControlId);
                     }
                     else {
                         EditorGUIUtility.PingObject(texture);
@@ -1127,8 +1140,10 @@ namespace AxCharacterShaders
             // PickerでPickされたテクスチャを反映
             if (Event.current.commandName == "ObjectSelectorUpdated" ||
                 Event.current.commandName == "ObjectSelectorClosed") {
-                prop.textureValue = (Texture)EditorGUIUtility.GetObjectPickerObject ();
-                return;
+                if (EditorGUIUtility.GetObjectPickerControlID() == pickerControlId){
+                    prop.textureValue = (Texture)EditorGUIUtility.GetObjectPickerObject ();
+                    return;
+                }
             }
 
             // ドラッグ＆ドロップ
@@ -1137,6 +1152,7 @@ namespace AxCharacterShaders
                     var objs = DragAndDrop.objectReferences;
                     if (objs.Length == 1 && objs[0].GetType() == typeof(Texture2D)) {
                         DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                        DragAndDrop.activeControlID = GUIUtility.GetControlID(FocusType.Passive);
                         if (Event.current.type == EventType.DragPerform)
                         {
                             DragAndDrop.activeControlID = 0;
@@ -1144,7 +1160,6 @@ namespace AxCharacterShaders
                             prop.textureValue = (Texture)objs[0];
                             return;
                         }
-                        DragAndDrop.activeControlID = GUIUtility.GetControlID(FocusType.Passive);
                     }
                 }
             }

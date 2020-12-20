@@ -46,6 +46,13 @@ float4 frag(
     float3 halfDirection = normalize(viewDirection+lightDirection);
     float3 cameraSpaceViewDir = mul((float3x3)unity_WorldToCamera, viewDirection);
 
+    // 落ち影の強度を変更するため、UNITY_SHADOW_ATTENUATIONを先行して実行して結果を書き換える
+    float shadowReceive = UNITY_SHADOW_ATTENUATION(i, i.posWorld.xyz);
+    float receivingMultiply = _ShadowReceivingIntensity * UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowReceivingMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowReceivingMask));
+    shadowReceive = mad(1-shadowReceive, -receivingMultiply, 1);
+
+    #undef UNITY_SHADOW_ATTENUATION
+    #define UNITY_SHADOW_ATTENUATION(a, worldPos) shadowReceive
     UNITY_LIGHT_ATTENUATION(attenuation,i, i.posWorld.xyz);
 
     #ifdef AXCS_CUTOUT

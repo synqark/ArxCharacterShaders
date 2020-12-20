@@ -54,6 +54,9 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/AlphaCutout" {
         _ShadowPlanBCustomShadowTexture ("[Plan B] Custom Shadow Texture", 2D) = "black" {}
         _ShadowPlanBCustomShadowDetailMap ("[Plan B] Custom Shadow Detail Texture ", 2D) = "gray" {}
         _ShadowPlanBCustomShadowTextureRGB ("[Plan B] Custom Shadow Texture RGB", Color) = (1,1,1,1)
+        // Shadow Receiving
+        _ShadowReceivingIntensity ("[Shadow Receiving] Intensity", Range(0, 1)) = 1
+        _ShadowReceivingMask ("[Shadow Receiving] Mask", 2D) = "white"  {}
         // Gloss
         [AXCSToggle]_UseGloss ("[Gloss] Enabled", Int) = 0
         _GlossBlend ("[Gloss] Smoothness", Range(0, 1)) = 0.5

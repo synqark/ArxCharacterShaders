@@ -135,6 +135,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 242351f50fe050d40879c196cfd8b0a8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadowReceivingMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ShadowStrengthMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -214,14 +218,15 @@ Material:
     - _ShadowPlanB2border: 0.55
     - _ShadowPlanB2borderBlur: 0.55
     - _ShadowPlanBHueShiftFromBase: -0.03
-    - _ShadowPlanBSaturationFromBase: 1.8
+    - _ShadowPlanBSaturationFromBase: 1.5
     - _ShadowPlanBUseCustomShadowTexture: 0
     - _ShadowPlanBValueFromBase: 0.746
     - _ShadowRampInit: 0
+    - _ShadowReceivingIntensity: 0
     - _ShadowSteps: 2
     - _ShadowStrength: 0
     - _ShadowUseStep: 0
-    - _Shadowborder: 0
+    - _Shadowborder: 0.5
     - _ShadowborderBlur: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

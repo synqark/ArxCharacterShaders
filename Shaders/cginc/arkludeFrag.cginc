@@ -48,9 +48,16 @@ float4 frag(
     float3 halfDirection = normalize(viewDirection+lightDirection);
     float3 cameraSpaceViewDir = mul((float3x3)unity_WorldToCamera, viewDirection);
 
-    #if !defined(SHADOWS_SCREEN)
-        float attenuation = 1;
+    #if (!defined(SHADOWS_SCREEN) || defined(AXCS_FADE))
+        fixed attenuation = 1.0;
     #else
+        // 落ち影の強度を変更するため、UNITY_SHADOW_ATTENUATIONを先行して実行して結果を書き換える
+        float shadowReceive = UNITY_SHADOW_ATTENUATION(i, i.posWorld.xyz);
+        float receivingMultiply = _ShadowReceivingIntensity * UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowReceivingMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowReceivingMask));
+        shadowReceive = mad(1-shadowReceive, -receivingMultiply, 1);
+
+        #undef UNITY_SHADOW_ATTENUATION
+        #define UNITY_SHADOW_ATTENUATION(a, worldPos) shadowReceive
         UNITY_LIGHT_ATTENUATION(attenuation, i, i.posWorld.xyz);
     #endif
 
@@ -110,14 +117,8 @@ float4 frag(
     // Rampテクスチャの反映
     directContribution = _ShadowRamp.Sample(my_linear_clamp_sampler, float2(directContribution, 0));
 
-    // （若干おまじない）周囲のオブジェクトから受けた「影」の明るさを補正する。
-    // TODO: 廃止予定
-    // float selfShade = saturate(dot(lightDirection,normalDirection)+1+_OtherShadowAdjust);
-    // float otherShadow = saturate(saturate(mad(attenuation, 2, -1))+mad(_OtherShadowBorderSharpness,-selfShade,_OtherShadowBorderSharpness));
-    // float tmpDirectContributionFactor0 = saturate(grayscalelightcolor * 1.5);
-    // directContribution = lerp(0, directContribution, saturate(1-(mad(tmpDirectContributionFactor0,-otherShadow,tmpDirectContributionFactor0))));
-    // TODO: 落ち影の強度をスライダー＆マスクで乗算する機能
-    directContribution = min(attenuation,directContribution);
+    // 落ち影の反映
+    directContribution *= attenuation;
 
     // 各種プロパティから受光強度を直接補正する
     // １：裏面専用の倍率を受光強度に乗算
