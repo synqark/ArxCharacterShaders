@@ -1,3 +1,9 @@
+2020/12/20 build 12----------------------
+・Tipsを全面的にAXCS_Docsに移行しました
+ヘルプボタンを押すと「https://synqark.github.io/AXCS_Docs/」サイトの該当ページが開きます
+・「Shading / Shadow」カテゴリに、他のオブジェクトからの落ち影の強度を調整する「Shadow Receiving」を追加しました。
+また、それに合わせて「Advanced」を少し掃除しました。
+
 2020/12/?? build 11----------------------
 ・「Outline」カテゴリからShadow Mixを削除しました。
 ・「Base Color Mix」を→「Base&Shading Mix」に変更しました。
