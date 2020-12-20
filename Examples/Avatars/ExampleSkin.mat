@@ -222,7 +222,7 @@ Material:
     - _ShadowPlanBUseCustomShadowTexture: 0
     - _ShadowPlanBValueFromBase: 0.746
     - _ShadowRampInit: 0
-    - _ShadowReceivingIntensity: 0
+    - _ShadowReceivingIntensity: 1
     - _ShadowSteps: 2
     - _ShadowStrength: 0
     - _ShadowUseStep: 0
