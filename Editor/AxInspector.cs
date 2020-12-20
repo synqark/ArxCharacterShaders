@@ -121,8 +121,6 @@ namespace AxCharacterShaders
         MaterialProperty ZWrite;
         MaterialProperty VertexColorBlendDiffuse;
         MaterialProperty VertexColorBlendEmissive;
-        MaterialProperty OtherShadowBorderSharpness;
-        MaterialProperty OtherShadowAdjust;
         MaterialProperty BackfaceColorMultiply;
         MaterialProperty EmissiveFreak1Tex;
         MaterialProperty EmissiveFreak1Mask;
@@ -294,8 +292,6 @@ namespace AxCharacterShaders
             DoubleSidedBackfaceValueFromBase = MatP("_DoubleSidedBackfaceValueFromBase", props, false);
             VertexColorBlendDiffuse = MatP("_VertexColorBlendDiffuse", props, false);
             VertexColorBlendEmissive = MatP("_VertexColorBlendEmissive", props, false);
-            OtherShadowBorderSharpness = MatP("_OtherShadowBorderSharpness", props, false);
-            OtherShadowAdjust = MatP("_OtherShadowAdjust", props, false);
             ZWrite = MatP("_ZWrite", props, false);
 
             EmissiveFreak1Tex = MatP("_EmissiveFreak1Tex", props, false);
@@ -873,8 +869,6 @@ namespace AxCharacterShaders
                             PointShadowborder.floatValue = 0.5f;
                             PointShadowborderBlur.floatValue = 0.01f;
                             PointShadowborderBlurMask.textureValue = null;
-                            OtherShadowAdjust.floatValue = -0.1f;
-                            OtherShadowBorderSharpness.floatValue = 3;
                             VertexColorBlendDiffuse.floatValue = 0f;
                             VertexColorBlendEmissive.floatValue = 0f;
                         }
@@ -893,13 +887,6 @@ namespace AxCharacterShaders
                             materialEditor.ShaderProperty(PointShadowborder, "Shadow Border (def:0.5)");
                             materialEditor.ShaderProperty(PointShadowborderBlur, "Shadow Border blur (def:0.01)");
                             materialEditor.ShaderProperty(PointShadowborderBlurMask, "Shadow Border blur Mask(def:none)");
-                            EditorGUI.indentLevel --;
-                        });
-                        UIHelper.DrawWithGroup(() => {
-                            EditorGUILayout.LabelField("Shade from other meshes", EditorStyles.boldLabel);
-                            EditorGUI.indentLevel ++;
-                            materialEditor.ShaderProperty(OtherShadowAdjust, "Adjust (def:-0.1)");
-                            materialEditor.ShaderProperty(OtherShadowBorderSharpness, "Sharpness(def:3)");
                             EditorGUI.indentLevel --;
                         });
                     });

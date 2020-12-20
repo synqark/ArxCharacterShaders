@@ -112,12 +112,12 @@ float4 frag(
 
     // （若干おまじない）周囲のオブジェクトから受けた「影」の明るさを補正する。
     // TODO: 廃止予定
-    float selfShade = saturate(dot(lightDirection,normalDirection)+1+_OtherShadowAdjust);
-    float otherShadow = saturate(saturate(mad(attenuation, 2, -1))+mad(_OtherShadowBorderSharpness,-selfShade,_OtherShadowBorderSharpness));
-    float tmpDirectContributionFactor0 = saturate(grayscalelightcolor * 1.5);
-    directContribution = lerp(0, directContribution, saturate(1-(mad(tmpDirectContributionFactor0,-otherShadow,tmpDirectContributionFactor0))));
+    // float selfShade = saturate(dot(lightDirection,normalDirection)+1+_OtherShadowAdjust);
+    // float otherShadow = saturate(saturate(mad(attenuation, 2, -1))+mad(_OtherShadowBorderSharpness,-selfShade,_OtherShadowBorderSharpness));
+    // float tmpDirectContributionFactor0 = saturate(grayscalelightcolor * 1.5);
+    // directContribution = lerp(0, directContribution, saturate(1-(mad(tmpDirectContributionFactor0,-otherShadow,tmpDirectContributionFactor0))));
     // TODO: 落ち影の強度をスライダー＆マスクで乗算する機能
-    // directContribution = min(attenuation,directContribution);
+    directContribution = min(attenuation,directContribution);
 
     // 各種プロパティから受光強度を直接補正する
     // １：裏面専用の倍率を受光強度に乗算

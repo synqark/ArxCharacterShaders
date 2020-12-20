@@ -151,10 +151,6 @@ uniform float _ShadowCapNormalMix;
 uniform float _VertexColorBlendDiffuse;
 uniform float _VertexColorBlendEmissive;
 
-// Shade from other objects.
-uniform float _OtherShadowAdjust;
-uniform float _OtherShadowBorderSharpness;
-
 // Refraction IF refracted
 #ifdef AXCS_REFRACTED
 uniform sampler2D _GrabTexture;

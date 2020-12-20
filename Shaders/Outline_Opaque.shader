@@ -105,9 +105,6 @@ Shader "ArxCharacterShaders/_Outline/Opaque" {
         // vertex color blend
         _VertexColorBlendDiffuse ("[VertexColor] Blend to diffuse", Range(0,1)) = 0
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
-        // advanced tweaking
-        _OtherShadowAdjust ("[Advanced] Other Mesh Shadow Adjust", Range(-0.2, 0.2)) = -0.1
-        _OtherShadowBorderSharpness ("[Advanced] Other Mesh Shadow Border Sharpness", Range(1, 5)) = 3
         // AXCS_GENERATOR:EMISSIVE_FREAK_PROPERTIES
         // Proximity color override
         [AXCSToggle]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
