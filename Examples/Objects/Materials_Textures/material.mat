@@ -159,6 +159,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 242351f50fe050d40879c196cfd8b0a8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadowReceivingMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ShadowStrengthMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -256,6 +260,7 @@ Material:
     - _ShadowPlanBUseShadowMix: 0
     - _ShadowPlanBValueFromBase: 1
     - _ShadowRampInit: 1
+    - _ShadowReceivingIntensity: 1
     - _ShadowSteps: 4
     - _ShadowStrength: 1
     - _ShadowUseStep: 0

@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: materialStencilReaderFade
-  m_Shader: {fileID: 4800000, guid: efa8f9f56db47404997e88b85819baea, type: 3}
+  m_Shader: {fileID: 4800000, guid: 2f13f85e17b00034082d64dcb9f7e465, type: 3}
   m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -31,6 +31,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 28b7665efe9dab84f85cdb2c8169f6b0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BumpMapSecondary:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -44,6 +48,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMapSecondary:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -93,6 +101,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 7e7cd7b6a5999d8449acf559d795c8e6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTexSecondary:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MatcapBlendMask:
@@ -187,6 +199,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 242351f50fe050d40879c196cfd8b0a8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadowReceivingMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ShadowStrengthMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -197,6 +213,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
+    - _BumpScaleSecondary: 1
     - _Cull: 2
     - _CustomShadow2nd: 0
     - _Cutoff: 0.5
@@ -308,6 +325,7 @@ Material:
     - _ShadowPlanBUseShadowMix: 0
     - _ShadowPlanBValueFromBase: 0.501
     - _ShadowRampInit: 1
+    - _ShadowReceivingIntensity: 1
     - _ShadowSteps: 4
     - _ShadowStrength: 1
     - _ShadowUseStep: 0
@@ -317,7 +335,9 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _StencilCompareAction: 6
+    - _StencilCompareActionSecondary: 6
     - _StencilNumber: 5
+    - _StencilNumberSecondary: 5
     - _UVSec: 0
     - _UseDoubleSided: 0
     - _UseEmissionParallax: 0
@@ -340,7 +360,9 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.992647, g: 0.5474156, b: 0.5474156, a: 1}
     - _Color: {r: 0, g: 0, b: 0, a: 0.8}
+    - _ColorSecondary: {r: 1, g: 1, b: 1, a: 0.41568628}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColorSecondary: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionParallaxColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveFreak1Color: {r: 0.5, g: 0.21720564, b: 0, a: 1}
     - _EmissiveFreak2Color: {r: 0, g: 0, b: 0, a: 1}

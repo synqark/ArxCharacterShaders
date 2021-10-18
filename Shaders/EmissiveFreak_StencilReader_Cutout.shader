@@ -58,7 +58,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
         _ShadowReceivingIntensity ("[Shadow Receiving] Intensity", Range(0, 1)) = 1
         _ShadowReceivingMask ("[Shadow Receiving] Mask", 2D) = "white"  {}
         // Gloss
-        [AXCSToggle]_UseGloss ("[Gloss] Enabled", Int) = 0
+        [Toggle(AXCS_GLOSS)]_UseGloss ("[Gloss] Enabled", Int) = 0
         _GlossBlend ("[Gloss] Smoothness", Range(0, 1)) = 0.5
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
@@ -172,6 +172,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma shader_feature_local AXCS_RIMLIGHT
+            #pragma shader_feature_local AXCS_GLOSS            
             #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
             #define AXCS_CUTOUT
             #define AXCS_EMISSIVE_FREAK
@@ -205,6 +206,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma shader_feature_local AXCS_RIMLIGHT
+            #pragma shader_feature_local AXCS_GLOSS            
             #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
             #define AXCS_CUTOUT
             #define AXCS_ADD

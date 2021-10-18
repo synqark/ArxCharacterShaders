@@ -98,7 +98,6 @@ uniform float _ShadowReceivingIntensity;
 UNITY_DECLARE_TEX2D_NOSAMPLER(_ShadowReceivingMask); uniform float4 _ShadowReceivingMask_ST;
 
 // Gloss
-uniform int _UseGloss;
 uniform float _GlossBlend;
 UNITY_DECLARE_TEX2D_NOSAMPLER(_GlossBlendMask); uniform float4 _GlossBlendMask_ST;
 uniform float _GlossPower;

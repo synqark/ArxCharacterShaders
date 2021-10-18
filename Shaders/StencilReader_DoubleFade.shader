@@ -66,7 +66,7 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
         _ShadowReceivingIntensity ("[Shadow Receiving] Intensity", Range(0, 1)) = 1
         _ShadowReceivingMask ("[Shadow Receiving] Mask", 2D) = "white"  {}
         // Gloss
-        [AXCSToggle]_UseGloss ("[Gloss] Enabled", Int) = 0
+        [Toggle(AXCS_GLOSS)]_UseGloss ("[Gloss] Enabled", Int) = 0
         _GlossBlend ("[Gloss] Smoothness", Range(0, 1)) = 0.5
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
@@ -118,8 +118,10 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
         [AXCSToggle]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
         _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
         _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
-        _ProximityOverrideColor ("[ProximityOverride] Override Color", Color) = (0,0,0,1)
-        [AXCSToggle]_ProximityOverrideAlphaOnly ("[ProximityOverride] Alpha Only", Int) = 0
+        [PowerSlider(2.0)]_ProximityOverrideHueShiftFromBase ("[ProximityOverride] Hue Shift From Base", Range(-0.5, 0.5)) = -0.01
+        _ProximityOverrideSaturationFromBase ("[ProximityOverride] Saturation From Base", Range(0, 2)) = 1.5
+        _ProximityOverrideValueFromBase ("[ProximityOverride] Value From Base", Range(0, 2)) = 0
+        _ProximityOverrideAlphaScale ("[ProximityOverride] Alpha Scale", Float) = 1.0
     }
     SubShader {
         Tags {
@@ -150,6 +152,7 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma shader_feature_local AXCS_RIMLIGHT
+            #pragma shader_feature_local AXCS_GLOSS            
             #pragma target 3.0
             #define AXCS_FADE
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
@@ -182,6 +185,7 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma shader_feature_local AXCS_RIMLIGHT
+            #pragma shader_feature_local AXCS_GLOSS            
             #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_ADD
@@ -215,6 +219,7 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma shader_feature_local AXCS_RIMLIGHT
+            #pragma shader_feature_local AXCS_GLOSS            
             #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_SECONDARY
@@ -248,6 +253,7 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma shader_feature_local AXCS_RIMLIGHT
+            #pragma shader_feature_local AXCS_GLOSS            
             #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_ADD
