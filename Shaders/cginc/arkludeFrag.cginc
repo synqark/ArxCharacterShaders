@@ -16,9 +16,14 @@ float4 frag(
     // アウトラインの裏面は常に削除
     clip(1 - isOutline + isFrontFace - 0.001);
 
+    float3 cameraPos = _WorldSpaceCameraPos;
+    #if defined(USING_STEREO_MATRICES)
+    cameraPos = (unity_StereoWorldSpaceCameraPos[0] + unity_StereoWorldSpaceCameraPos[1]) * .5;
+    #endif
+
     // 後の計算に使う変数を予め定義
     float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir * lerp(1, faceSign, _DoubleSidedFlipBackfaceNormal));
-    float3 viewDirection = normalize(UnityWorldSpaceViewDir(i.posWorld.xyz));
+    float3 viewDirection = normalize(cameraPos.xyz - i.posWorld.xyz);
 
     // Main color(Common + Detail)
     float4 mainColor = UNITY_SAMPLE_TEX2D(REF_MAINTEX, TRANSFORM_TEX(i.uv0, REF_MAINTEX)) * REF_COLOR.rgba;
