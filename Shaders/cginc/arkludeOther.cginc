@@ -1,5 +1,10 @@
 #include "Lighting.cginc"
 
+#if defined(USING_STEREO_MATRICES)
+// UnityShaderVariables.cginc
+#define _WorldSpaceCameraPos (unity_StereoWorldSpaceCameraPos[0] + unity_StereoWorldSpaceCameraPos[1]) * .5;
+#endif
+
 float3 grayscale(float3 color){
     return dot(color, float3(0.298912, 0.586611, 0.114478));
 }

@@ -82,7 +82,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
         _ReflectionSuppressBaseColorValue ("[Reflection] Suppress Base Color", Range(0, 1)) = 1
         _ReflectionCubemap ("[Reflection] Cubemap", Cube) = "" {}
         // Rim
-        [AXCSToggle]_UseRim ("[Rim] Enabled", Int) = 0
+        [Toggle(AXCS_RIMLIGHT)]_UseRim ("[Rim] Enabled", Int) = 0
         _RimBlend ("[Rim] Blend", Range(0, 3)) = 1
         _RimBlendMask ("[Rim] Blend Mask", 2D) = "white" {}
         _RimShadeMix("[Rim] Shade Mix", Range(0, 1)) = 0
@@ -171,6 +171,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
             #pragma multi_compile_fwdbase_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
+            #pragma shader_feature_local AXCS_RIMLIGHT
             #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
             #define AXCS_CUTOUT
             #define AXCS_EMISSIVE_FREAK
@@ -203,6 +204,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/AlphaCutout" {
             #pragma multi_compile_fwdadd_fullshadows
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
+            #pragma shader_feature_local AXCS_RIMLIGHT
             #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
             #define AXCS_CUTOUT
             #define AXCS_ADD

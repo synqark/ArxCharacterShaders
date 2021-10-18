@@ -89,7 +89,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/DoubleFade" {
         _ReflectionSuppressBaseColorValue ("[Reflection] Suppress Base Color", Range(0, 1)) = 1
         _ReflectionCubemap ("[Reflection] Cubemap", Cube) = "" {}
         // Rim
-        [AXCSToggle]_UseRim ("[Rim] Enabled", Int) = 0
+        [Toggle(AXCS_RIMLIGHT)]_UseRim ("[Rim] Enabled", Int) = 0
         _RimBlend ("[Rim] Blend", Range(0, 3)) = 1
         _RimBlendMask ("[Rim] Blend Mask", 2D) = "white" {}
         _RimShadeMix("[Rim] Shade Mix", Range(0, 1)) = 0
@@ -179,6 +179,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/DoubleFade" {
             #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
+            #pragma shader_feature_local AXCS_RIMLIGHT
             #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_EMISSIVE_FREAK
@@ -210,6 +211,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/DoubleFade" {
             #pragma multi_compile_fwdadd
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
+            #pragma shader_feature_local AXCS_RIMLIGHT
             #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_ADD
@@ -242,6 +244,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/DoubleFade" {
             #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
+            #pragma shader_feature_local AXCS_RIMLIGHT
             #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_SECONDARY
@@ -274,6 +277,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/DoubleFade" {
             #pragma multi_compile_fwdadd
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
+            #pragma shader_feature_local AXCS_RIMLIGHT
             #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_ADD

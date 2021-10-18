@@ -322,7 +322,7 @@ float4 frag(
         }
 
         // オプション：Rim
-        if (_UseRim) {
+        #ifdef AXCS_RIMLIGHT
             float _RimBlendMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_RimBlendMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _RimBlendMask));
             float4 _RimTexture_var = UNITY_SAMPLE_TEX2D_SAMPLER(_RimTexture, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _RimTexture));
 
@@ -341,7 +341,7 @@ float4 frag(
                     * _RimBlendMask_var
                     * lerp(float3(1,1,1), finalLight,_RimShadeMix)
                 );
-        }
+        #endif
 
         // オプション:ShadeCap
         if (_ShadowCapBlendMode < 2) {

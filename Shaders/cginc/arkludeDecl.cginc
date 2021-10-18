@@ -133,7 +133,6 @@ uniform samplerCUBE _ReflectionCubemap;
 uniform half4  _ReflectionCubemap_HDR;
 
 // Rim
-uniform int _UseRim;
 uniform float _RimBlendStart;
 uniform float _RimBlendEnd;
 uniform float _RimPow;
