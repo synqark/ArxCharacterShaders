@@ -198,7 +198,7 @@ Material:
     - _PointShadowborder: 0.5
     - _PointShadowborderBlur: 0.01
     - _ProximityOverrideAlphaScale: 1
-    - _ProximityOverrideBegin: 0.1
+    - _ProximityOverrideBegin: 0.05
     - _ProximityOverrideEnd: 0.01
     - _ProximityOverrideHueShiftFromBase: -0.01
     - _ProximityOverrideSaturationFromBase: 1.5

@@ -223,7 +223,7 @@ float4 frag(
         fixed4 finalRGBA = fixed4(finalColor * (alpha * _AlphaMask_var), 0);
         if (_UseProximityOverride) {
             float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
-            float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd) / overrideDistance , 0.0 , 1.0 ).x;
+            float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd - _ProjectionParams.y) / overrideDistance , 0.0 , 1.0 ).x;
             float3 overrideColor = CalculateHSV(
                 finalColor,
                 lerp(0, _ProximityOverrideHueShiftFromBase, overrideFactor),
@@ -237,7 +237,7 @@ float4 frag(
     #else
         if (_UseProximityOverride) {
             float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
-            float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd) / overrideDistance , 0.0 , 1.0 ).x;
+            float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd - _ProjectionParams.y) / overrideDistance , 0.0 , 1.0 ).x;
             finalColor = CalculateHSV(
                 finalColor,
                 lerp(0, _ProximityOverrideHueShiftFromBase, overrideFactor),
