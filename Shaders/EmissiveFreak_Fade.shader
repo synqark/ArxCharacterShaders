@@ -74,7 +74,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/Fade" {
         _MatcapTexture ("[MatCap] Texture", 2D) = "black" {}
         _MatcapColor ("[MatCap] Color", Color) = (1,1,1,1)
         // Reflection
-        [AXCSToggle]_UseReflection ("[Reflection] Enabled", Int) = 0
+        [Toggle(AXCS_REFLECTION)]_UseReflection ("[Reflection] Enabled", Int) = 0
         [AXCSToggle]_UseReflectionProbe ("[Reflection] Use Reflection Probe", Int) = 1
         _ReflectionReflectionPower ("[Reflection] Reflection Power", Range(0, 1)) = 1
         _ReflectionReflectionMask ("[Reflection] Reflection Mask", 2D) = "white" {}
@@ -170,6 +170,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/Fade" {
             #pragma shader_feature_local AXCS_RIMLIGHT
             #pragma shader_feature_local AXCS_GLOSS
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
+            #pragma shader_feature_local AXCS_REFLECTION
             #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_EMISSIVE_FREAK
@@ -200,6 +201,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/Fade" {
             #pragma shader_feature_local AXCS_RIMLIGHT
             #pragma shader_feature_local AXCS_GLOSS
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
+            #pragma shader_feature_local AXCS_REFLECTION
             #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_ADD

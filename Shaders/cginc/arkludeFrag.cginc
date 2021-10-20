@@ -248,7 +248,7 @@ float4 frag(
     if (!isOutline) {
     #endif
         // オプション：Reflection
-        if (_UseReflection) {
+        #ifdef AXCS_REFLECTION
             float3 normalDirectionReflection = normalize(mul( float3(normalLocal.rg*_ReflectionNormalMix,normalLocal.b), tangentTransform ));
             float reflNdotV = abs(dot( normalDirectionReflection, viewDirection ));
             float _ReflectionSmoothnessMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ReflectionReflectionMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ReflectionReflectionMask));
@@ -281,7 +281,7 @@ float4 frag(
             float reflSuppress = _ReflectionSuppressBaseColorValue * reflectionSmoothness;
             toonedMap = lerp(toonedMap,mad(toonedMap,-surfaceReduction,toonedMap), reflSuppress);
             ReflectionMap = indirectSpecular*lerp(float3(1,1,1), finalLight,_ReflectionShadeMix);
-        }
+        #endif
 
         // オプション：Gloss
         #ifdef AXCS_GLOSS

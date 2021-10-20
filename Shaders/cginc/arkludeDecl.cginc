@@ -122,26 +122,29 @@ uniform float _MatcapNormalMix;
 uniform float _MatcapShadeMix;
 
 // Reflection
-uniform int _UseReflection;
-uniform int _UseReflectionProbe;
-uniform float _ReflectionReflectionPower;
-UNITY_DECLARE_TEX2D_NOSAMPLER(_ReflectionReflectionMask); uniform float4 _ReflectionReflectionMask_ST;
-uniform float _ReflectionNormalMix;
-uniform float _ReflectionShadeMix;
-uniform float _ReflectionSuppressBaseColorValue;
-uniform samplerCUBE _ReflectionCubemap;
-uniform half4  _ReflectionCubemap_HDR;
+#ifdef AXCS_REFLECTION
+    uniform int _UseReflectionProbe;
+    uniform float _ReflectionReflectionPower;
+    UNITY_DECLARE_TEX2D_NOSAMPLER(_ReflectionReflectionMask); uniform float4 _ReflectionReflectionMask_ST;
+    uniform float _ReflectionNormalMix;
+    uniform float _ReflectionShadeMix;
+    uniform float _ReflectionSuppressBaseColorValue;
+    uniform samplerCUBE _ReflectionCubemap;
+    uniform half4  _ReflectionCubemap_HDR;
+#endif
 
 // Rim
-uniform float _RimBlendStart;
-uniform float _RimBlendEnd;
-uniform float _RimPow;
-uniform float4 _RimColor;
-uniform fixed _RimUseBaseTexture;
-uniform float _RimBlend;
-uniform float _RimShadeMix;
-UNITY_DECLARE_TEX2D_NOSAMPLER(_RimBlendMask); uniform float4 _RimBlendMask_ST;
-UNITY_DECLARE_TEX2D_NOSAMPLER(_RimTexture); uniform float4 _RimTexture_ST;
+#ifdef AXCS_RIMLIGHT
+    uniform float _RimBlendStart;
+    uniform float _RimBlendEnd;
+    uniform float _RimPow;
+    uniform float4 _RimColor;
+    uniform fixed _RimUseBaseTexture;
+    uniform float _RimBlend;
+    uniform float _RimShadeMix;
+    UNITY_DECLARE_TEX2D_NOSAMPLER(_RimBlendMask); uniform float4 _RimBlendMask_ST;
+    UNITY_DECLARE_TEX2D_NOSAMPLER(_RimTexture); uniform float4 _RimTexture_ST;
+#endif
 
 // Shade cap (Shadow cap)
 uniform int _ShadowCapBlendMode;
