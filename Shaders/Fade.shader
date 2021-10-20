@@ -26,7 +26,7 @@ Shader "ArxCharacterShaders/Fade" {
         _DetailNormalMap ("[Detail] Normal map", 2D) = "bump" {}
         _DetailNormalMapScale ("[Detail] Normal scale", Range(0, 2)) = 1
         // Emission Parallax
-        [AXCSToggle]_UseEmissionParallax ("[Emission Parallax] Use Emission Parallax", Int ) = 0
+        [Toggle(AXCS_PARALLAX_EMIS)]_UseEmissionParallax ("[Emission Parallax] Use Emission Parallax", Int ) = 0
         _EmissionParallaxTex ("[Emission Parallax] Texture", 2D ) = "black" {}
         [HDR]_EmissionParallaxColor ("[Emission Parallax] Color", Color ) = (1,1,1,1)
         _EmissionParallaxMask ("[Emission Parallax] Emission Mask", 2D ) = "white" {}
@@ -138,7 +138,8 @@ Shader "ArxCharacterShaders/Fade" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma shader_feature_local AXCS_RIMLIGHT
-            #pragma shader_feature_local AXCS_GLOSS            
+            #pragma shader_feature_local AXCS_GLOSS
+            #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma target 3.0
             #define AXCS_FADE
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
@@ -167,7 +168,8 @@ Shader "ArxCharacterShaders/Fade" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma shader_feature_local AXCS_RIMLIGHT
-            #pragma shader_feature_local AXCS_GLOSS            
+            #pragma shader_feature_local AXCS_GLOSS
+            #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma target 3.0
             #define AXCS_FADE
             #define AXCS_ADD

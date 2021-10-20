@@ -44,13 +44,14 @@ uniform float _DetailAlbedoScale;
 UNITY_DECLARE_TEX2D_NOSAMPLER(_AlphaMask); uniform float4 _AlphaMask_ST;
 
 // Emission Parallax
-uniform float _UseEmissionParallax;
-UNITY_DECLARE_TEX2D_NOSAMPLER(_EmissionParallaxTex); uniform float4 _EmissionParallaxTex_ST;
-uniform float4 _EmissionParallaxColor;
-UNITY_DECLARE_TEX2D_NOSAMPLER(_EmissionParallaxMask); uniform float4 _EmissionParallaxMask_ST;
-uniform float _EmissionParallaxDepth;
-UNITY_DECLARE_TEX2D_NOSAMPLER(_EmissionParallaxDepthMask); uniform float4 _EmissionParallaxDepthMask_ST;
-uniform float _EmissionParallaxDepthMaskInvert;
+#ifdef AXCS_PARALLAX_EMIS
+    UNITY_DECLARE_TEX2D_NOSAMPLER(_EmissionParallaxTex); uniform float4 _EmissionParallaxTex_ST;
+    uniform float4 _EmissionParallaxColor;
+    UNITY_DECLARE_TEX2D_NOSAMPLER(_EmissionParallaxMask); uniform float4 _EmissionParallaxMask_ST;
+    uniform float _EmissionParallaxDepth;
+    UNITY_DECLARE_TEX2D_NOSAMPLER(_EmissionParallaxDepthMask); uniform float4 _EmissionParallaxDepthMask_ST;
+    uniform float _EmissionParallaxDepthMaskInvert;
+#endif
 
 // Double Side
 uniform float _DoubleSidedBackfaceLightIntensity;
