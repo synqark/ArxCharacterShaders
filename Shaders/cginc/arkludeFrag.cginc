@@ -17,7 +17,7 @@ float4 frag(
     clip(1 - isOutline + isFrontFace - 0.001);
 
     float3 cameraPos = _WorldSpaceCameraPos;
-    #if defined(USING_STEREO_MATRICES)
+    #ifdef USING_STEREO_MATRICES
     cameraPos = (unity_StereoWorldSpaceCameraPos[0] + unity_StereoWorldSpaceCameraPos[1]) * .5;
     #endif
 
