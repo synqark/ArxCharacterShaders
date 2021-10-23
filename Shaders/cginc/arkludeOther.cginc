@@ -80,9 +80,8 @@ float3 GetIndirectSpecularCubemap(samplerCUBE _ReflectionCubemap, half4 _Reflect
 float2 ComputePositionRelatedTransformCap(in float3 cameraSpaceViewDir, in float3 normalDirectionCap){
     float3 transformCapViewDir = cameraSpaceViewDir - float3(0,0,1);
     float3 transformCapNormal = mul( (float3x3)unity_WorldToCamera, normalDirectionCap );
-    float2 transformCap_old = transformCapNormal.rg*0.5+0.5;
     float3 transformCapCombined = transformCapViewDir * (dot(transformCapViewDir, transformCapNormal) / transformCapViewDir.z) + transformCapNormal;
-    return lerp(((transformCapCombined.rg*0.5)+0.5), transformCap_old, saturate(-transformCapNormal.z));
+    return (transformCapCombined.rg*0.5)+0.5;
 }
 
 float2 ComputeNonPositionRelatedTransformCap(in float3 normalDirectionCap){

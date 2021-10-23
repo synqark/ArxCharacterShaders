@@ -1,3 +1,16 @@
+2021/10/23 build 17----------------------
+・Unity2019.4でビルド
+・一部シェーダー設定をshader_feature_local制御に変更
+　以下のプロパティをAnimation等で動的に変更している場合は、常にオンにして各カテゴリの反映量で制御してください
+    _UseEmissionParallax
+    _UseGloss
+    _UseReflection
+    _UseRim
+・StencilReader/DoubleFade系のバリエーションでスクリプトエラーが発生していた不具合を修正
+・Proximity Color Overrideの距離にClipping Plane(Near)を考慮するようになりました
+　Begin/Endの0となる位置が目の位置から、目+NearClipの位置になります。
+・Rim/MatCap/ShadeCapの計算を変更
+
 2020/12/20 build 12----------------------
 ・Tipsを全面的にAXCS_Docsに移行しました
 ヘルプボタンを押すと「https://synqark.github.io/AXCS_Docs/」サイトの該当ページが開きます
