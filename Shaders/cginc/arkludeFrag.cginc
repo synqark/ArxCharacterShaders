@@ -23,7 +23,8 @@ float4 frag(
 
     // 後の計算に使う変数を予め定義
     float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir * lerp(1, faceSign, _DoubleSidedFlipBackfaceNormal));
-    float3 viewDirection = normalize(cameraPos.xyz - i.posWorld.xyz);
+    float3 viewDirection = normalize(UnityWorldSpaceViewDir(i.posWorld.xyz));
+    float3 viewDirectionCenterEye = normalize(cameraPos.xyz - i.posWorld.xyz);
 
     // Main color(Common + Detail)
     float4 mainColor = UNITY_SAMPLE_TEX2D(REF_MAINTEX, TRANSFORM_TEX(i.uv0, REF_MAINTEX)) * REF_COLOR.rgba;
@@ -50,8 +51,8 @@ float4 frag(
     float3 normalDirection = normalize(mul( normalLocal, tangentTransform )); // Perturbed normals
     float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz + float3(0, +0.0000000001, 0));
     float3 lightColor = _LightColor0.rgb;
-    float3 halfDirection = normalize(viewDirection+lightDirection);
     float3 cameraSpaceViewDir = mul((float3x3)unity_WorldToCamera, viewDirection);
+    float3 cameraSpaceViewDirCenterEye = mul((float3x3)unity_WorldToCamera, viewDirectionCenterEye);
 
     #if (!defined(SHADOWS_SCREEN) || defined(AXCS_FADE))
         fixed attenuation = 1.0;
@@ -132,7 +133,7 @@ float4 frag(
     // ２：ShadeCapでLightShutterを使っている場合、受光強度にマスク処理を施す
     if (_ShadowCapBlendMode == 2) {
         float3 normalDirectionShadowCap = normalize(mul( float3(normalLocal.r*_ShadowCapNormalMix,normalLocal.g*_ShadowCapNormalMix,normalLocal.b), tangentTransform )); // Perturbed normals
-        float2 transformShadowCap = ComputeTransformCap(cameraSpaceViewDir,normalDirectionShadowCap);
+        float2 transformShadowCap = ComputeTransformCap(cameraSpaceViewDirCenterEye,normalDirectionShadowCap);
         float4 _ShadowCapTexture_var =  UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowCapTexture, REF_MAINTEX, TRANSFORM_TEX(transformShadowCap, _ShadowCapTexture));
         float4 _ShadowCapBlendMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowCapBlendMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowCapBlendMask));
         additionalContributionMultiplier *= saturate(1.0 - mad(_ShadowCapBlendMask_var.rgb,-_ShadowCapTexture_var.rgb,_ShadowCapBlendMask_var.rgb)*_ShadowCapBlend);
@@ -291,6 +292,7 @@ float4 frag(
             float perceptualRoughness = 1.0 - gloss;
             float roughness = perceptualRoughness * perceptualRoughness;
             float specPow = exp2( gloss * 10.0+1.0);
+            float3 halfDirection = normalize(viewDirection+lightDirection);
             float NdotL = saturate(dot( normalDirection, lightDirection ));
             float LdotH = saturate(dot(lightDirection, halfDirection));
             float3 specularColor = _GlossPower;
@@ -331,7 +333,7 @@ float4 frag(
             float _RimBlendMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_RimBlendMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _RimBlendMask));
             float4 _RimTexture_var = UNITY_SAMPLE_TEX2D_SAMPLER(_RimTexture, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _RimTexture));
 
-            float rimNdotV = abs(dot( normalDirection, viewDirection ));
+            float rimNdotV = abs(dot( normalDirection, viewDirectionCenterEye ));
             float oneMinusRimNdotV = 1 - rimNdotV; // 0:正面 ~ 1:真横
             float value = (oneMinusRimNdotV - _RimBlendStart) / (_RimBlendEnd - _RimBlendStart);
             float rimPow3 = value*value*value;
@@ -351,7 +353,7 @@ float4 frag(
         // オプション:ShadeCap
         if (_ShadowCapBlendMode < 2) {
             float3 normalDirectionShadowCap = normalize(mul( float3(normalLocal.r*_ShadowCapNormalMix,normalLocal.g*_ShadowCapNormalMix,normalLocal.b), tangentTransform )); // Perturbed normals
-            float2 transformShadowCap = ComputeTransformCap(cameraSpaceViewDir, normalDirectionShadowCap);
+            float2 transformShadowCap = ComputeTransformCap(cameraSpaceViewDirCenterEye, normalDirectionShadowCap);
             float4 _ShadowCapTexture_var =  UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowCapTexture, REF_MAINTEX, TRANSFORM_TEX(transformShadowCap, _ShadowCapTexture));
             float4 _ShadowCapBlendMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_ShadowCapBlendMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _ShadowCapBlendMask));
             shadowcap = (1.0 - mad(_ShadowCapBlendMask_var.rgb,-(_ShadowCapTexture_var.rgb),_ShadowCapBlendMask_var.rgb)*_ShadowCapBlend);
