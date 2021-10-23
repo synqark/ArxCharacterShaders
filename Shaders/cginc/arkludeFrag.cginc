@@ -383,7 +383,15 @@ float4 frag(
     // 屈折
     #ifdef AXCS_REFRACTED
         float refractionValue = pow(1.0-saturate(dot(normalDirection, viewDirectionCenterEye)),_RefractionFresnelExp);
-        float2 sceneUVs = (i.grabUV) + ((refractionValue*_RefractionStrength) * mul(unity_WorldToCamera, float4(normalDirection,0) ).xyz.rgb.rg);
+        float2 sceneUVs = (i.grabUV) + (refractionValue*_RefractionStrength) * mul(unity_WorldToCamera, float4(normalDirection,0) ).xy;
+        #ifdef USING_STEREO_MATRICES // SinglePassStereo限定で、GrabTextureの四隅が黒いので中央6割(0.2～0.8)しか使わない。(Multipassは忘れる)
+            float _refractClamp = 0.2;
+            float refractClampMax = 1.0 - _refractClamp;
+            sceneUVs = clamp(sceneUVs,
+                float2(_refractClamp/2 + unity_StereoEyeIndex*0.5, _refractClamp),
+                float2(refractClampMax/2 + unity_StereoEyeIndex*0.5, refractClampMax)
+            );
+        #endif
         float4 sceneColor = tex2D(_GrabTexture, sceneUVs);
     #endif
 
