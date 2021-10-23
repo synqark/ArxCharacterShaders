@@ -9,7 +9,9 @@
 ・StencilReader/DoubleFade系のバリエーションでスクリプトエラーが発生していた不具合を修正
 ・Proximity Color Overrideの距離にClipping Plane(Near)を考慮するようになりました
 　Begin/Endの0となる位置が目の位置から、目+NearClipの位置になります。
-・Rim/MatCap/ShadeCapの計算を変更
+・Rim/MatCap/ShadeCap/Refraction等に使う視点データをポジションベースに変更しました。
+　VRでの見た目が大きく変わります
+・あと何点か細かい変更を入れた気がしましたが、忘れました。
 
 2020/12/20 build 12----------------------
 ・Tipsを全面的にAXCS_Docsに移行しました
