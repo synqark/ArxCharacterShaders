@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: ExampleSkin
   m_Shader: {fileID: 4800000, guid: 87d1c60aa88359946943a8f85f3f67ce, type: 3}
-  m_ShaderKeywords: AXCS_RIMLIGHT
+  m_ShaderKeywords: AXCS_PROXIMITY_OVERRIDE AXCS_RIMLIGHT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0

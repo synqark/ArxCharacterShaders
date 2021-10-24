@@ -1,17 +1,26 @@
 2021/10/23 build 17----------------------
+細かいところをいっぱい修正しました。
+基本的に今までの設定内容で大きく変わることはありませんが、気になる方は下記を読んでください。
+
+シェーダー更新後、設定値と明らかに異なる挙動が見られた場合は、
+Unityメニューに追加された「AXCS->Refresh AXCS Materials」を実行してみてください。
+
 ・Unity2019.4でビルド
-・一部シェーダー設定をshader_feature_local制御に変更
+・一部シェーダー設定をshader_feature_local制御に変更しました。
 　以下のプロパティをAnimation等で動的に変更している場合は、常にオンにして各カテゴリの反映量で制御してください
     _UseEmissionParallax
     _UseGloss
     _UseReflection
     _UseRim
-・StencilReader/DoubleFade系のバリエーションでスクリプトエラーが発生していた不具合を修正
-・Proximity Color Overrideの距離にClipping Plane(Near)を考慮するようになりました
+    _UseProximityOverride
+・StencilReader/DoubleFade系のバリエーションでスクリプトエラーが発生していた不具合を修正しました。
+・Proximity Color Overrideの距離にClipping Plane(Near)を考慮するようになりました。
 　Begin/Endの0となる位置が目の位置から、目+NearClipの位置になります。
+　あわせて、距離計算方法をスクリーン座標基準に変更しました。
 ・Rim/MatCap/ShadeCap/Refraction等に使う視点データをポジションベースに変更しました。
-　VRでの見た目が大きく変わります
-・あと何点か細かい変更を入れた気がしましたが、忘れました。
+　VR内での見た目がより現実世界に近い感じになります。
+・VR使用時、Refractionの設定値によっては黒い線が出る問題を修正しました。
+　（SinglePass環境のみです。ご了承ください。）
 
 2020/12/20 build 12----------------------
 ・Tipsを全面的にAXCS_Docsに移行しました

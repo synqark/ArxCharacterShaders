@@ -24,6 +24,8 @@ namespace AxCharacterShaders
     [InitializeOnLoad]
     public class AxInitializer
     {
+        const string BUILD = "17";
+
         static AxInitializer()
         {
             if (!EditorApplication.isPlayingOrWillChangePlaymode)
@@ -54,7 +56,7 @@ namespace AxCharacterShaders
                     mat.shader = mat.shader;
                 }
             }
-            Debug.Log("Refreshed AXCS Materials");
+            Debug.Log("Refreshed AXCS Materials. build:" + BUILD);
         }
     }
 

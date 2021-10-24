@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: materialStencilReaderFade
   m_Shader: {fileID: 4800000, guid: 2f13f85e17b00034082d64dcb9f7e465, type: 3}
-  m_ShaderKeywords: _NORMALMAP
+  m_ShaderKeywords: AXCS_PROXIMITY_OVERRIDE _NORMALMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
