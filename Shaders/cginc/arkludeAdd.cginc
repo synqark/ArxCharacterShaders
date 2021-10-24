@@ -223,9 +223,9 @@ float4 frag(
     #ifdef AXCS_FADE
         fixed _AlphaMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_AlphaMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _AlphaMask)).r;
         fixed4 finalRGBA = fixed4(finalColor * (alpha * _AlphaMask_var), 0);
-        if (_UseProximityOverride) {
+        #ifdef AXCS_PROXIMITY_OVERRIDE
             float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
-            float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd - _ProjectionParams.y) / overrideDistance , 0.0 , 1.0 ).x;
+            float overrideFactor = 1.0 - clamp( (i.projPos.z - _ProximityOverrideEnd - _ProjectionParams.y) / overrideDistance , 0.0 , 1.0 ).x;
             float3 overrideColor = CalculateHSV(
                 finalColor,
                 lerp(0, _ProximityOverrideHueShiftFromBase, overrideFactor),
@@ -233,20 +233,20 @@ float4 frag(
                 lerp(1, _ProximityOverrideValueFromBase, overrideFactor)
             );
             finalRGBA = fixed4(overrideColor, lerp(finalRGBA.a, finalRGBA.a * _ProximityOverrideAlphaScale, overrideFactor));
-        }
+        #endif
         UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
         return finalRGBA;
     #else
-        if (_UseProximityOverride) {
+        #ifdef AXCS_PROXIMITY_OVERRIDE
             float overrideDistance = _ProximityOverrideBegin - _ProximityOverrideEnd;
-            float overrideFactor = 1.0 - clamp( (distance( i.posWorld , _WorldSpaceCameraPos ) - _ProximityOverrideEnd - _ProjectionParams.y) / overrideDistance , 0.0 , 1.0 ).x;
+            float overrideFactor = 1.0 - clamp( (i.projPos.z - _ProximityOverrideEnd - _ProjectionParams.y) / overrideDistance , 0.0 , 1.0 ).x;
             finalColor = CalculateHSV(
                 finalColor,
                 lerp(0, _ProximityOverrideHueShiftFromBase, overrideFactor),
                 lerp(1, _ProximityOverrideSaturationFromBase, overrideFactor),
                 lerp(1, _ProximityOverrideValueFromBase, overrideFactor)
             );
-        }
+        #endif
         fixed4 finalRGBA = fixed4(finalColor,1);
         UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
         return finalRGBA;

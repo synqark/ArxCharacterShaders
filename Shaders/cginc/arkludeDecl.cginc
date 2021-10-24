@@ -200,12 +200,13 @@ uniform float _EmissiveFreak2HueShift;
 #endif
 
 // Proximity color override
-uniform int _UseProximityOverride;
-uniform float _ProximityOverrideBegin;
-uniform float _ProximityOverrideEnd;
-uniform float4 _ProximityOverrideColor;
-uniform int _ProximityOverrideAlphaOnly;
-uniform float _ProximityOverrideHueShiftFromBase;
-uniform float _ProximityOverrideSaturationFromBase;
-uniform float _ProximityOverrideValueFromBase;
-uniform float _ProximityOverrideAlphaScale;
+#ifdef AXCS_PROXIMITY_OVERRIDE
+    uniform float _ProximityOverrideBegin;
+    uniform float _ProximityOverrideEnd;
+    uniform float4 _ProximityOverrideColor;
+    uniform int _ProximityOverrideAlphaOnly;
+    uniform float _ProximityOverrideHueShiftFromBase;
+    uniform float _ProximityOverrideSaturationFromBase;
+    uniform float _ProximityOverrideValueFromBase;
+    uniform float _ProximityOverrideAlphaScale;
+#endif

@@ -32,6 +32,11 @@ struct VertexOutput
     #ifdef AXCS_REFRACTED
         noperspective float2 grabUV : TEXCOORD7;
     #endif
+
+    #ifdef AXCS_PROXIMITY_OVERRIDE
+        float4 projPos : TEXCOORD8;
+    #endif
+
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
@@ -62,6 +67,11 @@ struct v2g
     #ifdef AXCS_REFRACTED
         noperspective float2 grabUV : TEXCOORD7;
     #endif
+
+    #ifdef AXCS_PROXIMITY_OVERRIDE
+        float4 projPos : TEXCOORD8;
+    #endif
+
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
@@ -89,6 +99,11 @@ struct g2f {
     #ifdef AXCS_REFRACTED
         noperspective float2 grabUV : TEXCOORD7;
     #endif
+
+    #ifdef AXCS_PROXIMITY_OVERRIDE
+        float4 projPos : TEXCOORD8;
+    #endif
+
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
@@ -167,6 +182,11 @@ VertexOutput vert(appdata_full v) {
         #endif
     #endif
 
+    #ifdef AXCS_PROXIMITY_OVERRIDE
+        o.projPos = ComputeScreenPos (o.pos);
+        COMPUTE_EYEDEPTH(o.projPos.z);
+    #endif
+
     return o;
 }
 
@@ -212,6 +232,10 @@ void geom(triangle v2g IN[3], inout TriangleStream<g2f> tristream)
                 o.ambientIndirect    = IN[i].ambientIndirect;
             #endif
 
+            #ifdef AXCS_PROXIMITY_OVERRIDE
+                o.projPos = IN[i].projPos;
+            #endif
+
             tristream.Append(o);
         }
         tristream.RestartStrip();
@@ -248,6 +272,10 @@ void geom(triangle v2g IN[3], inout TriangleStream<g2f> tristream)
             o.lightColor3        = IN[ii].lightColor3;
             o.ambientAttenuation = IN[ii].ambientAttenuation;
             o.ambientIndirect    = IN[ii].ambientIndirect;
+        #endif
+
+        #ifdef AXCS_PROXIMITY_OVERRIDE
+            o.projPos = IN[ii].projPos;
         #endif
 
         tristream.Append(o);

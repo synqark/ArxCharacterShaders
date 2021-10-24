@@ -101,7 +101,7 @@ Shader "ArxCharacterShaders/Opaque" {
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
         // AXCS_GENERATOR:EMISSIVE_FREAK_PROPERTIES
         // Proximity color override
-        [AXCSToggle]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
+        [Toggle(AXCS_PROXIMITY_OVERRIDE)]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
         _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
         _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
         [PowerSlider(2.0)]_ProximityOverrideHueShiftFromBase ("[ProximityOverride] Hue Shift From Base", Range(-0.5, 0.5)) = -0.01
@@ -132,6 +132,7 @@ Shader "ArxCharacterShaders/Opaque" {
             #pragma shader_feature_local AXCS_GLOSS
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
+            #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
             #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
             // AXCS_GENERATOR:OUTLINE_DEFINE
@@ -162,6 +163,7 @@ Shader "ArxCharacterShaders/Opaque" {
             #pragma shader_feature_local AXCS_GLOSS
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
+            #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
             #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
             #define AXCS_ADD
             // AXCS_GENERATOR:OUTLINE_DEFINE
