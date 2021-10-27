@@ -210,3 +210,11 @@ uniform float _EmissiveFreak2HueShift;
     uniform float _ProximityOverrideValueFromBase;
     uniform float _ProximityOverrideAlphaScale;
 #endif
+
+// Tessellation
+#ifdef AXCS_TESSELLATION
+    uniform float _TessellationBeginDistance;
+    uniform float _TessellationEndDistance;
+    uniform float _TessellationMaxDensity;
+    uniform float _TessellationPhongStretch;
+#endif
