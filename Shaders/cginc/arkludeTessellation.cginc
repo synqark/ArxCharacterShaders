@@ -36,22 +36,8 @@ float3 ProjectPositionToTangentSpace( float3 position, float3 plane_position, fl
     float projectValue = dot( ( position - plane_position ), plane_normal );
     return ( position - projectValue * plane_normal * _TessellationPhongStretch);
 }
-float Tessellation(appdata_tess v){
-    return max(
-        1.0, min(_TessellationMaxDensity,
-            (
-                (
-                    distance(mul(unity_ObjectToWorld, v.vertex).rgb, _WorldSpaceCameraPos) - _TessellationBeginDistance
-                ) / (_TessellationEndDistance - _TessellationBeginDistance)
-            ) * _TessellationMaxDensity
-        )
-    );
-}
 float4 Tessellation(appdata_tess v, appdata_tess v1, appdata_tess v2){
-    float tv = Tessellation(v);
-    float tv1 = Tessellation(v1);
-    float tv2 = Tessellation(v2);
-    return float4( tv1+tv2, tv2+tv, tv+tv1, tv+tv1+tv2 ) / float4(2,2,2,3);
+    return UnityDistanceBasedTess(v.vertex, v1.vertex, v2.vertex, _TessellationEndDistance, _TessellationBeginDistance, _TessellationMaxDensity);
 }
 OutputPatchConstant hullconst (InputPatch<appdata_tess,3> v) {
     OutputPatchConstant o = (OutputPatchConstant)0;
@@ -82,9 +68,9 @@ VertexOutput domain (OutputPatchConstant tessFactors, const OutputPatch<appdata_
     v.texcoord3 = vi[0].texcoord3*bary.x + vi[1].texcoord3*bary.y + vi[2].texcoord3*bary.z;
 
     float3 phongPos = float3( 0.0f, 0.0f, 0.0f );
-    phongPos += ( bary.x * ProjectPositionToTangentSpace( v.vertex.xyz, vi[ 0 ].vertex, vi[ 0 ].normal ) );
-    phongPos += ( bary.y * ProjectPositionToTangentSpace( v.vertex.xyz, vi[ 1 ].vertex, vi[ 1 ].normal ) );
-    phongPos += ( bary.z * ProjectPositionToTangentSpace( v.vertex.xyz, vi[ 2 ].vertex, vi[ 2 ].normal ) );
+    phongPos += ( bary.x * ProjectPositionToTangentSpace( v.vertex.xyz, vi[ 0 ].vertex, normalize(vi[ 0 ].normal) ) );
+    phongPos += ( bary.y * ProjectPositionToTangentSpace( v.vertex.xyz, vi[ 1 ].vertex, normalize(vi[ 1 ].normal) ) );
+    phongPos += ( bary.z * ProjectPositionToTangentSpace( v.vertex.xyz, vi[ 2 ].vertex, normalize(vi[ 2 ].normal) ) );
 
     v.vertex = float4(phongPos, v.vertex.w);
 
