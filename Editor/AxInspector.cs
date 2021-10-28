@@ -154,6 +154,11 @@ namespace AxCharacterShaders
         MaterialProperty EmissiveFreak2BlinkIn;
         MaterialProperty EmissiveFreak2BlinkInMix;
         MaterialProperty EmissiveFreak2HueShift;
+        MaterialProperty TessellationBeginDistance;
+        MaterialProperty TessellationEndDistance;
+        MaterialProperty TessellationMaxDensity;
+        MaterialProperty TessellationDensityMask;
+        MaterialProperty TessellationPhongStretch;
 
         #endregion
 
@@ -179,6 +184,7 @@ namespace AxCharacterShaders
             bool isRefracted = shader.name.Contains("Refracted");
             bool isEmissiveFreak = shader.name.Contains("/_EmissiveFreak/");
             bool isOutline = shader.name.Contains("/_Outline/");
+            bool isTessellation = shader.name.Contains("/_Tessellation/");
 
             // Clear regitered props
             ClearRegisteredPropertiesList();
@@ -330,6 +336,18 @@ namespace AxCharacterShaders
             EmissiveFreak2BlinkInMix = MatP("_EmissiveFreak2BlinkInMix", props, false);
             EmissiveFreak2HueShift = MatP("_EmissiveFreak2HueShift", props, false);
 
+            EmissiveFreak2BlinkOut = MatP("_EmissiveFreak2BlinkOut", props, false);
+            EmissiveFreak2BlinkOutMix = MatP("_EmissiveFreak2BlinkOutMix", props, false);
+            EmissiveFreak2BlinkIn = MatP("_EmissiveFreak2BlinkIn", props, false);
+            EmissiveFreak2BlinkInMix = MatP("_EmissiveFreak2BlinkInMix", props, false);
+            EmissiveFreak2HueShift = MatP("_EmissiveFreak2HueShift", props, false);
+
+            TessellationBeginDistance = MatP("_TessellationBeginDistance", props, false);
+            TessellationEndDistance = MatP("_TessellationEndDistance", props, false);
+            TessellationMaxDensity = MatP("_TessellationMaxDensity", props, false);
+            TessellationDensityMask = MatP("_TessellationDensityMask", props, false);
+            TessellationPhongStretch = MatP("_TessellationPhongStretch", props, false);
+
             EditorGUIUtility.labelWidth = 0f;
 
             EditorGUI.BeginChangeCheck();
@@ -337,6 +355,12 @@ namespace AxCharacterShaders
                 // バリエーションの説明
                 IsShowVariationTip = UIHelper.ShurikenFoldout(shader.name.Substring(20) + "について", IsShowVariationTip);
                 if (IsShowVariationTip) {
+                    if (isTessellation) {
+                        EditorGUILayout.HelpBox("Tessellationカテゴリは、メッシュを近い位置で見たときにポリゴン数を増やし、なめらかに表示させる機能です。"
+                        + Environment.NewLine + "他のバリエーションに比べて負荷が非常に高いため、慎重に使用してください。"
+                        + Environment.NewLine + "現在はディスプレイスメントマップは使えず、Phong Tessellationのみサポートしてます。"
+                        , MessageType.Info);
+                    }
                     if (isOutline) {
                         EditorGUILayout.HelpBox("Outlineカテゴリは、メッシュにアウトラインを付けたいときに使用するバリエーションです。"
                         + Environment.NewLine + "アウトラインと半透明（Fade）は相性の問題で使用できません。"
@@ -448,6 +472,23 @@ namespace AxCharacterShaders
                             materialEditor.ShaderProperty(AlphaMask, "Alpha Mask");
                         });
                     }
+                }
+                // Phong Tessellation
+                if(isTessellation){
+                    UIHelper.ShurikenHeader("Tessellation");
+                    UIHelper.DrawWithGroup(() => {
+                        UIHelper.DrawWithGroup(() => {
+                            materialEditor.ShaderProperty(TessellationBeginDistance, "BeginDistance");
+                            materialEditor.ShaderProperty(TessellationEndDistance,   "EndDistance");
+                        });
+                        UIHelper.DrawWithGroup(() => {
+                            materialEditor.TexturePropertySingleLine(new GUIContent("Density & Mask", "Density and Mask Texture"), TessellationDensityMask, TessellationMaxDensity);
+                            materialEditor.TextureScaleOffsetPropertyIndent(TessellationDensityMask);
+                        });
+                        UIHelper.DrawWithGroup(() => {
+                            materialEditor.ShaderProperty(TessellationPhongStretch,  "Phong Tessellation Stretch");
+                        });
+                    });
                 }
 
                 // Refraction

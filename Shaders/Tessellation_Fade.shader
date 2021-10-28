@@ -114,7 +114,7 @@ Shader "ArxCharacterShaders/_Tessellation/Fade" {
         _ProximityOverrideAlphaScale ("[ProximityOverride] Alpha Scale", Float) = 1.0
         // Phong Tessellation
         _TessellationBeginDistance ("[Tessellation] BeginDistance", Range(0.1, 5)) = 1.0
-        _TessellationEndDistance ("[Tessellation] EndDistance", Range(0, 9.9)) = 0
+        _TessellationEndDistance ("[Tessellation] EndDistance", Range(0, 4.9)) = 0
         _TessellationMaxDensity ("[Tessellation] MaxDensity", Range(1, 25)) = 5
         _TessellationDensityMask ("[Tessellation] DensityMask", 2D) = "white" {}
         _TessellationPhongStretch ("[Tessellation] PhongStretch", Range(0, 3)) = 0.5
