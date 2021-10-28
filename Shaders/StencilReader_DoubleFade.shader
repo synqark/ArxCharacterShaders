@@ -115,13 +115,14 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
         // AXCS_GENERATOR:EMISSIVE_FREAK_PROPERTIES
         // Proximity color override
-        [AXCSToggle(AXCS_PROXIMITY_OVERRIDE)Toggle]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
+        [Toggle(AXCS_PROXIMITY_OVERRIDE)]_UseProximityOverride ("[ProximityOverride] Enabled", Int) = 0
         _ProximityOverrideBegin ("[ProximityOverride] Begin", Range(0.0, 1.0)) = 0.10
         _ProximityOverrideEnd ("[ProximityOverride] End", Range(0.0, 1.0)) = 0.01
         [PowerSlider(2.0)]_ProximityOverrideHueShiftFromBase ("[ProximityOverride] Hue Shift From Base", Range(-0.5, 0.5)) = -0.01
         _ProximityOverrideSaturationFromBase ("[ProximityOverride] Saturation From Base", Range(0, 2)) = 1.5
         _ProximityOverrideValueFromBase ("[ProximityOverride] Value From Base", Range(0, 2)) = 0
         _ProximityOverrideAlphaScale ("[ProximityOverride] Alpha Scale", Float) = 1.0
+        // AXCS_GENERATOR:TESSELLATION_PROPERTIES
     }
     SubShader {
         Tags {
@@ -146,7 +147,7 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
             CGPROGRAM
 
 
-            #pragma vertex vert
+            #pragma vertex vert // AXCS_GENERATOR:TESSELLATION_PIPELINES
             #pragma fragment frag
             #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
@@ -156,13 +157,15 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 3.0
+            #pragma target 3.0 // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
             #define AXCS_FADE
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
+            // AXCS_GENERATOR:TESSELLATION_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
+            // AXCS_GENERATOR:TESSELLATION_INCLUDE
             #include "cginc/arkludeFrag.cginc"
             ENDCG
         }
@@ -182,7 +185,7 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
 
             CGPROGRAM
 
-            #pragma vertex vert
+            #pragma vertex vert // AXCS_GENERATOR:TESSELLATION_PIPELINES
             #pragma fragment frag
             #pragma multi_compile_fwdadd
             #pragma multi_compile_fog
@@ -192,13 +195,15 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 3.0
+            #pragma target 3.0 // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
             #define AXCS_FADE
             #define AXCS_ADD
+            // AXCS_GENERATOR:TESSELLATION_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
+            // AXCS_GENERATOR:TESSELLATION_INCLUDE
             #include "cginc/arkludeAdd.cginc"
             ENDCG
         }
@@ -219,7 +224,7 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
             CGPROGRAM
 
 
-            #pragma vertex vert
+            #pragma vertex vert // AXCS_GENERATOR:TESSELLATION_PIPELINES
             #pragma fragment frag
             #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
@@ -229,14 +234,16 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 3.0
+            #pragma target 3.0 // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
             #define AXCS_FADE
             #define AXCS_SECONDARY
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
+            // AXCS_GENERATOR:TESSELLATION_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
+            // AXCS_GENERATOR:TESSELLATION_INCLUDE
             #include "cginc/arkludeFrag.cginc"
             ENDCG
         }
@@ -256,7 +263,7 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
 
             CGPROGRAM
 
-            #pragma vertex vert
+            #pragma vertex vert // AXCS_GENERATOR:TESSELLATION_PIPELINES
             #pragma fragment frag
             #pragma multi_compile_fwdadd
             #pragma multi_compile_fog
@@ -266,14 +273,16 @@ Shader "ArxCharacterShaders/_StencilReader/DoubleFade" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 3.0
+            #pragma target 3.0 // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
             #define AXCS_FADE
             #define AXCS_ADD
             #define AXCS_SECONDARY
+            // AXCS_GENERATOR:TESSELLATION_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
+            // AXCS_GENERATOR:TESSELLATION_INCLUDE
             #include "cginc/arkludeAdd.cginc"
             ENDCG
         }

@@ -216,5 +216,8 @@ uniform float _EmissiveFreak2HueShift;
     uniform float _TessellationBeginDistance;
     uniform float _TessellationEndDistance;
     uniform float _TessellationMaxDensity;
+    uniform sampler2D _TessellationDensityMask; uniform float4 _TessellationDensityMask_ST;
     uniform float _TessellationPhongStretch;
+    // uniform float _highLightViewBias;
+    // uniform float _highLightBorder;
 #endif

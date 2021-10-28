@@ -87,26 +87,29 @@ namespace AxCharacterShaders.Generator
 
                     // キーワードの置換
                     if (shaderCode[line].Contains("AXCS_GENERATOR")) {
-                        var keyword = shaderCode[line].Substring(shaderCode[line].IndexOf(":")+1);
+                        var keywordLine = shaderCode[line].Substring(shaderCode[line].IndexOf(":")+1);
                         // 先頭についているスペースとタブ文字数を取得
                         var spacing = 0;
                         foreach(var c in shaderCode[line]) {
                             if (!Char.IsWhiteSpace(c)) break;
                             spacing++;
                         }
-                        if (replaceCodes.ContainsKey(keyword)) {
-                            var code = replaceCodes[keyword];
-                            var lines = code.Split(new[]{"\r\n","\n","\r"}, StringSplitOptions.None);
-                            shaderCode.RemoveAt(line);
-                            shaderCode.InsertRange(line, lines.Select(text => {
-                                    text = text.Trim();
-                                    if (text.Length == 0) return text;
-                                    if (text.StartsWith(@"}")) spacing-=4;
-                                    text = new string(' ', spacing) + text;
-                                    if (text.EndsWith(@"{")) spacing+=4;
-                                    return text;
-                                }
-                            ));
+                        var keywords = keywordLine.Split(',');
+                        foreach(var keyword in keywords) {
+                            if (replaceCodes.ContainsKey(keyword)) {
+                                var code = replaceCodes[keyword];
+                                var lines = code.Split(new[]{"\r\n","\n","\r"}, StringSplitOptions.None);
+                                shaderCode.RemoveAt(line);
+                                shaderCode.InsertRange(line, lines.Select(text => {
+                                        text = text.Trim();
+                                        if (text.Length == 0) return text;
+                                        if (text.StartsWith(@"}")) spacing-=4;
+                                        text = new string(' ', spacing) + text;
+                                        if (text.EndsWith(@"{")) spacing+=4;
+                                        return text;
+                                    }
+                                ));
+                            }
                         }
                     }
                 }
@@ -131,7 +134,7 @@ namespace AxCharacterShaders.Generator
             // StencilWriterジェネレーター
             var stencilWriterGenerator = new AxGenerator(){
                 includeShaderNames = new string[]{"Cutout"},
-                excludeShaderNames = new string[]{"Stencil", "Outline", "EmissiveFreak"},
+                excludeShaderNames = new string[]{"Stencil", "Outline", "EmissiveFreak", "Tessellation"},
                 namePrefix = "",
                 fileNamePrefix = "StencilWriter_",
             };
@@ -184,7 +187,7 @@ namespace AxCharacterShaders.Generator
             // StencilReaderジェネレーター
             var stencilReaderGenerator = new AxGenerator(){
                 includeShaderNames = new string[]{"Cutout", "Fade"},
-                excludeShaderNames = new string[]{"Stencil", "Outline", "EmissiveFreak"},
+                excludeShaderNames = new string[]{"Stencil", "Outline", "EmissiveFreak", "Tessellation"},
                 namePrefix = "",
                 fileNamePrefix = "StencilReader_",
             };
@@ -218,7 +221,7 @@ namespace AxCharacterShaders.Generator
             // EmissiveFreakジェネレーター
             var emissiveFreakGenerator = new AxGenerator(){
                 includeShaderNames = new string[]{"Opaque", "Cutout", "Stencil", "Fade"},
-                excludeShaderNames = new string[]{"Outline", "EmissiveFreak"},
+                excludeShaderNames = new string[]{"Outline", "EmissiveFreak", "Tessellation"},
                 namePrefix = "",
                 fileNamePrefix = "EmissiveFreak_",
             };
@@ -272,7 +275,7 @@ namespace AxCharacterShaders.Generator
             // Outlineジェネレーター
             var outlineGenerator = new AxGenerator(){
                 includeShaderNames = new string[]{"Opaque", "Cutout", "Stencil", "EmissiveFreak"},
-                excludeShaderNames = new string[]{"Fade", "Outline"},
+                excludeShaderNames = new string[]{"Fade", "Outline", "Tessellation"},
                 namePrefix = "",
                 fileNamePrefix = "Outline_",
             };
@@ -283,7 +286,7 @@ namespace AxCharacterShaders.Generator
             );
             outlineGenerator.replaceCodes.Add(
                 "OUTLINE_SHADER_MODEL",
-                "#pragma target 4.0"
+                "#pragma target 4.0  // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET"
             );
 
             outlineGenerator.replaceCodes.Add(
@@ -322,6 +325,54 @@ namespace AxCharacterShaders.Generator
 
             outlineGenerator.variationName = new KeyValuePair<int, string>(1, "_Outline");
             outlineGenerator.run();
+        }
+
+        [MenuItem("AXCS/Generator/5.GenerateTessellation", priority = 24)]
+        public static void generateTessellationVariation()
+        {
+            // Outlineジェネレーター
+            var tessGenerator = new AxGenerator(){
+                includeShaderNames = new string[]{"Opaque", "Fade", "Cutout", "Stencil", "EmissiveFreak"},
+                excludeShaderNames = new string[]{"Tessellation"},
+                namePrefix = "",
+                fileNamePrefix = "Tessellation_",
+            };
+            tessGenerator.replaceCodes = new Dictionary<string, string>();
+
+            tessGenerator.replaceCodes.Add(
+                "TESSELLATION_PROPERTIES",
+                $@"// Phong Tessellation
+                _TessellationBeginDistance (""[Tessellation] BeginDistance"", Range(0.1, 5)) = 1.0
+                _TessellationEndDistance (""[Tessellation] EndDistance"", Range(0, 9.9)) = 0
+                _TessellationMaxDensity (""[Tessellation] MaxDensity"", Range(1, 25)) = 5
+                _TessellationDensityMask (""[Tessellation] DensityMask"", 2D) = ""white"" {{}}
+                _TessellationPhongStretch (""[Tessellation] PhongStretch"", Range(0, 3)) = 0.5"
+            );
+
+            tessGenerator.replaceCodes.Add(
+                "TESSELLATION_PIPELINES",
+                $@"#pragma hull hull
+                #pragma domain domain
+                #pragma vertex tessvert"
+            );
+
+            tessGenerator.replaceCodes.Add(
+                "TESSELLATION_SHADER_TARGET",
+                $@"#pragma target 4.6"
+            );
+
+            tessGenerator.replaceCodes.Add(
+                "TESSELLATION_DEFINE",
+                $@"#define AXCS_TESSELLATION"
+            );
+
+            tessGenerator.replaceCodes.Add(
+                "TESSELLATION_INCLUDE",
+                $@"#include ""cginc/arkludeTessellation.cginc"""
+            );
+
+            tessGenerator.variationName = new KeyValuePair<int, string>(1, "_Tessellation");
+            tessGenerator.run();
         }
 
 		public static List<string> LoadTextFileFromDisk( string pathName )

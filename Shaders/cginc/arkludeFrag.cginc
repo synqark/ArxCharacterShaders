@@ -239,6 +239,19 @@ float4 frag(
         Diffuse = lerp(Diffuse, CalculateHSV(Diffuse, _DoubleSidedBackfaceHueShiftFromBase, _DoubleSidedBackfaceSaturationFromBase, _DoubleSidedBackfaceValueFromBase), !isFrontFace);
     }
 
+
+    // ハイライトを上書きする
+    // ディレクショナルライトのみモード
+    // #ifdef AXCS_TESSELLATION
+    //     float3 h_halfDirection = normalize(viewDirection+lightDirection);
+    //     float h_NdotL = saturate(dot( normalDirection, lightDirection ));
+    //     float h_NdotV = saturate(1-dot( normalDirection, viewDirection ));
+    //     if (lerp(h_NdotL, h_NdotL * h_NdotV, _highLightViewBias) > _highLightBorder) {
+    //         toonedMap *= 2.0;
+    //     }
+    // #endif
+
+    // 受講強度計算モード
     float3 ReflectionMap = float3(0,0,0);
     float3 specular = float3(0,0,0);
     float3 matcap = float3(0,0,0);

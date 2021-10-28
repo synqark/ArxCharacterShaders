@@ -111,6 +111,7 @@ Shader "ArxCharacterShaders/AlphaCutout" {
         [PowerSlider(2.0)]_ProximityOverrideHueShiftFromBase ("[ProximityOverride] Hue Shift From Base", Range(-0.5, 0.5)) = -0.01
         _ProximityOverrideSaturationFromBase ("[ProximityOverride] Saturation From Base", Range(0, 2)) = 1.5
         _ProximityOverrideValueFromBase ("[ProximityOverride] Value From Base", Range(0, 2)) = 0
+        // AXCS_GENERATOR:TESSELLATION_PROPERTIES
     }
     SubShader {
         Tags {
@@ -129,7 +130,7 @@ Shader "ArxCharacterShaders/AlphaCutout" {
             // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
-            #pragma vertex vert
+            #pragma vertex vert // AXCS_GENERATOR:TESSELLATION_PIPELINES
             // AXCS_GENERATOR:OUTLINE_USE_GEOM
             #pragma fragment frag
             #pragma multi_compile_fwdbase_fullshadows
@@ -140,14 +141,16 @@ Shader "ArxCharacterShaders/AlphaCutout" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
+            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL,TESSELLATION_SHADER_TARGET
             #define AXCS_CUTOUT
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
             // AXCS_GENERATOR:OUTLINE_DEFINE
+            // AXCS_GENERATOR:TESSELLATION_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
+            // AXCS_GENERATOR:TESSELLATION_INCLUDE
             #include "cginc/arkludeFrag.cginc"
             ENDCG
         }
@@ -162,7 +165,7 @@ Shader "ArxCharacterShaders/AlphaCutout" {
             // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
-            #pragma vertex vert
+            #pragma vertex vert // AXCS_GENERATOR:TESSELLATION_PIPELINES
             // AXCS_GENERATOR:OUTLINE_USE_GEOM
             #pragma fragment frag
             #pragma multi_compile_fwdadd_fullshadows
@@ -173,14 +176,16 @@ Shader "ArxCharacterShaders/AlphaCutout" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL
+            #pragma target 3.0 // AXCS_GENERATOR:OUTLINE_SHADER_MODEL,TESSELLATION_SHADER_TARGET
             #define AXCS_CUTOUT
             #define AXCS_ADD
             // AXCS_GENERATOR:OUTLINE_DEFINE
+            // AXCS_GENERATOR:TESSELLATION_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
+            // AXCS_GENERATOR:TESSELLATION_INCLUDE
             #include "cginc/arkludeAdd.cginc"
             ENDCG
         }

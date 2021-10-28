@@ -115,6 +115,7 @@ Shader "ArxCharacterShaders/FadeRefracted" {
         _ProximityOverrideSaturationFromBase ("[ProximityOverride] Saturation From Base", Range(0, 2)) = 1.5
         _ProximityOverrideValueFromBase ("[ProximityOverride] Value From Base", Range(0, 2)) = 0
         _ProximityOverrideAlphaScale ("[ProximityOverride] Alpha Scale", Float) = 1.0
+        // AXCS_GENERATOR:TESSELLATION_PROPERTIES
     }
     SubShader {
         Tags {
@@ -136,7 +137,7 @@ Shader "ArxCharacterShaders/FadeRefracted" {
             CGPROGRAM
 
 
-            #pragma vertex vert
+            #pragma vertex vert // AXCS_GENERATOR:TESSELLATION_PIPELINES
             #pragma fragment frag
             #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
@@ -146,14 +147,16 @@ Shader "ArxCharacterShaders/FadeRefracted" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 3.0
+            #pragma target 3.0 // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
             #define AXCS_FADE
             #define AXCS_REFRACTED
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
+            // AXCS_GENERATOR:TESSELLATION_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
+            // AXCS_GENERATOR:TESSELLATION_INCLUDE
             #include "cginc/arkludeFrag.cginc"
             ENDCG
         }
@@ -169,7 +172,7 @@ Shader "ArxCharacterShaders/FadeRefracted" {
             // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
-            #pragma vertex vert
+            #pragma vertex vert // AXCS_GENERATOR:TESSELLATION_PIPELINES
             #pragma fragment frag
             #pragma multi_compile_fwdadd
             #pragma multi_compile_fog
@@ -179,14 +182,16 @@ Shader "ArxCharacterShaders/FadeRefracted" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 3.0
+            #pragma target 3.0 // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
             #define AXCS_FADE
             #define AXCS_ADD
             #define AXCS_REFRACTED
+            // AXCS_GENERATOR:TESSELLATION_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
+            // AXCS_GENERATOR:TESSELLATION_INCLUDE
             #include "cginc/arkludeAdd.cginc"
             ENDCG
         }

@@ -156,6 +156,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
         [PowerSlider(2.0)]_ProximityOverrideHueShiftFromBase ("[ProximityOverride] Hue Shift From Base", Range(-0.5, 0.5)) = -0.01
         _ProximityOverrideSaturationFromBase ("[ProximityOverride] Saturation From Base", Range(0, 2)) = 1.5
         _ProximityOverrideValueFromBase ("[ProximityOverride] Value From Base", Range(0, 2)) = 0
+        // AXCS_GENERATOR:TESSELLATION_PROPERTIES
     }
     SubShader {
         Tags {
@@ -199,7 +200,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
             // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
-            #pragma vertex vert
+            #pragma vertex vert // AXCS_GENERATOR:TESSELLATION_PIPELINES
             #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdbase_fullshadows
@@ -210,14 +211,16 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 4.0
+            #pragma target 4.0  // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
             #define AXCS_CUTOUT
             #define AXCS_EMISSIVE_FREAK
             #define AXCS_OUTLINE
+            // AXCS_GENERATOR:TESSELLATION_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
+            // AXCS_GENERATOR:TESSELLATION_INCLUDE
             #include "cginc/arkludeFrag.cginc"
             ENDCG
         }
@@ -232,7 +235,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
             // AXCS_GENERATOR:STENCIL_READER_STATEMENT
             CGPROGRAM
 
-            #pragma vertex vert
+            #pragma vertex vert // AXCS_GENERATOR:TESSELLATION_PIPELINES
             #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_fwdadd_fullshadows
@@ -243,14 +246,16 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 4.0
+            #pragma target 4.0  // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
             #define AXCS_CUTOUT
             #define AXCS_ADD
             #define AXCS_OUTLINE
+            // AXCS_GENERATOR:TESSELLATION_DEFINE
 
             #include "cginc/arkludeDecl.cginc"
             #include "cginc/arkludeOther.cginc"
             #include "cginc/arkludeVertGeom.cginc"
+            // AXCS_GENERATOR:TESSELLATION_INCLUDE
             #include "cginc/arkludeAdd.cginc"
             ENDCG
         }
@@ -271,7 +276,7 @@ Shader "ArxCharacterShaders/_Outline/_EmissiveFreak/_StencilWriter/AlphaCutout" 
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
+            #pragma target 4.0  // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
 
             uniform float _CutoutCutoutAdjust;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;

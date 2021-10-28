@@ -37,7 +37,9 @@ float3 ProjectPositionToTangentSpace( float3 position, float3 plane_position, fl
     return ( position - projectValue * plane_normal * _TessellationPhongStretch);
 }
 float4 Tessellation(appdata_tess v, appdata_tess v1, appdata_tess v2){
-    return UnityDistanceBasedTess(v.vertex, v1.vertex, v2.vertex, _TessellationEndDistance, _TessellationBeginDistance, _TessellationMaxDensity);
+    float4 tess = UnityDistanceBasedTess(v.vertex, v1.vertex, v2.vertex, _TessellationEndDistance, _TessellationBeginDistance, _TessellationMaxDensity);
+    float  densityMask = clamp(tex2Dlod (_TessellationDensityMask, float4( TRANSFORM_TEX(v.texcoord, _TessellationDensityMask), 0, 0)), 0.01, 1.0);
+    return tess * densityMask;
 }
 OutputPatchConstant hullconst (InputPatch<appdata_tess,3> v) {
     OutputPatchConstant o = (OutputPatchConstant)0;

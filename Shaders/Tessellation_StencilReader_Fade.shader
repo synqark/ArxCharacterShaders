@@ -1,4 +1,4 @@
-Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
+Shader "ArxCharacterShaders/_Tessellation/_StencilReader/Fade" {
     Properties {
         // Double Sided
         [Enum(None,0, Front,1, Back,2)] _Cull("Cull", Int) = 2
@@ -8,6 +8,8 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
         [PowerSlider(2.0)]_DoubleSidedBackfaceHueShiftFromBase("Backface Hue Shift From Base", Range(-0.5, 0.5)) = 0
         _DoubleSidedBackfaceSaturationFromBase("Backface Saturation From Base", Range(0, 2)) = 1
         _DoubleSidedBackfaceValueFromBase("Backface Value From Base", Range(0, 2)) = 1
+        //
+        [Enum(Off, 0, On, 1)]_ZWrite("ZWrite", Float) = 0
         // Common
         _MainTex ("[Common] Base Texture", 2D) = "white" {}
         _Color ("[Common] Base Color", Color) = (1,1,1,1)
@@ -15,6 +17,8 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
         _BumpScale ("[Common] Normal scale", Range(0,2)) = 1
         _EmissionMap ("[Common] Emission map", 2D) = "white" {}
         [HDR]_EmissionColor ("[Common] Emission Color", Color) = (0,0,0,1)
+        // Alpha Mask
+        _AlphaMask ("[Alpha] AlphaMask", 2D ) = "white" {}
         // DetailMap
         _DetailMask ("[Detail] Mask texture", 2D) = "white" {}
         _DetailAlbedoMap ("[Detail] Albedo map ", 2D) = "gray" {}
@@ -43,7 +47,7 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
         _PointShadowStrength ("[PointShadow] Strength", Range(0, 1)) = 0.5
         _PointShadowborder ("[PointShadow] border ", Range(0, 1)) = 0.5
         _PointShadowborderBlur ("[PointShadow] border Blur", Range(0, 1)) = 0.01
-        _PointShadowborderBlurMask ("[PointShadow] border Blur Mask", 2D) = "white"  {}
+        _PointShadowborderBlurMask ("[PointShadow] border Blur Mask", 2D) = "white" {}
         // Plan B
         [AXCSToggle] _ShadowPlanBUseCustomShadowTexture ("[Plan B] Use Custom Shadow Texture", Int ) = 0
         [PowerSlider(2.0)]_ShadowPlanBHueShiftFromBase ("[Plan B] Hue Shift From Base", Range(-0.5, 0.5)) = 0
@@ -61,16 +65,6 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
         _GlossBlendMask ("[Gloss] Smoothness Mask", 2D) = "white" {}
         _GlossPower ("[Gloss] Metallic", Range(0, 1)) = 0.5
         _GlossColor ("[Gloss] Color", Color) = (1,1,1,1)
-        // Outline
-        _OutlineWidth ("[Outline] Width", Range(0, 20)) = 0.1
-        _OutlineColor ("[Outline] Color", Color) = (0,0,0,1)
-        _OutlineTexture ("[Outline] Texture", 2D) = "white" {}
-        _OutlineTextureColorRate ("[Outline] Texture Color Rate", Range(0, 1)) = 0.05
-        _OutlineWidthMask ("[Outline] Outline Width Mask", 2D) = "white" {}
-        [AXCSToggle]_OutlineUseColorShift("[Outline] Use Outline Color Shift", Int) = 0
-        [PowerSlider(2.0)]_OutlineHueShiftFromBase("[Outline] Hue Shift From Base", Range(-0.5, 0.5)) = 0
-        _OutlineSaturationFromBase("[Outline] Saturation From Base", Range(0, 2)) = 1
-        _OutlineValueFromBase("[Outline] Value From Base", Range(0, 2)) = 1
         // MatCap
         [Enum(Add,0, Lighten,1, Screen,2, Unused,3)] _MatcapBlendMode ("[MatCap] Blend Mode", Int) = 3
         _MatcapBlend ("[MatCap] Blend", Range(0, 3)) = 1
@@ -105,6 +99,9 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
         _ShadowCapBlendMask ("[ShadowCap] Blend Mask", 2D) = "white" {}
         _ShadowCapNormalMix ("[ShadowCap] Normal map mix", Range(0, 2)) = 1
         _ShadowCapTexture ("[ShadowCap] Texture", 2D) = "white" {}
+        // Stencil(Reader)
+        _StencilNumber ("[StencilReader] Number", int) = 5
+        [Enum(UnityEngine.Rendering.CompareFunction)] _StencilCompareAction ("[StencilReader] Compare Action", int) = 6
         // vertex color blend
         _VertexColorBlendDiffuse ("[VertexColor] Blend to diffuse", Range(0,1)) = 0
         _VertexColorBlendEmissive ("[VertexColor] Blend to emissive", Range(0,1)) = 0
@@ -116,16 +113,19 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
         [PowerSlider(2.0)]_ProximityOverrideHueShiftFromBase ("[ProximityOverride] Hue Shift From Base", Range(-0.5, 0.5)) = -0.01
         _ProximityOverrideSaturationFromBase ("[ProximityOverride] Saturation From Base", Range(0, 2)) = 1.5
         _ProximityOverrideValueFromBase ("[ProximityOverride] Value From Base", Range(0, 2)) = 0
-        // Tessellation
+        _ProximityOverrideAlphaScale ("[ProximityOverride] Alpha Scale", Float) = 1.0
+        // Phong Tessellation
         _TessellationBeginDistance ("[Tessellation] BeginDistance", Range(0.1, 5)) = 1.0
         _TessellationEndDistance ("[Tessellation] EndDistance", Range(0, 9.9)) = 0
         _TessellationMaxDensity ("[Tessellation] MaxDensity", Range(1, 25)) = 5
+        _TessellationDensityMask ("[Tessellation] DensityMask", 2D) = "white" {}
         _TessellationPhongStretch ("[Tessellation] PhongStretch", Range(0, 3)) = 0.5
     }
     SubShader {
         Tags {
-            "Queue"="Geometry"
-            "RenderType"="Opaque"
+            "Queue"="Transparent-100"
+            "RenderType"="Transparent"
+            "IgnoreProjector"="True"
         }
         Pass {
             Name "FORWARD"
@@ -133,15 +133,22 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
                 "LightMode"="ForwardBase"
             }
             Cull [_Cull]
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite [_ZWrite]
+
+            Stencil {
+                Ref [_StencilNumber]
+                Comp [_StencilCompareAction]
+            }
 
             CGPROGRAM
+
 
             #pragma hull hull
             #pragma domain domain
             #pragma vertex tessvert
-            #pragma geometry geom
             #pragma fragment frag
-            #pragma multi_compile_fwdbase_fullshadows
+            #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma shader_feature_local AXCS_RIMLIGHT
@@ -150,8 +157,8 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
             #pragma target 4.6
+            #define AXCS_FADE
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
-            #define AXCS_OUTLINE
             #define AXCS_TESSELLATION
 
             #include "cginc/arkludeDecl.cginc"
@@ -168,15 +175,20 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
             }
             Cull [_Cull]
             Blend One One
+            ZWrite [_ZWrite]
+
+            Stencil {
+                Ref [_StencilNumber]
+                Comp [_StencilCompareAction]
+            }
 
             CGPROGRAM
 
             #pragma hull hull
             #pragma domain domain
             #pragma vertex tessvert
-            #pragma geometry geom
             #pragma fragment frag
-            #pragma multi_compile_fwdadd_fullshadows
+            #pragma multi_compile_fwdadd
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
             #pragma shader_feature_local AXCS_RIMLIGHT
@@ -185,8 +197,8 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
             #pragma target 4.6
+            #define AXCS_FADE
             #define AXCS_ADD
-            #define AXCS_OUTLINE
             #define AXCS_TESSELLATION
 
             #include "cginc/arkludeDecl.cginc"
@@ -196,42 +208,27 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
             #include "cginc/arkludeAdd.cginc"
             ENDCG
         }
+
+        // ------------------------------------------------------------------
+        //  Shadow rendering pass
         Pass {
-            Name "ShadowCaster"
-            Tags {
-                "LightMode"="ShadowCaster"
-            }
-            Offset 1, 1
+            Name "SHADOWCASTER"
+            Tags { "LightMode" = "ShadowCaster" }
+
+            ZWrite On ZTest LEqual
             Cull [_Cull]
 
             CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-            #include "UnityCG.cginc"
-            #include "Lighting.cginc"
-            #pragma fragmentoption ARB_precision_hint_fastest
+            #pragma target 3.0
+
+            // -------------------------------------
             #pragma multi_compile_shadowcaster
-            #pragma multi_compile_fog
-            #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.0
-            struct VertexInput {
-                float4 vertex : POSITION;
-                float2 texcoord0 : TEXCOORD0;
-            };
-            struct g2f {
-                V2F_SHADOW_CASTER;
-                float2 uv0 : TEXCOORD1;
-            };
-            g2f vert (VertexInput v) {
-                g2f o = (g2f)0;
-                o.uv0 = v.texcoord0;
-                o.pos = UnityObjectToClipPos( v.vertex );
-                TRANSFER_SHADOW_CASTER(o)
-                return o;
-            }
-            float4 frag(g2f i) : COLOR {
-                SHADOW_CASTER_FRAGMENT(i)
-            }
+
+            #pragma vertex vertShadowCaster
+            #pragma fragment fragShadowCaster
+
+            #include "cginc/arkludeFadeShadowCaster.cginc"
+
             ENDCG
         }
     }
