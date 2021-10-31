@@ -99,8 +99,8 @@ float4 frag(
         float4 _HighlightColorTexture_var = UNITY_SAMPLE_TEX2D_SAMPLER(_HighlightColorTexture, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _HighlightColorTexture));
 
         // ハイライトの適用度
-        float hlNdotL = saturate(dot( normalDirection, lightDirection ));
-        float highLightContribute = _HighlightRamp.Sample(my_linear_clamp_sampler, float2(hlNdotL, 0));
+        float hlNdotL = dot(normalDirection, lightDirection);
+        float highLightContribute = _HighlightRamp.Sample(my_linear_clamp_sampler, float2(hlNdotL/2 + 1, 0));
         float hlNdotV = saturate(1-dot( normalDirection, viewDirection ));
 
         float3 hlNmDr = normalize(mul( normalLocal, tangentTransform ));

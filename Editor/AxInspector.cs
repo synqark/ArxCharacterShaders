@@ -543,6 +543,9 @@ namespace AxCharacterShaders
                             UIHelper.DrawWithGroup(() => {
                                 materialEditor.TexturePropertySingleLine(new GUIContent("Mask from Camera", "Area Mask from Camera"), HighlightViewBiasRamp);
                                 materialEditor.TextureScaleOffsetPropertyIndent(HighlightViewBiasRamp);
+                                if (HighlightViewBiasRamp.textureValue == null) {
+                                    AssignDefaultTexture(HighlightViewBiasRamp, "Textures/HighLightCameraMask1.png");
+                                }
                             });
                         });
                         UIHelper.DrawWithGroup(() => {
@@ -557,12 +560,12 @@ namespace AxCharacterShaders
                                     "Revert"
                                 );
                                 if (p) {
-                                    AssignDefaultRampTexture(HighlightRamp);
+                                    AssignDefaultTexture(HighlightRamp, "Textures/Ramp_1.png");
                                 }
 
                                 materialEditor.TexturePropertySingleLine(new GUIContent("Texture", "Ramp Texture"), HighlightRamp, HighlightRamp);
                                 if (HighlightRamp.textureValue == null) {
-                                    AssignDefaultRampTexture(HighlightRamp);
+                                    AssignDefaultTexture(HighlightRamp, "Textures/Ramp_1.png");
                                 }
                             });
                             EditorGUI.indentLevel --;
