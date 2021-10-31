@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: ExampleSkin
   m_Shader: {fileID: 4800000, guid: 3ab98ad607734274bb8b5d3b8fb87cb6, type: 3}
-  m_ShaderKeywords: AXCS_PROXIMITY_OVERRIDE
+  m_ShaderKeywords: AXCS_PROXIMITY_OVERRIDE _HIGHLIGHT_HSVSHIFT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -53,6 +53,22 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _GlossBlendMask:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HighlightColorTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HighlightMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HighlightRamp:
+        m_Texture: {fileID: 2800000, guid: 242351f50fe050d40879c196cfd8b0a8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HighlightViewBiasRamp:
+        m_Texture: {fileID: 2800000, guid: df58530a9e453994fa2432bfb44df077, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -177,6 +193,11 @@ Material:
     - _GlossPower: 0.5
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _Highlight: 3
+    - _HighlightColorHueShiftFromBase: 0
+    - _HighlightColorSaturationFromBase: 1
+    - _HighlightColorValueFromBase: 2
+    - _HighlightIntensity: 1
     - _MatcapBlend: 1
     - _MatcapBlendMode: 3
     - _MatcapNormalMix: 1
@@ -264,6 +285,7 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionParallaxColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlossColor: {r: 1, g: 1, b: 1, a: 1}
+    - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
     - _MatcapColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _ProximityOverrideColor: {r: 0.91610515, g: 1, b: 0.21698111, a: 1}
