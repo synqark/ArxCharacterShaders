@@ -118,6 +118,17 @@ Shader "ArxCharacterShaders/_StencilReader/FadeRefracted" {
         _ProximityOverrideValueFromBase ("[ProximityOverride] Value From Base", Range(0, 2)) = 0
         _ProximityOverrideAlphaScale ("[ProximityOverride] Alpha Scale", Float) = 1.0
         // AXCS_GENERATOR:TESSELLATION_PROPERTIES
+        // Highlighting
+        [KeywordEnum(Add, Replace, Screen, HSVShift, Unused)]_Highlight ("[Highlight] Enable", Int) = 4
+        _HighlightIntensity ("[Highlight] Intensity",  Range(0, 1)) = 1
+        _HighlightMask ("[Highlight] Mask Texture", 2D) = "white" {}
+        [AXCSRamp]_HighlightRamp ("[Highlight] Ramp Texture", 2D) = "white"  {}
+        _HighlightViewBiasRamp  ("[Highlight] View Bias Ramp", 2D) = "white"  {}
+        _HighlightColor ("[Highlight] Color", Color) = (1,1,1,1)
+        _HighlightColorTexture ("[Highlight] Color Texture", 2D) = "white" {}
+        [PowerSlider(2.0)]_HighlightColorHueShiftFromBase("[Highlight] Hue Shift From Base", Range(-0.5, 0.5)) = 0
+        _HighlightColorSaturationFromBase("[Highlight] Saturation From Base", Range(0, 2)) = 1
+        _HighlightColorValueFromBase("[Highlight] Value From Base", Range(0, 2)) = 2
     }
     SubShader {
         Tags {
@@ -153,6 +164,7 @@ Shader "ArxCharacterShaders/_StencilReader/FadeRefracted" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
+            #pragma shader_feature_local _HIGHLIGHT_ADD _HIGHLIGHT_LIGHTEN _HIGHLIGHT_SCREEN _HIGHLIGHT_HSVSHIFT _HIGHLIGHT_UNUSED
             #pragma target 3.0 // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
             #define AXCS_FADE
             #define AXCS_REFRACTED

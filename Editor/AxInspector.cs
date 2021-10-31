@@ -159,6 +159,16 @@ namespace AxCharacterShaders
         MaterialProperty TessellationMaxDensity;
         MaterialProperty TessellationDensityMask;
         MaterialProperty TessellationPhongStretch;
+        MaterialProperty Highlight;
+        MaterialProperty HighlightIntensity;
+        MaterialProperty HighlightMask;
+        MaterialProperty HighlightRamp;
+        MaterialProperty HighlightViewBiasRamp;
+        MaterialProperty HighlightColor;
+        MaterialProperty HighlightColorTexture;
+        MaterialProperty HighlightColorHueShiftFromBase;
+        MaterialProperty HighlightColorSaturationFromBase;
+        MaterialProperty HighlightColorValueFromBase;
 
         #endregion
 
@@ -348,6 +358,17 @@ namespace AxCharacterShaders
             TessellationDensityMask = MatP("_TessellationDensityMask", props, false);
             TessellationPhongStretch = MatP("_TessellationPhongStretch", props, false);
 
+            Highlight = MatP("_Highlight", props, false);
+            HighlightIntensity = MatP("_HighlightIntensity", props, false);
+            HighlightMask = MatP("_HighlightMask", props, false);
+            HighlightRamp = MatP("_HighlightRamp", props, false);
+            HighlightViewBiasRamp = MatP("_HighlightViewBiasRamp", props, false);
+            HighlightColor = MatP("_HighlightColor", props, false);
+            HighlightColorTexture = MatP("_HighlightColorTexture", props, false);
+            HighlightColorHueShiftFromBase = MatP("_HighlightColorHueShiftFromBase", props, false);
+            HighlightColorSaturationFromBase = MatP("_HighlightColorSaturationFromBase", props, false);
+            HighlightColorValueFromBase = MatP("_HighlightColorValueFromBase", props, false);
+
             EditorGUIUtility.labelWidth = 0f;
 
             EditorGUI.BeginChangeCheck();
@@ -508,6 +529,70 @@ namespace AxCharacterShaders
                     });
                 }
 
+                // Highlighting
+                UIHelper.ShurikenHeader("HighLighting");
+                materialEditor.DrawShaderPropertySameLine(Highlight, true);
+                var useHighlight = Highlight.floatValue;
+                if(useHighlight != 4) // Not 'Unused'
+                {
+                    UIHelper.DrawWithGroup(() => {
+                        UIHelper.DrawWithGroup(() => {
+                            materialEditor.TexturePropertySingleLine(new GUIContent("Blend & Mask", "Blend and Mask Texture"), HighlightMask, HighlightIntensity);
+                            materialEditor.TextureScaleOffsetPropertyIndent(HighlightMask);
+
+                            UIHelper.DrawWithGroup(() => {
+                                materialEditor.TexturePropertySingleLine(new GUIContent("Mask from Camera", "Area Mask from Camera"), HighlightViewBiasRamp);
+                                materialEditor.TextureScaleOffsetPropertyIndent(HighlightViewBiasRamp);
+                            });
+                        });
+                        UIHelper.DrawWithGroup(() => {
+                            EditorGUILayout.LabelField("HighLight Area", EditorStyles.boldLabel);
+                            EditorGUI.indentLevel ++;
+                            UIHelper.DrawWithGroup(() => {
+                                // HighLight Ramp
+                                Rect controlRect = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight, EditorStyles.colorField);
+                                GUI.Label(controlRect, "Area Ramp", EditorStyles.boldLabel);
+                                var p = GUI.Button(
+                                    new Rect(controlRect.x + EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth, controlRect.y, controlRect.width - EditorGUIUtility.labelWidth - EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight),
+                                    "Revert"
+                                );
+                                if (p) {
+                                    AssignDefaultRampTexture(HighlightRamp);
+                                }
+
+                                materialEditor.TexturePropertySingleLine(new GUIContent("Texture", "Ramp Texture"), HighlightRamp, HighlightRamp);
+                                if (HighlightRamp.textureValue == null) {
+                                    AssignDefaultRampTexture(HighlightRamp);
+                                }
+                            });
+                            EditorGUI.indentLevel --;
+                        });
+                        if(useHighlight == 3) // HSV Shift
+                        {
+                            UIHelper.DrawWithGroup(() => {
+                                EditorGUILayout.LabelField("HSV Shift", EditorStyles.boldLabel);
+                                EditorGUI.indentLevel ++;
+                                UIHelper.DrawWithGroup(() => {
+                                    materialEditor.ShaderProperty(HighlightColorHueShiftFromBase, "Hue Shift");
+                                    materialEditor.ShaderProperty(HighlightColorSaturationFromBase,"Saturation");
+                                    materialEditor.ShaderProperty(HighlightColorValueFromBase,"Value");
+                                });
+                                EditorGUI.indentLevel --;
+                            });
+
+                        } else {
+                            UIHelper.DrawWithGroup(() => {
+                                EditorGUILayout.LabelField("Color & Texture", EditorStyles.boldLabel);
+                                EditorGUI.indentLevel ++;
+                                UIHelper.DrawWithGroup(() => {
+                                    materialEditor.TexturePropertySingleLine(new GUIContent("HighLight Color", "Color Texture (RGB)"), HighlightColorTexture, HighlightColor);
+                                    materialEditor.TextureScaleOffsetPropertyIndent(HighlightColorTexture);
+                                });
+                                EditorGUI.indentLevel --;
+                            });
+                        }
+                    });
+                }
                 // Shadow
                 UIHelper.ShurikenHeader("Shading / Shadow", "6-shading");
                 UIHelper.DrawWithGroup(() => {
@@ -528,7 +613,6 @@ namespace AxCharacterShaders
                         if (p) {
                             AssignDefaultRampTexture(ShadowRamp);
                         }
-
                         materialEditor.TexturePropertySingleLine(new GUIContent("Texture", "Ramp Texture"), ShadowRamp, ShadowRamp);
                         if (ShadowRamp.textureValue == null) {
                             if (ShadowRampInit.floatValue == 0) {
@@ -983,6 +1067,9 @@ namespace AxCharacterShaders
         // デフォルトのRampテクスチャを割り当てる
         private void AssignDefaultRampTexture(MaterialProperty rampProperty) {
             rampProperty.textureValue = (Texture2D)AssetDatabase.LoadAssetAtPath(AxCommon.GetBaseDir() + "Textures/Ramp_Default.png", typeof(Texture2D));
+        }
+        private void AssignDefaultTexture(MaterialProperty rampProperty, string textureName) {
+            rampProperty.textureValue = (Texture2D)AssetDatabase.LoadAssetAtPath(AxCommon.GetBaseDir() + textureName, typeof(Texture2D));
         }
     }
 

@@ -221,3 +221,15 @@ uniform float _EmissiveFreak2HueShift;
     // uniform float _highLightViewBias;
     // uniform float _highLightBorder;
 #endif
+
+#if defined(_HIGHLIGHT_ADD) || defined(_HIGHLIGHT_LIGHTEN) || defined(_HIGHLIGHT_SCREEN) || defined(_HIGHLIGHT_HSVSHIFT)
+    uniform float _HighlightIntensity;
+    UNITY_DECLARE_TEX2D_NOSAMPLER(_HighlightMask); uniform float4 _HighlightMask_ST;
+    uniform texture2D _HighlightRamp;         //  SamplerState my_linear_clamp_sampler;
+    UNITY_DECLARE_TEX2D_NOSAMPLER(_HighlightViewBiasRamp); uniform float4 _HighlightViewBiasRamp_ST;
+    uniform float4 _HighlightColor;
+    UNITY_DECLARE_TEX2D_NOSAMPLER(_HighlightColorTexture); uniform float4 _HighlightColorTexture_ST;
+    uniform float _HighlightColorHueShiftFromBase;
+    uniform float _HighlightColorSaturationFromBase;
+    uniform float _HighlightColorValueFromBase;
+#endif

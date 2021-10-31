@@ -92,6 +92,42 @@ float4 frag(
         }
     #endif
 
+    // ハイライトを上書きする
+    // ディレクショナルライトのみモード
+    #if defined(_HIGHLIGHT_ADD) || defined(_HIGHLIGHT_HSVSHIFT) || defined(_HIGHLIGHT_LIGHTEN) || defined(_HIGHLIGHT_SCREEN)
+        float _HighlightMask_var = UNITY_SAMPLE_TEX2D_SAMPLER(_HighlightMask, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _HighlightMask)).r;
+        float4 _HighlightColorTexture_var = UNITY_SAMPLE_TEX2D_SAMPLER(_HighlightColorTexture, REF_MAINTEX, TRANSFORM_TEX(i.uv0, _HighlightColorTexture));
+
+        // ハイライトの適用度
+        float hlNdotL = saturate(dot( normalDirection, lightDirection ));
+        float highLightContribute = _HighlightRamp.Sample(my_linear_clamp_sampler, float2(hlNdotL, 0));
+        float hlNdotV = saturate(1-dot( normalDirection, viewDirection ));
+
+        float3 hlNmDr = normalize(mul( normalLocal, tangentTransform ));
+        float2 hlCap = ComputeTransformCap(cameraSpaceViewDirCenterEye, hlNmDr);
+        float4 hlBiasRamp = UNITY_SAMPLE_TEX2D_SAMPLER(_HighlightViewBiasRamp, REF_MAINTEX, TRANSFORM_TEX(hlCap, _HighlightViewBiasRamp));
+
+        highLightContribute *= hlBiasRamp.r;
+        highLightContribute *= _HighlightMask_var * _HighlightIntensity;
+
+        // ハイライトの色
+        float3 highlightColor = _HighlightColor * _HighlightColorTexture_var;
+
+        // Diffuseに合成
+        #ifdef _HIGHLIGHT_ADD
+            Diffuse = saturate(Diffuse + (highlightColor * highLightContribute));
+        #endif
+        #ifdef _HIGHLIGHT_LIGHTEN
+            Diffuse = max(Diffuse, (highlightColor * highLightContribute));
+        #endif
+        #ifdef _HIGHLIGHT_SCREEN
+            Diffuse = 1-(1-saturate(Diffuse)) * (1-saturate(highlightColor * highLightContribute));
+        #endif
+        #ifdef _HIGHLIGHT_HSVSHIFT
+            Diffuse = max(Diffuse, CalculateHSV(Diffuse, _HighlightColorHueShiftFromBase, _HighlightColorSaturationFromBase, _HighlightColorValueFromBase) * highLightContribute);
+        #endif
+    #endif
+
     // 空間光をサンプリング
     float3 ShadeSH9Plus = GetSHLength();
     float3 ShadeSH9Minus = ShadeSH9(float4(0,0,0,1)) * _ShadowAmbientIntensity;
@@ -238,18 +274,6 @@ float4 frag(
         toonedMap = lerp(toonedMap, CalculateHSV(toonedMap, _DoubleSidedBackfaceHueShiftFromBase, _DoubleSidedBackfaceSaturationFromBase, _DoubleSidedBackfaceValueFromBase), !isFrontFace);
         Diffuse = lerp(Diffuse, CalculateHSV(Diffuse, _DoubleSidedBackfaceHueShiftFromBase, _DoubleSidedBackfaceSaturationFromBase, _DoubleSidedBackfaceValueFromBase), !isFrontFace);
     }
-
-
-    // ハイライトを上書きする
-    // ディレクショナルライトのみモード
-    // #ifdef AXCS_TESSELLATION
-    //     float3 h_halfDirection = normalize(viewDirection+lightDirection);
-    //     float h_NdotL = saturate(dot( normalDirection, lightDirection ));
-    //     float h_NdotV = saturate(1-dot( normalDirection, viewDirection ));
-    //     if (lerp(h_NdotL, h_NdotL * h_NdotV, _highLightViewBias) > _highLightBorder) {
-    //         toonedMap *= 2.0;
-    //     }
-    // #endif
 
     // 受講強度計算モード
     float3 ReflectionMap = float3(0,0,0);
