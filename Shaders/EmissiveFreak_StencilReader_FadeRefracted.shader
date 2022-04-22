@@ -195,7 +195,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/FadeRefracted" {
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
             #pragma shader_feature_local _HIGHLIGHT_ADD _HIGHLIGHT_LIGHTEN _HIGHLIGHT_SCREEN _HIGHLIGHT_HSVSHIFT _HIGHLIGHT_UNUSED
-            #pragma target 3.0 // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
+            #pragma target 5.0
             #define AXCS_FADE
             #define AXCS_REFRACTED
             #define AXCS_EMISSIVE_FREAK
@@ -234,7 +234,7 @@ Shader "ArxCharacterShaders/_EmissiveFreak/_StencilReader/FadeRefracted" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 3.0 // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET
+            #pragma target 5.0
             #define AXCS_FADE
             #define AXCS_ADD
             #define AXCS_REFRACTED

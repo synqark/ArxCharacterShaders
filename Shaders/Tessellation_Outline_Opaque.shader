@@ -162,7 +162,7 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
             #pragma shader_feature_local _HIGHLIGHT_ADD _HIGHLIGHT_LIGHTEN _HIGHLIGHT_SCREEN _HIGHLIGHT_HSVSHIFT _HIGHLIGHT_UNUSED
-            #pragma target 4.6
+            #pragma target 5.0
             // AXCS_GENERATOR:EMISSIVE_FREAK_DEFINE
             #define AXCS_OUTLINE
             #define AXCS_TESSELLATION
@@ -197,7 +197,7 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
             #pragma shader_feature_local AXCS_PARALLAX_EMIS
             #pragma shader_feature_local AXCS_REFLECTION
             #pragma shader_feature_local AXCS_PROXIMITY_OVERRIDE
-            #pragma target 4.6
+            #pragma target 5.0
             #define AXCS_ADD
             #define AXCS_OUTLINE
             #define AXCS_TESSELLATION
@@ -226,17 +226,24 @@ Shader "ArxCharacterShaders/_Tessellation/_Outline/Opaque" {
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles
-            #pragma target 4.6
+            #pragma target 5.0
             struct VertexInput {
                 float4 vertex : POSITION;
                 float2 texcoord0 : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
             struct g2f {
                 V2F_SHADOW_CASTER;
                 float2 uv0 : TEXCOORD1;
+                UNITY_VERTEX_OUTPUT_STEREO
             };
             g2f vert (VertexInput v) {
                 g2f o = (g2f)0;
+
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_INITIALIZE_OUTPUT(g2f, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+
                 o.uv0 = v.texcoord0;
                 o.pos = UnityObjectToClipPos( v.vertex );
                 TRANSFER_SHADOW_CASTER(o)

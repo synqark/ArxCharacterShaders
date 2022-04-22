@@ -7,7 +7,7 @@ float4 frag(
     ,  bool isFrontFace : SV_IsFrontFace
     ) : SV_Target
 {
-    UNITY_VERTEX_OUTPUT_STEREO(i);
+    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
     // 表裏・アウトライン
     fixed faceSign = isFrontFace ? 1 : -1;
@@ -424,15 +424,21 @@ float4 frag(
         float3 refrComb = refrCamV * (dot(refrCamV, refrNm) / refrCamV.z) + refrNm;
         float refractionValue = pow(1.0-saturate(dot(refrCamV, refrNm) / 2),_RefractionFresnelExp);
         float2 sceneUVs = (i.grabUV) + ((refractionValue * _RefractionStrength) * refrComb ).xy;
-        #ifdef USING_STEREO_MATRICES // SinglePassStereo限定で、GrabTextureの四隅が黒いので中央6割(0.2～0.8)しか使わない。(Multipassは忘れる)
-            float _refractClamp = 0.2;
-            float refractClampMax = 1.0 - _refractClamp;
+        float _refractClamp = 0.2;
+        float refractClampMax = 1.0 - _refractClamp;
+        #ifdef UNITY_SINGLE_PASS_STEREO
             sceneUVs = clamp(sceneUVs,
                 float2(_refractClamp/2 + unity_StereoEyeIndex*0.5, _refractClamp),
                 float2(refractClampMax/2 + unity_StereoEyeIndex*0.5, refractClampMax)
             );
         #endif
-        float4 sceneColor = tex2D(_GrabTexture, sceneUVs);
+        #ifdef UNITY_STEREO_INSTANCING_ENABLED
+            sceneUVs = clamp(sceneUVs,
+                float2(_refractClamp, _refractClamp),
+                float2(refractClampMax, refractClampMax)
+            );
+        #endif
+        float4 sceneColor = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_GrabTexture, sceneUVs);
     #endif
 
 

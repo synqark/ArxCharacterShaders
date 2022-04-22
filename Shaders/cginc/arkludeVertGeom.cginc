@@ -37,7 +37,12 @@ struct VertexOutput
         float4 projPos : TEXCOORD8;
     #endif
 
-    UNITY_VERTEX_OUTPUT_STEREO
+    #ifdef AXCS_OUTLINE
+        UNITY_VERTEX_INPUT_INSTANCE_ID
+    #else
+        UNITY_VERTEX_OUTPUT_STEREO
+    #endif
+
 };
 
 struct v2g
@@ -72,6 +77,7 @@ struct v2g
         float4 projPos : TEXCOORD8;
     #endif
 
+    UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
@@ -144,7 +150,13 @@ struct g2f {
 
 VertexOutput vert(appdata_full v) {
     VertexOutput o;
-    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+    UNITY_SETUP_INSTANCE_ID(v);
+    UNITY_INITIALIZE_OUTPUT(VertexOutput, o);
+    #ifdef AXCS_OUTLINE
+        UNITY_TRANSFER_INSTANCE_ID(v, o);
+    #else
+        UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+    #endif
     o.uv0 = v.texcoord;
     // o.normal = v.normal;
     o.color = float4(v.color.rgb, 0);
@@ -197,6 +209,9 @@ void geom(triangle v2g IN[3], inout TriangleStream<g2f> tristream)
     #if !defined(AXCS_REFRACTED) && defined(AXCS_OUTLINE)
         for (int i = 2; i >= 0; i--)
         {
+            UNITY_SETUP_INSTANCE_ID(IN[i]);
+            UNITY_INITIALIZE_OUTPUT(g2f, o);
+            UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
             float4 posWorld = (mul(unity_ObjectToWorld, IN[i].vertex));
             float _OutlineWidthMask_var = tex2Dlod (_OutlineWidthMask, float4( TRANSFORM_TEX(IN[i].uv0, _OutlineWidthMask), 0, 0));
             float width = _OutlineWidth * _OutlineWidthMask_var;
@@ -243,6 +258,9 @@ void geom(triangle v2g IN[3], inout TriangleStream<g2f> tristream)
 
     for (int ii = 0; ii < 3; ii++)
     {
+        UNITY_SETUP_INSTANCE_ID(IN[ii]);
+        UNITY_INITIALIZE_OUTPUT(g2f, o);
+        UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
         o.pos = UnityObjectToClipPos(IN[ii].vertex);
         o.uv0 = IN[ii].uv0;
         o.color = float4(IN[ii].color.rgb, 0);

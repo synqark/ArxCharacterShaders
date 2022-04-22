@@ -28,6 +28,7 @@ struct VertexInputS
     float4 vertex   : POSITION;
     float3 normal   : NORMAL;
     float2 uv0      : TEXCOORD0;
+    UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 #ifdef UNITY_STANDARD_USE_SHADOW_OUTPUT_STRUCT
@@ -35,6 +36,7 @@ struct VertexOutputShadowCaster
 {
     V2F_SHADOW_CASTER_NOPOS
     float2 tex : TEXCOORD1;
+    UNITY_VERTEX_OUTPUT_STEREO
 };
 #endif
 
@@ -48,6 +50,10 @@ void vertShadowCaster (VertexInputS v,
     #endif
     out float4 opos : SV_POSITION)
 {
+    UNITY_SETUP_INSTANCE_ID(v);
+    UNITY_INITIALIZE_OUTPUT(VertexOutputShadowCaster, o);
+    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+
     #ifdef UNITY_STANDARD_USE_SHADOW_OUTPUT_STRUCT
         UNITY_INITIALIZE_OUTPUT(VertexOutputShadowCaster, o);
     #endif

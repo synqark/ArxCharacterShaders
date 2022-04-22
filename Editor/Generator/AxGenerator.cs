@@ -285,11 +285,6 @@ namespace AxCharacterShaders.Generator
                 "#pragma geometry geom"
             );
             outlineGenerator.replaceCodes.Add(
-                "OUTLINE_SHADER_MODEL",
-                "#pragma target 4.0  // AXCS_GENERATOR:TESSELLATION_SHADER_TARGET"
-            );
-
-            outlineGenerator.replaceCodes.Add(
                 "OUTLINE_PROPERTIES",
                 $@"// Outline
                 _OutlineWidth (""[Outline] Width"", Range(0, 20)) = 0.1
@@ -354,11 +349,6 @@ namespace AxCharacterShaders.Generator
                 $@"#pragma hull hull
                 #pragma domain domain
                 #pragma vertex tessvert"
-            );
-
-            tessGenerator.replaceCodes.Add(
-                "TESSELLATION_SHADER_TARGET",
-                $@"#pragma target 4.6"
             );
 
             tessGenerator.replaceCodes.Add(

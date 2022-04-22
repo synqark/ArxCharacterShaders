@@ -8,6 +8,7 @@ struct appdata_tess {
     float4 texcoord2 : TEXCOORD2;
     float4 texcoord3 : TEXCOORD3;
     fixed4 color : COLOR;
+    UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 struct OutputPatchConstant {
@@ -21,6 +22,9 @@ struct OutputPatchConstant {
 };
 appdata_tess tessvert (appdata_full v) {
     appdata_tess o;
+    UNITY_SETUP_INSTANCE_ID(v);
+    UNITY_INITIALIZE_OUTPUT(appdata_tess, o);
+    UNITY_TRANSFER_INSTANCE_ID(v, o);
     o.vertex = v.vertex;
     o.tangent = v.tangent;
     o.normal = v.normal;
@@ -68,6 +72,7 @@ VertexOutput domain (OutputPatchConstant tessFactors, const OutputPatch<appdata_
     v.texcoord1 = vi[0].texcoord1*bary.x + vi[1].texcoord1*bary.y + vi[2].texcoord1*bary.z;
     v.texcoord2 = vi[0].texcoord2*bary.x + vi[1].texcoord2*bary.y + vi[2].texcoord2*bary.z;
     v.texcoord3 = vi[0].texcoord3*bary.x + vi[1].texcoord3*bary.y + vi[2].texcoord3*bary.z;
+    UNITY_TRANSFER_INSTANCE_ID(vi[0], v);
 
     float3 phongPos = float3( 0.0f, 0.0f, 0.0f );
     phongPos += ( bary.x * ProjectPositionToTangentSpace( v.vertex.xyz, vi[ 0 ].vertex, normalize(vi[ 0 ].normal) ) );

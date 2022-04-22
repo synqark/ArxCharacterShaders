@@ -159,7 +159,7 @@ uniform float _VertexColorBlendEmissive;
 
 // Refraction IF refracted
 #ifdef AXCS_REFRACTED
-uniform sampler2D _GrabTexture;
+UNITY_DECLARE_SCREENSPACE_TEXTURE(_GrabTexture);
 uniform float _RefractionFresnelExp;
 uniform float _RefractionStrength;
 #endif

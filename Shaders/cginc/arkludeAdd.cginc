@@ -7,7 +7,7 @@ float4 frag(
     ,  bool isFrontFace : SV_IsFrontFace
     ) : SV_Target
 {
-    UNITY_VERTEX_OUTPUT_STEREO(i);
+    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
     // 表裏・アウトライン
     fixed faceSign = isFrontFace ? 1 : -1;
